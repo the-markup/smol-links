@@ -1,0 +1,19 @@
+{
+    "name": "the-markup/wp-shlink",
+    "description": "Create and manage Shlink short links from WordPress",
+    "type": "project",
+    "require-dev": {
+        "phpunit/phpunit": "^7.5",
+        "yoast/phpunit-polyfills": "^1.0"
+    },
+    "license": "GPL",
+    "authors": [
+        {
+            "name": "The Markup",
+            "email": "infra@themarkup.org"
+        }
+    ],
+    "scripts": {
+        "test": "@php ./vendor/phpunit/phpunit/phpunit"
+    }
+}

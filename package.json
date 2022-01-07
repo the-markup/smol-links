@@ -1,0 +1,17 @@
+{
+  "name": "wp-shlink",
+  "version": "0.0.1",
+  "main": "Gruntfile.js",
+  "author": "The Markup",
+  "scripts": {
+    "start": "grunt default",
+    "readme": "grunt readme",
+    "i18n": "grunt i18n"
+  },
+  "devDependencies": {
+    "grunt": "~1.4.1",
+    "grunt-cli": "^1.4.3",
+    "grunt-wp-i18n": "~1.0.3",
+    "grunt-wp-readme-to-markdown": "~2.1.0"
+  }
+}
