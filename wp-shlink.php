@@ -9,7 +9,7 @@
  * Domain Path:     /languages
  * Version:         0.0.1
  *
- * @package         Shlink
+ * @package         WP_Shlink
  */
 
 namespace WP_Shlink;

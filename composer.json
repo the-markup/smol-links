@@ -6,7 +6,7 @@
         "phpunit/phpunit": "^7.5",
         "yoast/phpunit-polyfills": "^1.0"
     },
-    "license": "GPL",
+    "license": "GPL-2.0-or-later",
     "authors": [
         {
             "name": "The Markup",
