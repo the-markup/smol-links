@@ -1,15 +1,16 @@
 <?php
 /**
- * Plugin Name:     WP Shlink
- * Plugin URI:      https://github.com/the-markup/wp-shlink
- * Description:     Create and manage Shlink short links from WordPress
- * Author:          The Markup
- * Author URI:      https://themarkup.org/
- * Text Domain:     wp-shlink
- * Domain Path:     /languages
- * Version:         0.0.1
+ * Plugin Name:       Shlink
+ * Description:       Create and manage Shlink short links from WordPress
+ * Requires at least: 5.8
+ * Requires PHP:      7.0
+ * Version:           0.0.1
+ * Author:            The Markup
+ * License:           GPL-2.0-or-later
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain:       wp-shlink
  *
- * @package         WP_Shlink
+ * @package           wp-shlink
  */
 
 namespace WP_Shlink;
@@ -46,7 +47,7 @@ class Plugin {
 			if ($post->post_status == 'future' &&
 			    $post->post_status == 'publish') {
 				$long_url = get_permalink($post);
-			} else {
+			} else if ($post->post_status != 'auto-draft') {
 				$long_url = $this->get_expected_permalink($post);
 			}
 
