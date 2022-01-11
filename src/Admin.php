@@ -4,8 +4,8 @@ namespace WP_Shlink;
 
 class Admin {
 
-	function __construct($plugin) {
-		$this->plugin = $plugin;
+	function __construct($options) {
+		$this->options = \WP_Shlink\Options::init();
 		add_action('admin_menu', [$this, 'on_admin_menu']);
 		add_action('admin_init', [$this, 'on_admin_init']);
 	}
@@ -80,17 +80,17 @@ class Admin {
 	}
 
 	function base_url_field() {
-		$value = htmlentities($this->plugin->options->get('base_url'));
+		$value = htmlentities($this->options->get('base_url'));
 		echo '<input type="text" name="shlink_options[base_url]" class="regular-text ltr" value="' . $value . '">';
 	}
 
 	function api_key_field() {
-		$value = htmlentities($this->plugin->options->get('api_key'));
+		$value = htmlentities($this->options->get('api_key'));
 		echo '<input type="text" name="shlink_options[api_key]" class="regular-text ltr" value="' . $value . '">';
 	}
 
 	function generate_on_save_field() {
-		$value = htmlentities($this->plugin->options->get('generate_on_save'));
+		$value = htmlentities($this->options->get('generate_on_save'));
 		echo '<input type="checkbox" name="shlink_options[generate_on_save]" value="1" ' . checked( 1, $value, false ) . '>';
 	}
 }

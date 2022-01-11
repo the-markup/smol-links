@@ -4,8 +4,16 @@ namespace WP_Shlink;
 
 class Options {
 
-	function __construct($plugin) {
-		$this->plugin = $plugin;
+	static $instance;
+
+	static function init() {
+		if (! self::$instance) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
+
+	function __construct() {
 		$defaults = [
 			'base_url' => '',
 			'api_key' => '',
