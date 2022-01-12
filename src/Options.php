@@ -1,7 +1,19 @@
 <?php
+/**
+ * Class Options
+ *
+ * @package   Shlink
+ * @author    The Markup
+ * @license   GPL-2.0-or-later
+ * @link      https://themarkup.org/
+ * @copyright 2022 The Markup
+ */
 
 namespace WP_Shlink;
 
+/**
+ * Interface to WordPress options store
+ */
 class Options {
 
 	static $instance;

@@ -1,9 +1,21 @@
 <?php
+/**
+ * Class API
+ *
+ * @package   Shlink
+ * @author    The Markup
+ * @license   GPL-2.0-or-later
+ * @link      https://themarkup.org/
+ * @copyright 2022 The Markup
+ */
 
 namespace WP_Shlink;
 
 use \WP_Shlink\Options;
 
+/**
+ * Interface to the Shlink REST API
+ */
 class API {
 
 	function __construct() {
