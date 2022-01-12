@@ -6,15 +6,17 @@
 	"author": "The Markup",
 	"license": "GPL-2.0-or-later",
 	"scripts": {
-		"build": "grunt default && wp-scripts build && npm run docs",
+		"build": "wp-scripts build src/js/main.js",
 		"format": "wp-scripts format",
 		"lint:css": "wp-scripts lint-style",
 		"lint:js": "wp-scripts lint-js",
 		"start": "wp-scripts start",
 		"packages-update": "wp-scripts packages-update",
+		"grunt": "grunt default",
 		"docs": "phpdoc --directory src --target docs"
 	},
 	"devDependencies": {
+		"@wordpress/i18n": "^4.2.4",
 		"@wordpress/scripts": "^19.2.2",
 		"grunt": "~1.4.1",
 		"grunt-cli": "^1.4.3",

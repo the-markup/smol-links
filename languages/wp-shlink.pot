@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shlink 0.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-shlink\n"
-"POT-Creation-Date: 2022-01-11 23:00:06+00:00\n"
+"POT-Creation-Date: 2022-01-12 18:58:57+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,27 +24,27 @@ msgstr ""
 "X-Textdomain-Support: yes\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
-#: src/Admin.php:15 src/Admin.php:42
+#: src/Settings.php:17 src/Settings.php:44
 msgid "Shlink Settings"
 msgstr ""
 
-#: src/Admin.php:27
+#: src/Settings.php:29
 msgid "Server"
 msgstr ""
 
-#: src/Admin.php:33
+#: src/Settings.php:35
 msgid "Generating Shlinks"
 msgstr ""
 
-#: src/Admin.php:58
+#: src/Settings.php:60
 msgid "Base URL"
 msgstr ""
 
-#: src/Admin.php:65
+#: src/Settings.php:67
 msgid "API Key"
 msgstr ""
 
-#: src/Admin.php:75
+#: src/Settings.php:77
 msgid "Generate upon saving a post"
 msgstr ""
 

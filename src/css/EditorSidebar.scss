@@ -1,0 +1,13 @@
+.shlink-input {
+	cursor: pointer;
+}
+
+.shlink-copied {
+	display: none;
+	margin-top: 5px;
+	color: #808080;
+
+	&.visible {
+		display: block;
+	}
+}
