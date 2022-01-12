@@ -18,33 +18,66 @@ use \WP_Shlink\Options;
  */
 class API {
 
+	static $instance;
+
+	static function init() {
+		if (! self::$instance) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
+
 	function __construct() {
 		$this->options = Options::init();
 	}
 
-	function create_shlink($request) {
+	function create_shlink($args) {
 		$base_url = $this->options->get('base_url');
 		$endpoint = "$base_url/rest/v2/short-urls";
-		return $this->request('POST', $endpoint, $request);
+		return $this->request('POST', $endpoint, $args);
 	}
 
-	function update_shlink($short_code, $request) {
+	function update_shlink($short_code, $args) {
 		$base_url = $this->options->get('base_url');
 		$endpoint = "$base_url/rest/v2/short-urls/$short_code";
-		return $this->request('PATCH', $endpoint, $request);
+		return $this->request('PATCH', $endpoint, $args);
 	}
 
-	function request($method, $endpoint, $request) {
-		$request = apply_filters('wp_shlink_request', $request);
-		return wp_remote_request($endpoint, [
+	function get_shlinks($args = null) {
+		$base_url = $this->options->get('base_url');
+		$endpoint = "$base_url/rest/v2/short-urls";
+		$response = $this->request('GET', $endpoint, $args);
+		if (! empty($response['body'])) {
+			\dbug($response['body']);
+			$response = json_decode($response['body'], 'array');
+			return $response['shortUrls'];
+		} else if (is_wp_error($response)) {
+			throw new Exception('wp-shlink: ' . $response->getMessage());
+		} else {
+			throw new Exception('wp-shlink: error loading Shlinks');
+		}
+	}
+
+	function request($method, $endpoint, $args = null) {
+		$url = $endpoint;
+		$request = [
 			'method'  => $method,
-			'body'    => wp_json_encode($request),
 			'headers' => [
 				'Accept'       => 'application/json',
-				'Content-Type' => 'application/json',
 				'X-Api-Key'    => $this->options->get('api_key')
 			]
-		]);
+		];
+		if ($args) {
+			$args = apply_filters('wp_shlink_request', $args);
+			if (strtoupper($method) == 'GET') {
+				$url .= '?' . build_query($args);
+			} else {
+				$request['headers']['Content-Type'] = 'application/json';
+				$request['body'] = wp_json_encode($args);
+			}
+		}
+		\dbug($url);
+		return wp_remote_request($url, $request);
 	}
 
 }

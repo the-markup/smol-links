@@ -1,3 +1,5 @@
+import '../css/editor.scss';
+
 (wp => {
 
 	const { registerPlugin } = wp.plugins;

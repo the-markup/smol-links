@@ -2,7 +2,7 @@
 
 namespace WP_Shlink;
 
-class EditorSidebar {
+class Editor {
 
 	function __construct() {
 		add_action('init', [$this, 'on_init']);
@@ -26,17 +26,17 @@ class EditorSidebar {
 		}
 
 		wp_enqueue_script(
-			'wp-shlink',
-			plugins_url('build/main.js', __DIR__),
+			'wp-shlink-editor',
+			plugins_url('build/editor.js', __DIR__),
 			['wp-edit-post', 'wp-components', 'wp-plugins', 'wp-data'],
-			filemtime(plugin_dir_path(__DIR__) . 'build/main.js')
+			filemtime(plugin_dir_path(__DIR__) . 'build/editor.js')
 		);
 
 		wp_enqueue_style(
-			'wp-shlink',
-			plugins_url('build/main.css', __DIR__),
+			'wp-shlink-editor',
+			plugins_url('build/editor.css', __DIR__),
 			[],
-			filemtime(plugin_dir_path(__DIR__) . 'build/main.css')
+			filemtime(plugin_dir_path(__DIR__) . 'build/editor.css')
 		);
 	}
 

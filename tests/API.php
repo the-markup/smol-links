@@ -13,7 +13,7 @@ namespace WP_Shlink;
 
 require_once(dirname(__DIR__) . '/src/API.php');
 
-use \WP_Shlink\API;
+use WP_Shlink\API;
 
 class TestAPI extends API {
 

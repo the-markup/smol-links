@@ -6,7 +6,7 @@
 	"author": "The Markup",
 	"license": "GPL-2.0-or-later",
 	"scripts": {
-		"build": "wp-scripts build src/js/main.js",
+		"build": "wp-scripts build src/js/editor.js src/js/manager.js",
 		"format": "wp-scripts format",
 		"lint:css": "wp-scripts lint-style",
 		"lint:js": "wp-scripts lint-js",

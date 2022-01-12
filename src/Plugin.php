@@ -51,8 +51,8 @@ class Plugin {
 	 */
 	function __construct() {
 		$this->options = Options::init();
+		$this->api = API::init();
 		$this->admin = new Admin($this->options);
-		$this->api = new API();
 		add_action('save_post', [$this, 'on_save_post']);
 	}
 

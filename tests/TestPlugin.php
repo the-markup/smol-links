@@ -23,7 +23,7 @@ class TestPlugin extends WP_UnitTestCase {
 		$this->plugin = Plugin::init();
 
 		// Use a mocked API that simulates requests
-		$this->plugin->api = new TestAPI();
+		$this->plugin->api = TestAPI::init();
 
 		// Let's pretend we have a server config
 		$this->plugin->options->set('base_url', 'not empty');
