@@ -6,6 +6,10 @@ require_once(__DIR__ . '/Options.php');
 require_once(__DIR__ . '/Admin.php');
 require_once(__DIR__ . '/API.php');
 
+use \WP_Shlink\Options;
+use \WP_Shlink\Admin;
+use \WP_Shlink\API;
+
 class Plugin {
 
 	static $instance;
@@ -18,9 +22,9 @@ class Plugin {
 	}
 
 	function __construct() {
-		$this->options = \WP_Shlink\Options::init();
-		$this->admin = new \WP_Shlink\Admin($this->options);
-		$this->api = new \WP_Shlink\API();
+		$this->options = Options::init();
+		$this->admin = new Admin($this->options);
+		$this->api = new API();
 		add_action('save_post', [$this, 'on_save_post']);
 	}
 

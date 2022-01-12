@@ -5,7 +5,12 @@
  * @package wp-shlink
  */
 
+namespace WP_Shlink;
+
+require_once dirname(__DIR__) . '/src/API.php';
+
 use \WP_Shlink\API;
+use \WP_UnitTestCase;
 
 class TestAPI extends API {
 
@@ -50,7 +55,7 @@ class TestPlugin extends WP_UnitTestCase {
 
 	function setUp() {
 		// Plugin instance to test
-		$this->plugin = \WP_Shlink\Plugin::init();
+		$this->plugin = Plugin::init();
 
 		// Use a mocked API that simulates requests
 		$this->plugin->api = new TestAPI();

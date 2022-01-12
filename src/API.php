@@ -2,10 +2,12 @@
 
 namespace WP_Shlink;
 
+use \WP_Shlink\Options;
+
 class API {
 
 	function __construct() {
-		$this->options = \WP_Shlink\Options::init();
+		$this->options = Options::init();
 	}
 
 	function create_shlink($request) {

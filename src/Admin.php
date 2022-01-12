@@ -2,10 +2,12 @@
 
 namespace WP_Shlink;
 
+use \WP_Shlink\Options;
+
 class Admin {
 
 	function __construct($options) {
-		$this->options = \WP_Shlink\Options::init();
+		$this->options = Options::init();
 		add_action('admin_menu', [$this, 'on_admin_menu']);
 		add_action('admin_init', [$this, 'on_admin_init']);
 	}
