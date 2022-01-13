@@ -11,11 +11,7 @@ import '../css/editor.scss';
 
 		var shortUrl = wp.data.useSelect(select => {
 			var meta = select('core/editor').getEditedPostAttribute('meta');
-			if (meta.shlink) {
-				var shlink = JSON.parse(meta.shlink);
-				return shlink.shortUrl;
-			}
-			return null;
+			return meta.shlink_short_url || null;
 		}, []);
 
 		if (shortUrl) {

@@ -10,7 +10,8 @@ class Manager {
 		$this->api = API::init();
 		add_action('admin_menu', [$this, 'on_admin_menu']);
 		add_action('admin_enqueue_scripts', [$this, 'on_enqueue_assets']);
-		add_action('wp_ajax_shlinks', [$this, 'ajax_shlinks']);
+		add_action('wp_ajax_get_shlinks', [$this, 'ajax_get_shlinks']);
+		add_action('wp_ajax_create_shlink', [$this, 'ajax_create_shlink']);
 	}
 
 	function on_admin_menu() {
@@ -49,15 +50,20 @@ class Manager {
 		?>
 		<div class="wrap">
 			<h1><?php _e('Shlink Manager', 'wp-shlink'); ?></h1>
-
+			<form action="/wp-admin/admin-ajax.php" method="post" class="shlink-create">
+				<input type="hidden" name="action" value="create_shlink">
+				<label for="long_url">URL to shorten</label>
+				<input type="text" name="long_url" id="long_url" class="shlink-long-url">
+				<input type="submit" value="Shorten">
+			</form>
 			<div class="shlink-manager">Loading...</div>
 		</div>
 		<?php
 	}
 
-	function ajax_shlinks() {
+	function ajax_get_shlinks() {
 		try {
-			$shlinks = $this->api->get_shlinks([
+			$response = $this->api->get_shlinks([
 				'page'         => 1,
 				'itemsPerPage' => 25,
 				'orderBy'      => 'dateCreated-DESC'
@@ -66,16 +72,27 @@ class Manager {
 			header('Content-Type: application/json');
 			echo json_encode([
 				'ok' => true,
-				'shlinks' => $shlinks
+				'shlink' => $response
 			]);
-		} catch (Exception $error) {
+		} catch (\Exception $error) {
 			header('Content-Type: application/json');
 			echo json_encode([
 				'ok' => false,
 				'error' => $error->getMessage()
 			]);
 		}
+		exit;
+	}
 
+	function ajax_create_shlink() {
+		$response = $this->api->create_shlink([
+			'longUrl' => $_POST['long_url']
+		]);
+		header('Content-Type: application/json');
+		echo json_encode([
+			'ok' => true,
+			'shlink' => $response
+		]);
 		exit;
 	}
 

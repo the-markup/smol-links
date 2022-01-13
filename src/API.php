@@ -46,16 +46,7 @@ class API {
 	function get_shlinks($args = null) {
 		$base_url = $this->options->get('base_url');
 		$endpoint = "$base_url/rest/v2/short-urls";
-		$response = $this->request('GET', $endpoint, $args);
-		if (! empty($response['body'])) {
-			\dbug($response['body']);
-			$response = json_decode($response['body'], 'array');
-			return $response['shortUrls'];
-		} else if (is_wp_error($response)) {
-			throw new Exception('wp-shlink: ' . $response->getMessage());
-		} else {
-			throw new Exception('wp-shlink: error loading Shlinks');
-		}
+		return $this->request('GET', $endpoint, $args);
 	}
 
 	function request($method, $endpoint, $args = null) {
@@ -68,7 +59,6 @@ class API {
 			]
 		];
 		if ($args) {
-			$args = apply_filters('wp_shlink_request', $args);
 			if (strtoupper($method) == 'GET') {
 				$url .= '?' . build_query($args);
 			} else {
@@ -76,8 +66,14 @@ class API {
 				$request['body'] = wp_json_encode($args);
 			}
 		}
-		\dbug($url);
-		return wp_remote_request($url, $request);
+		$response = wp_remote_request($url, $request);
+		if (is_wp_error($response)) {
+			throw new \Exception('wp-shlink: ' . $response->getMessage());
+		} else if (! empty($response['body'])) {
+			return json_decode($response['body'], 'array');
+		} else {
+			throw new \Exception("wp-shlink: error loading $endpoint");
+		}
 	}
 
 }

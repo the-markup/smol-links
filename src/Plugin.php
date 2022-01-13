@@ -115,13 +115,13 @@ class Plugin {
 			if (empty($shlink)) {
 				$response = $this->api->create_shlink($request);
 				$this->save_post_response($response, $post);
-			} else if ($shlink['longUrl'] != $long_url) {
-				$short_code = $shlink['shortCode'];
+			} else if ($shlink['long_url'] != $long_url) {
+				$short_code = $shlink['short_code'];
 				$response = $this->api->update_shlink($short_code, $request);
 				$this->save_post_response($response, $post);
 			}
 
-		} catch (Exception $err) {
+		} catch (\Exception $err) {
 			\dbug($err->getMessage());
 			if ( function_exists( '\wp_sentry_safe' ) ) {
 				\wp_sentry_safe( function ( $client ) use ( $err ) {
@@ -136,22 +136,25 @@ class Plugin {
 	/**
 	 * Retrieve a stored Shlink for a given post
 	 *
-	 * The returned object is from the raw JSON response from the Shlink API at
-	 * the time the post was last updated.
+	 * The returned array contains existing short/long URLs and short code, or
+	 * null if none are stored for the target post.
 	 *
 	 * @param \WP_Post $post Target post to retrieve the Shlink for
-	 * @return object
+	 * @return array|null Associative array with keys `long_url`, `short_url`,
+	 *                    and `short_code`
 	 */
 	function get_post_shlink($post) {
-		$json = get_post_meta($post->ID, 'shlink', true);
-		if (empty($json)) {
+		$long_url   = get_post_meta($post->ID, 'shlink_long_url', true);
+		$short_url  = get_post_meta($post->ID, 'shlink_short_url', true);
+		$short_code = get_post_meta($post->ID, 'shlink_short_code', true);
+		if (empty($short_url) || empty($long_url) || empty($short_code)) {
 			return null;
 		}
-		$shlink = json_decode($json, 'array');
-		if (empty($shlink['shortUrl'])) {
-			return null;
-		}
-		return $shlink;
+		return [
+			'long_url'   => $long_url,
+			'short_url'  => $short_url,
+			'short_code' => $short_code
+		];
 	}
 
 	/**
@@ -162,7 +165,7 @@ class Plugin {
 	 * URL should match the post's eventual permalink.
 	 *
 	 * @param \WP_Post $post Target post to predict a permalink for
-	 * @return string
+	 * @return string Expected permalink URL
 	 * @see https://wordpress.stackexchange.com/a/42988
 	 */
 	function get_expected_permalink($post) {
@@ -180,24 +183,16 @@ class Plugin {
 	/**
 	 * Handles the Shlink API response for a recently saved post
 	 *
-	 * @param array $rsp A response from `wp_remote_request()`
+	 * @param array $response shlink creation response from the API
 	 * @param \WP_Post $post The post we're saving a Shlink for
 	 */
-	function save_post_response($rsp, $post) {
-		if (is_wp_error($rsp)) {
-			throw new Exception('wp-shlink: ' . $rsp->get_error_message());
-		}
-		if (! empty($rsp['response']['code']) &&
-		    $rsp['response']['code'] != 200) {
-			$code = $rsp['response']['code'];
-			$message = $rsp['response']['message'];
-			throw new Exception("wp-shlink: HTTP $code $message");
-		}
-		$shlink = json_decode($rsp['body'], 'array');
+	function save_post_response($shlink, $post) {
 		if (! empty($shlink['shortUrl'])) {
-			update_post_meta($post->ID, 'shlink', $rsp['body']);
+			update_post_meta($post->ID, 'shlink_long_url', $shlink['longUrl']);
+			update_post_meta($post->ID, 'shlink_short_url', $shlink['shortUrl']);
+			update_post_meta($post->ID, 'shlink_short_code', $shlink['shortCode']);
 		} else {
-			throw new Exception("wp-shlink: no 'shortUrl' found in API response");
+			throw new \Exception("wp-shlink: no 'shortUrl' found in API response");
 		}
 	}
 

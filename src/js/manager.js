@@ -7,7 +7,7 @@ class ShlinkManager {
 	}
 
 	load() {
-		return fetch('/wp-admin/admin-ajax.php?action=shlinks');
+		return fetch('/wp-admin/admin-ajax.php?action=get_shlinks');
 	}
 
 	async showResults(result) {
@@ -18,28 +18,61 @@ class ShlinkManager {
 		if (! response.ok) {
 			html = 'Error: ' + (response.error || 'mystery error');
 		} else {
-			html = this.getListHtml(response.shlinks.data);
+			html = this.getListHTML(response.shlink.shortUrls.data);
 		}
 
 		let el = document.querySelector('.shlink-manager');
 		el.innerHTML = html;
+
+		let form = document.querySelector('.shlink-create');
+		form.addEventListener('submit', this.createShlink.bind(this));
 	}
 
-	getListHtml(data) {
+	getListHTML(data) {
 		let html = '<ul class="shlink-list">';
 		for (let shlink of data) {
-			html += this.getItemHtml(shlink);
+			html += this.getItemHTML(shlink);
 		}
 		html += '</ul>';
 		return html;
 	}
 
-	getItemHtml(shlink) {
+	getItemHTML(shlink) {
 		let title = shlink.title || shlink.longUrl;
 		return `<li class="shlink-item">
 			<a href="${shlink.longUrl}" class="shlink-long-url">${title}</a>
 			<a href="${shlink.shortUrl}" class="shlink-short-url">${shlink.shortUrl}</a>
 		</li>`;
+	}
+
+	async createShlink(event) {
+		event.preventDefault();
+		let url = event.target.getAttribute('action');
+		let longURLField = document.querySelector('input.shlink-long-url');
+
+		let result = await fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded'
+			},
+			body: this.encodeFormData({
+				action: 'create_shlink',
+				long_url: longURLField.value
+			})
+		});
+
+		let response = await result.json();
+		longURLField.value = '';
+		console.log(response);
+	}
+
+	encodeFormData(data) {
+		let assignments = Object.keys(data).map(key => {
+			key = encodeURIComponent(key);
+			let value = encodeURIComponent(data[key]);
+			return `${key}=${value}`;
+		});
+		return assignments.join('&');
 	}
 
 }
