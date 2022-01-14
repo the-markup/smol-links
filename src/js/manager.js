@@ -57,8 +57,18 @@ class ShlinkManager {
 	getItemContentHTML(shlink) {
 		let title = shlink.title || shlink.longUrl;
 		return `<div class="shlink-item__content">
-			<div class="shlink-long-url">${title}</div>
-			<div class="shlink-short-url">${shlink.shortUrl}</a>
+			<div class="shlink-item__clicks">
+				${shlink.visitsCount} clicks
+			</div>
+			<div class="shlink-item__links">
+				<div class="shlink-item__long-url">${title}</div>
+				<div class="shlink-item__short-url">${shlink.shortUrl}</div>
+				<div class="shlink-loading">
+					<span class="shlink-loading-dot shlink-loading-dot--1"></span>
+					<span class="shlink-loading-dot shlink-loading-dot--2"></span>
+					<span class="shlink-loading-dot shlink-loading-dot--3"></span>
+				</div>
+			</div>
 		</div>`;
 	}
 
@@ -66,6 +76,17 @@ class ShlinkManager {
 		event.preventDefault();
 		let url = event.target.getAttribute('action');
 		let longURLField = document.querySelector('input.shlink-long-url');
+
+		let list = document.querySelector('.shlink-list');
+		list.innerHTML = this.getItemHTML({
+			longUrl: longURLField.value,
+			shortCode: '',
+			shortUrl: '',
+			visitsCount: 0
+		}) + list.innerHTML;
+
+		let item = list.querySelectorAll('.shlink-item')[0];
+		item.classList.add('shlink-item--is-saving');
 
 		let result = await fetch(url, {
 			method: 'POST',
@@ -79,12 +100,14 @@ class ShlinkManager {
 		});
 
 		longURLField.value = '';
-		let response = await result.json();
-		let list = document.querySelector('.shlink-list');
-		list.innerHTML = this.getItemHTML(response.shlink) + list.innerHTML;
 
-		let items = list.querySelectorAll('.shlink-item');
-		this.editShlink(items[0]);
+		let response = await result.json();
+		item.innerHTML = this.getItemContentHTML(response.shlink);
+		item.classList.remove('shlink-item--is-saving');
+
+		item.setAttribute('data-title', response.shlink.title || '');
+		item.setAttribute('data-short-code', response.shlink.shortCode);
+		item.setAttribute('data-short-url', response.shlink.shortUrl);
 	}
 
 	clickHandler(event) {
@@ -152,13 +175,21 @@ class ShlinkManager {
 
 	async saveShlink(event) {
 		event.preventDefault();
+
 		let item = event.target.closest('.shlink-item');
 		let title = item.querySelector('.shlink-edit-title').value;
 		let longUrl = item.querySelector('.shlink-edit-long-url').value;
 		let shortCode = item.querySelector('.shlink-edit-short-code').value;
+
 		item.setAttribute('data-title', title);
 		item.setAttribute('data-long-url', longUrl);
 		item.setAttribute('data-short-code', shortCode);
+
+		let longURL = item.querySelector('.shlink-item__long-url');
+		longURL.innerHTML = title || longUrl;
+
+		item.classList.remove('shlink-item--is-editing');
+		item.classList.add('shlink-item--is-saving');
 
 		let result = await fetch('/wp-admin/admin-ajax.php', {
 			method: 'POST',
@@ -174,8 +205,8 @@ class ShlinkManager {
 		});
 		let response = await result.json();
 		if (response.ok) {
-			item.classList.remove('shlink-item--is-editing');
 			item.innerHTML = this.getItemContentHTML(response.shlink);
+			item.classList.remove('shlink-item--is-saving');
 		}
 	}
 

@@ -1,5 +1,13 @@
+@keyframes fade {
+	0%, 40%, 80%, 100% {
+		opacity: 1;
+	}
+	50%, 70% {
+		opacity: 0;
+	}
+}
+
 .shlink-create {
-	background: rgba(0, 0, 0, 0.1);
 	padding: 15px;
 
 	.shlink-label {
@@ -12,19 +20,34 @@
 
 .shlink-manager {
 	font-size: 14px;
-	margin-top: 10px;
-	border-top: 1px solid #e5e5e5;
 
-	.shlink-loading {
-		padding: 10px 15px;
-		font-size: 14px;
-		font-weight: bold;
-		border-bottom: 1px solid #e5e5e5;
+	> .shlink-loading {
+		padding: 15px;
+		margin-left: 5px;
+	}
+}
+
+.shlink-loading-dot {
+	width: 8px;
+	height: 8px;
+	background-color: #50575e;
+	border-radius: 4px;
+	display: inline-block;
+	margin-right: 4px;
+	animation: 2s fade linear infinite;
+
+	&--1 {
+		animation-delay: -0.4s;
+	}
+
+	&--2 {
+		animation-delay: -0.2s;
 	}
 }
 
 .shlink-list {
 	margin: 0;
+	border-top: 1px solid #e5e5e5;
 }
 
 .shlink-item {
@@ -33,7 +56,15 @@
 	border-bottom: 1px solid #e5e5e5;
 	cursor: pointer;
 
-	.shlink-long-url {
+	.shlink-item__content {
+		display: flex;
+	}
+
+	.shlink-item__clicks {
+		min-width: 100px;
+	}
+
+	.shlink-item__long-url {
 		color: #0073aa;
 		font-size: 14px;
 		font-weight: bold;
@@ -41,12 +72,13 @@
 
 	&:hover {
 		background: #e5e5e5;
-		.shlink-long-url {
+
+		.shlink-item__long-url {
 			color: #0096dd;
 		}
 	}
 
-	.shlink-short-url {
+	.shlink-item__short-url {
 		color: #50575e;
 		margin-top: 5px;
 	}
@@ -66,7 +98,8 @@
 	}
 
 	&.shlink-item--is-editing {
-		background: #e5e5e5;
+		background: #fff;
+		border: 1px solid #c3c4c7;
 		cursor: default;
 
 		.shlink-item__edit {
@@ -75,6 +108,27 @@
 
 		.shlink-item__content {
 			display: none;
+		}
+	}
+
+	.shlink-loading {
+		display: none;
+	}
+
+	&.shlink-item--is-saving {
+		pointer-events: none;
+
+		.shlink-item__long-url {
+			color: #50575e;
+		}
+
+		.shlink-item__short-url {
+			display: none;
+		}
+
+		.shlink-loading {
+			display: block;
+			margin-top: 5px;
 		}
 	}
 }

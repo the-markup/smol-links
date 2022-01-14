@@ -58,7 +58,11 @@ class Manager {
 				<input type="submit" value="Shorten" class="shlinkn-submit button button-primary">
 			</form>
 			<div class="shlink-manager">
-				<div class="shlink-loading">Loading shlinks...</div>
+				<div class="shlink-loading">
+					<span class="shlink-loading-dot shlink-loading-dot--1"></span>
+					<span class="shlink-loading-dot shlink-loading-dot--2"></span>
+					<span class="shlink-loading-dot shlink-loading-dot--3"></span>
+				</div>
 			</div>
 		</div>
 		<?php
