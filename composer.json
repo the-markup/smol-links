@@ -1,7 +1,7 @@
 {
     "name": "the-markup/wp-shlink",
     "description": "Create and manage Shlink short links from WordPress",
-    "type": "project",
+    "type": "wordpress-plugin",
     "require-dev": {
         "phpunit/phpunit": "^7.5",
         "yoast/phpunit-polyfills": "^1.0"
