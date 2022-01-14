@@ -12,6 +12,7 @@ class Manager {
 		add_action('admin_enqueue_scripts', [$this, 'on_enqueue_assets']);
 		add_action('wp_ajax_get_shlinks', [$this, 'ajax_get_shlinks']);
 		add_action('wp_ajax_create_shlink', [$this, 'ajax_create_shlink']);
+		add_action('wp_ajax_update_shlink', [$this, 'ajax_update_shlink']);
 	}
 
 	function on_admin_menu() {
@@ -52,11 +53,13 @@ class Manager {
 			<h1><?php _e('Shlink Manager', 'wp-shlink'); ?></h1>
 			<form action="/wp-admin/admin-ajax.php" method="post" class="shlink-create">
 				<input type="hidden" name="action" value="create_shlink">
-				<label for="long_url">URL to shorten</label>
-				<input type="text" name="long_url" id="long_url" class="shlink-long-url">
-				<input type="submit" value="Shorten">
+				<label for="long_url" class="shlink-label">URL to shorten</label>
+				<input type="text" name="long_url" id="long_url" class="shlink-long-url regular-text ltr">
+				<input type="submit" value="Shorten" class="shlinkn-submit button button-primary">
 			</form>
-			<div class="shlink-manager">Loading...</div>
+			<div class="shlink-manager">
+				<div class="shlink-loading">Loading shlinks...</div>
+			</div>
 		</div>
 		<?php
 	}
@@ -86,6 +89,19 @@ class Manager {
 
 	function ajax_create_shlink() {
 		$response = $this->api->create_shlink([
+			'longUrl' => $_POST['long_url']
+		]);
+		header('Content-Type: application/json');
+		echo json_encode([
+			'ok' => true,
+			'shlink' => $response
+		]);
+		exit;
+	}
+
+	function ajax_update_shlink() {
+		$response = $this->api->update_shlink($_POST['short_code'], [
+			'title' => $_POST['title'],
 			'longUrl' => $_POST['long_url']
 		]);
 		header('Content-Type: application/json');

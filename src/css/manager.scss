@@ -1,0 +1,89 @@
+.shlink-create {
+	background: rgba(0, 0, 0, 0.1);
+	padding: 15px;
+
+	.shlink-label {
+		display: block;
+		font-size: 14px;
+		font-weight: bold;
+		padding-bottom: 5px;
+	}
+}
+
+.shlink-manager {
+	font-size: 14px;
+	margin-top: 10px;
+	border-top: 1px solid #e5e5e5;
+
+	.shlink-loading {
+		padding: 10px 15px;
+		font-size: 14px;
+		font-weight: bold;
+		border-bottom: 1px solid #e5e5e5;
+	}
+}
+
+.shlink-list {
+	margin: 0;
+}
+
+.shlink-item {
+	margin: 0;
+	padding: 15px;
+	border-bottom: 1px solid #e5e5e5;
+	cursor: pointer;
+
+	.shlink-long-url {
+		color: #0073aa;
+		font-size: 14px;
+		font-weight: bold;
+	}
+
+	&:hover {
+		background: #e5e5e5;
+		.shlink-long-url {
+			color: #0096dd;
+		}
+	}
+
+	.shlink-short-url {
+		color: #50575e;
+		margin-top: 5px;
+	}
+
+	.shlink-item__edit {
+		display: none;
+
+		.shlink-label {
+			display: block;
+			font-weight: bold;
+			padding-bottom: 5px;
+		}
+
+		.shlink-edit-field {
+			padding-bottom: 15px;
+		}
+	}
+
+	&.shlink-item--is-editing {
+		background: #e5e5e5;
+		cursor: default;
+
+		.shlink-item__edit {
+			display: block;
+		}
+
+		.shlink-item__content {
+			display: none;
+		}
+	}
+}
+
+.shlink-edit-short-code {
+	width: 100px;
+}
+
+.shlink-edit-prefix {
+	color: #50575e;
+	font-size: 14px;
+}

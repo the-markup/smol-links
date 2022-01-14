@@ -12,7 +12,6 @@ class ShlinkManager {
 
 	async showResults(result) {
 		let response = await result.json();
-		console.log(response);
 		let html = 'Oops, something unexpected happened';
 
 		if (! response.ok) {
@@ -23,6 +22,7 @@ class ShlinkManager {
 
 		let el = document.querySelector('.shlink-manager');
 		el.innerHTML = html;
+		el.addEventListener('click', this.clickHandler.bind(this));
 
 		let form = document.querySelector('.shlink-create');
 		form.addEventListener('submit', this.createShlink.bind(this));
@@ -38,11 +38,28 @@ class ShlinkManager {
 	}
 
 	getItemHTML(shlink) {
-		let title = shlink.title || shlink.longUrl;
-		return `<li class="shlink-item">
-			<a href="${shlink.longUrl}" class="shlink-long-url">${title}</a>
-			<a href="${shlink.shortUrl}" class="shlink-short-url">${shlink.shortUrl}</a>
+		let dataAttrs = this.getItemDataAttrs(shlink);
+		let contentHTML = this.getItemContentHTML(shlink);
+		return `<li class="shlink-item"${dataAttrs}>
+			${contentHTML}
 		</li>`;
+	}
+
+	getItemDataAttrs(shlink) {
+		let dataAttrs = '';
+		dataAttrs += ` data-title="${this.escape(shlink.title)}"`;
+		dataAttrs += ` data-long-url="${this.escape(shlink.longUrl)}"`;
+		dataAttrs += ` data-short-url="${this.escape(shlink.shortUrl)}"`;
+		dataAttrs += ` data-short-code="${this.escape(shlink.shortCode)}"`;
+		return dataAttrs;
+	}
+
+	getItemContentHTML(shlink) {
+		let title = shlink.title || shlink.longUrl;
+		return `<div class="shlink-item__content">
+			<div class="shlink-long-url">${title}</div>
+			<div class="shlink-short-url">${shlink.shortUrl}</a>
+		</div>`;
 	}
 
 	async createShlink(event) {
@@ -61,9 +78,105 @@ class ShlinkManager {
 			})
 		});
 
-		let response = await result.json();
 		longURLField.value = '';
-		console.log(response);
+		let response = await result.json();
+		let list = document.querySelector('.shlink-list');
+		list.innerHTML = this.getItemHTML(response.shlink) + list.innerHTML;
+
+		let items = list.querySelectorAll('.shlink-item');
+		this.editShlink(items[0]);
+	}
+
+	clickHandler(event) {
+		var item;
+		if (event.target.classList.contains('button')) {
+			return;
+		}
+		if (event.target.classList.contains('shlink-item')) {
+			item = event.target;
+		} else if (event.target.closest('.shlink-item')) {
+			item = event.target.closest('.shlink-item');
+		} else {
+			return true;
+		}
+		this.editShlink(item);
+	}
+
+	editShlink(item) {
+		let current = document.querySelector('.shlink-item--is-editing');
+		if (current) {
+			current.classList.remove('shlink-item--is-editing');
+		}
+		item.classList.add('shlink-item--is-editing');
+
+		var form;
+		if (item.querySelector('.shlink-item__edit')) {
+			form = item.querySelector('.shlink-item__edit');
+		} else {
+			let shortUrl = item.getAttribute('data-short-url');
+			let shortCode = item.getAttribute('data-short-code');
+			let regex = new RegExp(`${shortCode}$`);
+			let prefix = shortUrl.replace(regex, '');
+			form = item.appendChild(document.createElement('form'));
+			form.setAttribute('action', '/wp-admin/admin-ajax.php');
+			form.setAttribute('method', 'POST');
+			form.classList.add('shlink-item__edit');
+			form.innerHTML = `
+				<div class="shlink-edit-field">
+					<label for="shlink-edit-title" class="shlink-label">Title</label>
+					<input type="text" id="shlink-edit-title" name="title" class="shlink-edit-title regular-text ltr" value="${item.getAttribute('data-title')}">
+				</div>
+				<div class="shlink-edit-field">
+					<label for="shlink-edit-long-url" class="shlink-label">Long URL</label>
+					<input type="text" id="shlink-edit-long-url" name="long_url" class="shlink-edit-long-url regular-text ltr" value="${item.getAttribute('data-long-url')}">
+				</div>
+				<div class="shlink-edit-field">
+					<label for="shlink-edit-short-code" class="shlink-label">Short URL</label>
+					<span class="shlink-edit-prefix">${prefix}</span><input type="text" id="shlink-edit-short-code" name="short_code" class="shlink-edit-short-code regular-text ltr" value="${item.getAttribute('data-short-code')}">
+				</div>
+				<div class="shlink-edit-buttons">
+					<input type="submit" value="Save" class="shlink-save button button-primary">
+					<input type="button" value="Cancel" class="shlink-cancel button">
+				</div>
+			`;
+			form.addEventListener('submit', this.saveShlink.bind(this));
+
+			let cancel = form.querySelector('.shlink-cancel');
+			cancel.addEventListener('click', event => {
+				event.preventDefault();
+				let item = event.target.closest('.shlink-item');
+				item.classList.remove('shlink-item--is-editing');
+			});
+		}
+	}
+
+	async saveShlink(event) {
+		event.preventDefault();
+		let item = event.target.closest('.shlink-item');
+		let title = item.querySelector('.shlink-edit-title').value;
+		let longUrl = item.querySelector('.shlink-edit-long-url').value;
+		let shortCode = item.querySelector('.shlink-edit-short-code').value;
+		item.setAttribute('data-title', title);
+		item.setAttribute('data-long-url', longUrl);
+		item.setAttribute('data-short-code', shortCode);
+
+		let result = await fetch('/wp-admin/admin-ajax.php', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded'
+			},
+			body: this.encodeFormData({
+				action: 'update_shlink',
+				title: title,
+				long_url: longUrl,
+				short_code: shortCode
+			})
+		});
+		let response = await result.json();
+		if (response.ok) {
+			item.classList.remove('shlink-item--is-editing');
+			item.innerHTML = this.getItemContentHTML(response.shlink);
+		}
 	}
 
 	encodeFormData(data) {
@@ -73,6 +186,18 @@ class ShlinkManager {
 			return `${key}=${value}`;
 		});
 		return assignments.join('&');
+	}
+
+	escape(value) {
+		if (! value) {
+			return '';
+		}
+		return ('' + value)
+			.replace(/&/g, '&amp;')
+			.replace(/'/g, '&apos;')
+			.replace(/"/g, '&quot;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;');
 	}
 
 }
