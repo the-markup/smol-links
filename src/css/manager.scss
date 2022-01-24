@@ -45,6 +45,22 @@
 	}
 }
 
+.shlink-edit-title {
+	margin: 0;
+	padding-bottom: 15px;
+	font-size: 14px;
+}
+
+.shlink-label {
+	display: block;
+	font-weight: bold;
+	padding-bottom: 5px;
+}
+
+.shlink-edit-field {
+	padding-bottom: 15px;
+}
+
 .shlink-list {
 	margin: 0;
 	border-top: 1px solid #e5e5e5;
@@ -85,16 +101,6 @@
 
 	.shlink-item__edit {
 		display: none;
-
-		.shlink-label {
-			display: block;
-			font-weight: bold;
-			padding-bottom: 5px;
-		}
-
-		.shlink-edit-field {
-			padding-bottom: 15px;
-		}
 	}
 
 	&.shlink-item--is-editing {

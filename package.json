@@ -10,7 +10,7 @@
 		"format": "wp-scripts format",
 		"lint:css": "wp-scripts lint-style",
 		"lint:js": "wp-scripts lint-js",
-		"start": "wp-scripts start",
+		"start": "wp-scripts start src/js/editor.js src/js/manager.js",
 		"packages-update": "wp-scripts packages-update",
 		"grunt": "grunt default",
 		"docs": "phpdoc --directory src --target docs"

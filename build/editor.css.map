@@ -1,0 +1,1 @@
+{"version":3,"file":"editor.css","mappings":";;;AAAA;EACC;AACD;;AAEA;EACC;EACA;EACA;AACD;AACC;EACC;AACF,C","sources":["webpack://wp-shlink/./src/css/editor.scss"],"sourcesContent":[".shlink-input input {\n\tcursor: pointer;\n}\n\n.shlink-copied {\n\tdisplay: none;\n\tmargin-top: 5px;\n\tcolor: #808080;\n\n\t&.visible {\n\t\tdisplay: block;\n\t}\n}\n"],"names":[],"sourceRoot":""}
