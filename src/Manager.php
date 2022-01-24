@@ -58,11 +58,11 @@ class Manager {
 					<input type="text" name="long_url" id="shlink-create__long-url" class="shlink-long-url regular-text ltr">
 				</div>
 				<div class="shlink-edit-field">
-					<label for="shlink-create__short-code" class="shlink-label">Short code</label>
+					<label for="shlink-create__short-code" class="shlink-label shlink-label--optional">Short code</label>
 					<input type="text" name="short_code" id="shlink-create__short-code" class="shlink-short-code regular-text ltr">
 				</div>
 				<div class="shlink-edit-field">
-					<label for="shlink-create__title" class="shlink-label">Title</label>
+					<label for="shlink-create__title" class="shlink-label shlink-label--optional">Title</label>
 					<input type="text" name="title" id="shlink-create__title" class="shlink-title regular-text ltr">
 				</div>
 				<div class="shlink-buttons">
