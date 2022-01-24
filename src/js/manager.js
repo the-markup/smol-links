@@ -174,19 +174,13 @@ class ShlinkManager {
 	}
 
 	async saveShlink(event) {
+		console.log('saveShlink');
 		event.preventDefault();
 
 		let item = event.target.closest('.shlink-item');
 		let title = item.querySelector('.shlink-edit-title').value;
 		let longUrl = item.querySelector('.shlink-edit-long-url').value;
 		let shortCode = item.querySelector('.shlink-edit-short-code').value;
-
-		item.setAttribute('data-title', title);
-		item.setAttribute('data-long-url', longUrl);
-		item.setAttribute('data-short-code', shortCode);
-
-		let longURL = item.querySelector('.shlink-item__long-url');
-		longURL.innerHTML = title || longUrl;
 
 		item.classList.remove('shlink-item--is-editing');
 		item.classList.add('shlink-item--is-saving');
@@ -204,10 +198,32 @@ class ShlinkManager {
 			})
 		});
 		let response = await result.json();
-		if (response.ok) {
-			item.innerHTML = this.getItemContentHTML(response.shlink);
-			item.classList.remove('shlink-item--is-saving');
+		if (response && response.ok && response.shlink) {
+			let shlink = response.shlink;
+
+			if (shlink.status == 200) {
+				item.innerHTML = this.getItemContentHTML(response.shlink);
+				item.classList.remove('shlink-item--is-saving');
+
+				item.setAttribute('data-title', title);
+				item.setAttribute('data-long-url', longUrl);
+				item.setAttribute('data-short-code', shortCode);
+
+				let longURL = item.querySelector('.shlink-item__long-url');
+				longURL.innerHTML = title || longUrl;
+				return true;
+			} else {
+				item.classList.add('shlink-item--is-editing');
+				item.classList.remove('shlink-item--is-saving');
+
+				if (shlink.title && shlink.detail) {
+					alert(`Error: ${shlink.title}. ${shlink.detail}.`);
+					return false;
+				}
+			}
 		}
+		alert('Sorry, there was a problem saving changes to the Shlink.');
+		return false;
 	}
 
 	encodeFormData(data) {
