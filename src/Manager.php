@@ -53,9 +53,21 @@ class Manager {
 			<h1><?php _e('Shlink Manager', 'wp-shlink'); ?></h1>
 			<form action="/wp-admin/admin-ajax.php" method="post" class="shlink-create">
 				<input type="hidden" name="action" value="create_shlink">
-				<label for="long_url" class="shlink-label">URL to shorten</label>
-				<input type="text" name="long_url" id="long_url" class="shlink-long-url regular-text ltr">
-				<input type="submit" value="Shorten" class="shlinkn-submit button button-primary">
+				<div class="shlink-edit-field">
+					<label for="shlink-create__long-url" class="shlink-label">URL to shorten</label>
+					<input type="text" name="long_url" id="shlink-create__long-url" class="shlink-long-url regular-text ltr">
+				</div>
+				<div class="shlink-edit-field">
+					<label for="shlink-create__short-code" class="shlink-label shlink-label--optional">Short code</label>
+					<input type="text" name="short_code" id="shlink-create__short-code" class="shlink-short-code regular-text ltr">
+				</div>
+				<div class="shlink-edit-field">
+					<label for="shlink-create__title" class="shlink-label shlink-label--optional">Title</label>
+					<input type="text" name="title" id="shlink-create__title" class="shlink-title regular-text ltr">
+				</div>
+				<div class="shlink-buttons">
+					<input type="submit" value="Shorten" class="shlinkn-submit button button-primary">
+				</div>
 			</form>
 			<div class="shlink-manager">
 				<div class="shlink-loading">
@@ -77,13 +89,13 @@ class Manager {
 			]);
 
 			header('Content-Type: application/json');
-			echo json_encode([
+			echo wp_json_encode([
 				'ok' => true,
 				'shlink' => $response
 			]);
 		} catch (\Exception $error) {
 			header('Content-Type: application/json');
-			echo json_encode([
+			echo wp_json_encode([
 				'ok' => false,
 				'error' => $error->getMessage()
 			]);
@@ -93,10 +105,12 @@ class Manager {
 
 	function ajax_create_shlink() {
 		$response = $this->api->create_shlink([
-			'longUrl' => $_POST['long_url']
+			'longUrl' => $_POST['long_url'],
+			'customSlug' => $_POST['short_code'],
+			'title' => $_POST['title']
 		]);
 		header('Content-Type: application/json');
-		echo json_encode([
+		echo wp_json_encode([
 			'ok' => true,
 			'shlink' => $response
 		]);
@@ -109,7 +123,7 @@ class Manager {
 			'longUrl' => $_POST['long_url']
 		]);
 		header('Content-Type: application/json');
-		echo json_encode([
+		echo wp_json_encode([
 			'ok' => true,
 			'shlink' => $response
 		]);

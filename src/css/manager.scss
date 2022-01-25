@@ -15,6 +15,12 @@
 		font-size: 14px;
 		font-weight: bold;
 		padding-bottom: 5px;
+
+		&--optional:after {
+			content: "optional";
+			font-weight: normal;
+			margin-left: 10px;
+		}
 	}
 }
 
@@ -43,6 +49,22 @@
 	&--2 {
 		animation-delay: -0.2s;
 	}
+}
+
+.shlink-edit-title {
+	margin: 0;
+	padding-bottom: 15px;
+	font-size: 14px;
+}
+
+.shlink-label {
+	display: block;
+	font-weight: bold;
+	padding-bottom: 5px;
+}
+
+.shlink-edit-field {
+	padding-bottom: 15px;
 }
 
 .shlink-list {
@@ -85,16 +107,6 @@
 
 	.shlink-item__edit {
 		display: none;
-
-		.shlink-label {
-			display: block;
-			font-weight: bold;
-			padding-bottom: 5px;
-		}
-
-		.shlink-edit-field {
-			padding-bottom: 15px;
-		}
 	}
 
 	&.shlink-item--is-editing {
