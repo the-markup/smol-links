@@ -6,6 +6,7 @@ wp-cli.local.yml
 node_modules/
 vendor/
 .phpdoc/
+/build/
 *.sql
 *.tar.gz
 *.zip
