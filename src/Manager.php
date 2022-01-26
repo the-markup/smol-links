@@ -106,13 +106,11 @@ class Manager {
 
 	function ajax_create_shlink() {
 		$request = [
-			'longUrl' => $_POST['long_url']
+			'longUrl' => $_POST['long_url'],
+			'title'   => $_POST['title']
 		];
 		if (! empty($_POST['short_code'])) {
 			$request['customSlug'] = $_POST['short_code'];
-		}
-		if (! empty($_POST['title'])) {
-			$request['title'] = $_POST['title'];
 		}
 		$response = $this->api->create_shlink($request);
 		header('Content-Type: application/json');
@@ -125,8 +123,8 @@ class Manager {
 
 	function ajax_update_shlink() {
 		$response = $this->api->update_shlink($_POST['short_code'], [
-			'title' => $_POST['title'],
-			'longUrl' => $_POST['long_url']
+			'longUrl' => $_POST['long_url'],
+			'title'   => $_POST['title']
 		]);
 		header('Content-Type: application/json');
 		echo wp_json_encode([

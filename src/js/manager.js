@@ -194,7 +194,7 @@ class ShlinkManager {
 			form.setAttribute('method', 'POST');
 			form.classList.add('shlink-item__edit');
 			form.innerHTML = `
-					<h3 class="shlink-edit-title">${shortUrl}</h3>
+					<h3 class="shlink-edit-heading">${shortUrl}</h3>
 					<div class="shlink-edit-field">
 						<label for="shlink-edit-title" class="shlink-label">Title</label>
 						<input type="text" id="shlink-edit-title" name="title" class="shlink-edit-title regular-text ltr" value="${item.getAttribute('data-title')}">
@@ -225,7 +225,6 @@ class ShlinkManager {
 		let item = event.target.closest('.shlink-item');
 		let title = item.querySelector('.shlink-edit-title').value;
 		let longUrl = item.querySelector('.shlink-edit-long-url').value;
-		let shortCode = item.querySelector('.shlink-edit-short-code').value;
 
 		item.classList.remove('shlink-item--is-editing');
 		item.classList.add('shlink-item--is-saving');
@@ -239,8 +238,7 @@ class ShlinkManager {
 				action: 'update_shlink',
 				title: title,
 				long_url: longUrl,
-				old_short_code: item.getAttribute('data-short-code'),
-				new_short_code: shortCode
+				short_code: item.getAttribute('data-short-code')
 			})
 		});
 		let response = await result.json();
@@ -251,9 +249,9 @@ class ShlinkManager {
 				item.innerHTML = this.getItemContentHTML(response.shlink);
 				item.classList.remove('shlink-item--is-saving');
 
-				item.setAttribute('data-title', title);
-				item.setAttribute('data-long-url', longUrl);
-				item.setAttribute('data-short-code', shortCode);
+				item.setAttribute('data-title', shlink.title);
+				item.setAttribute('data-long-url', shlink.longUrl);
+				item.setAttribute('data-short-code', shlink.shortCode);
 
 				let longURL = item.querySelector('.shlink-item__long-url');
 				longURL.innerHTML = title || longUrl;
