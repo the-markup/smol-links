@@ -3,6 +3,7 @@
 namespace WP_Shlink;
 
 use WP_Shlink\API;
+use WP_Shlink\Options;
 
 class Manager {
 
@@ -48,6 +49,12 @@ class Manager {
 	}
 
 	function manager_page() {
+
+		$options = Options::init();
+		if (! $options->get('base_url') || ! $options->get('api_key')) {
+			return $this->config_error();
+		}
+
 		?>
 		<div class="wrap">
 			<h1><?php _e('Shlink Manager', 'wp-shlink'); ?></h1>
@@ -76,6 +83,20 @@ class Manager {
 					<span class="shlink-loading-dot shlink-loading-dot--2"></span>
 					<span class="shlink-loading-dot shlink-loading-dot--3"></span>
 				</div>
+			</div>
+		</div>
+		<?php
+	}
+
+	function config_error() {
+		?>
+		<div class="wrap">
+			<h1><?php _e('Shlink Manager', 'wp-shlink'); ?></h1>
+			<div class="notice notice-warning">
+				<p>
+					Cannot connect to Shlink Server.
+					<a href="/wp-admin/options-general.php?page=shlink"><?php _e('Please configure Shlink API settings.', 'wp-shlink'); ?></a>
+				</p>
 			</div>
 		</div>
 		<?php
