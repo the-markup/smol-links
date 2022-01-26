@@ -68,7 +68,7 @@ class API {
 		}
 		$response = wp_remote_request($url, $request);
 		if (is_wp_error($response)) {
-			throw new \Exception('wp-shlink: ' . $response->getMessage());
+			throw new \Exception('wp-shlink: ' . $response->get_error_message());
 		} else if (! empty($response['body'])) {
 			return json_decode($response['body'], 'array');
 		} else {
