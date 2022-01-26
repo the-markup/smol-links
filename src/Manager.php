@@ -53,6 +53,7 @@ class Manager {
 			<h1><?php _e('Shlink Manager', 'wp-shlink'); ?></h1>
 			<form action="/wp-admin/admin-ajax.php" method="post" class="shlink-create">
 				<input type="hidden" name="action" value="create_shlink">
+				<div class="shlink-create-feedback"></div>
 				<div class="shlink-edit-field">
 					<label for="shlink-create__long-url" class="shlink-label">URL to shorten</label>
 					<input type="text" name="long_url" id="shlink-create__long-url" class="shlink-long-url regular-text ltr">
@@ -104,11 +105,16 @@ class Manager {
 	}
 
 	function ajax_create_shlink() {
-		$response = $this->api->create_shlink([
-			'longUrl' => $_POST['long_url'],
-			'customSlug' => $_POST['short_code'],
-			'title' => $_POST['title']
-		]);
+		$request = [
+			'longUrl' => $_POST['long_url']
+		];
+		if (! empty($_POST['short_code'])) {
+			$request['customSlug'] = $_POST['short_code'];
+		}
+		if (! empty($_POST['title'])) {
+			$request['title'] = $_POST['title'];
+		}
+		$response = $this->api->create_shlink($request);
 		header('Content-Type: application/json');
 		echo wp_json_encode([
 			'ok' => true,

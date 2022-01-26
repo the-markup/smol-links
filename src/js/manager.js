@@ -76,11 +76,32 @@ class ShlinkManager {
 		event.preventDefault();
 
 		let form = event.target;
+		if (form.classList.contains('is-saving')) {
+			return;
+		}
+
 		let url = form.getAttribute('action');
+		let feedback = document.querySelector('.shlink-create-feedback');
+		feedback.innerHTML = '';
 
 		let longURLField = form.querySelector('.shlink-long-url');
 		let shortCodeField = form.querySelector('.shlink-short-code');
 		let titleField = form.querySelector('.shlink-title');
+
+		if (longURLField.value == '') {
+			feedback.innerHTML = `
+				<div class="notice notice-error is-dismissible">
+					<p>Sorry, you must specify a long URL to shorten.</p>
+				</div>
+			`;
+			return;
+		}
+
+		form.classList.add('is-saving');
+
+		longURLField.setAttribute('readonly', 'readonly');
+		shortCodeField.setAttribute('readonly', 'readonly');
+		titleField.setAttribute('readonly', 'readonly');
 
 		let list = document.querySelector('.shlink-list');
 		list.innerHTML = this.getItemHTML({
@@ -107,17 +128,38 @@ class ShlinkManager {
 			})
 		});
 
-		longURLField.value = '';
-		shortCodeField.value = '';
-		titleField.value = '';
-
 		let response = await result.json();
-		item.innerHTML = this.getItemContentHTML(response.shlink);
 		item.classList.remove('shlink-item--is-saving');
 
-		item.setAttribute('data-title', response.shlink.title || '');
-		item.setAttribute('data-short-code', response.shlink.shortCode);
-		item.setAttribute('data-short-url', response.shlink.shortUrl);
+		form.classList.remove('is-saving');
+		longURLField.removeAttribute('readonly');
+		shortCodeField.removeAttribute('readonly');
+		titleField.removeAttribute('readonly');
+
+		if (response.shlink && response.shlink.shortCode) {
+			item.innerHTML = this.getItemContentHTML(response.shlink);
+			item.setAttribute('data-title', response.shlink.title || '');
+			item.setAttribute('data-short-code', response.shlink.shortCode);
+			item.setAttribute('data-short-url', response.shlink.shortUrl);
+			longURLField.value = '';
+			shortCodeField.value = '';
+			titleField.value = '';
+		} else {
+			list.removeChild(item);
+			let title = 'Error';
+			let detail = 'Could not create shlink';
+			if (response.shlink && response.shlink.title) {
+				title = response.shlink.title;
+			}
+			if (response.shlink && response.shlink.detail) {
+				detail = response.shlink.detail;
+			}
+			feedback.innerHTML = `
+				<div class="notice notice-error is-dismissible">
+					<p>${title}. ${detail}.</p>
+				</div>
+			`;
+		}
 	}
 
 	clickHandler(event) {
