@@ -1,4 +1,5 @@
 import '../css/manager.scss';
+var octicons = require('@primer/octicons');
 
 class ShlinkManager {
 
@@ -14,8 +15,8 @@ class ShlinkManager {
 		let response = await result.json();
 		let html = 'Oops, something unexpected happened';
 
-		if (! response.ok) {
-			html = 'Error: ' + (response.error || 'mystery error');
+		if (! response.ok || ! response.shlink) {
+			html = 'Error: ' + (response.error || 'something went wrong loading shlinks. Try again?');
 		} else {
 			html = this.getListHTML(response.shlink.shortUrls.data);
 		}
@@ -62,7 +63,10 @@ class ShlinkManager {
 			</div>
 			<div class="shlink-item__links">
 				<div class="shlink-item__long-url">${title}</div>
-				<div class="shlink-item__short-url">${shlink.shortUrl}</div>
+				<div class="shlink-item__short-url">
+					${this.getCopyHTML()}
+					${shlink.shortUrl}
+				</div>
 				<div class="shlink-loading">
 					<span class="shlink-loading-dot shlink-loading-dot--1"></span>
 					<span class="shlink-loading-dot shlink-loading-dot--2"></span>
@@ -70,6 +74,19 @@ class ShlinkManager {
 				</div>
 			</div>
 		</div>`;
+	}
+
+	getCopyHTML() {
+		return `
+			<span class="shlink-item__copy">
+				<span class="shlink-item__copy-link">
+					${octicons.copy.toSVG()}
+				</span>
+				<span class="shlink-item__copy-success">
+					${octicons.check.toSVG()}
+				</span>
+			</span>
+		`;
 	}
 
 	async createShlink(event) {
@@ -174,6 +191,12 @@ class ShlinkManager {
 		} else {
 			return true;
 		}
+		let copy = event.target.classList.contains('shlink-item__copy') ||
+		           event.target.closest('.shlink-item__copy');
+		if (copy) {
+			this.copyLink(item, copy);
+			return;
+		}
 		this.editShlink(item);
 	}
 
@@ -194,7 +217,7 @@ class ShlinkManager {
 			form.setAttribute('method', 'POST');
 			form.classList.add('shlink-item__edit');
 			form.innerHTML = `
-					<h3 class="shlink-edit-heading">${shortUrl}</h3>
+					<h3 class="shlink-edit-heading">${this.getCopyHTML()} ${shortUrl}</h3>
 					<div class="shlink-edit-field">
 						<label for="shlink-edit-title" class="shlink-label">Title</label>
 						<input type="text" id="shlink-edit-title" name="title" class="shlink-edit-title regular-text ltr" value="${item.getAttribute('data-title')}">
@@ -268,6 +291,17 @@ class ShlinkManager {
 		}
 		alert('Sorry, there was a problem saving changes to the Shlink.');
 		return false;
+	}
+
+	async copyLink(item, copy) {
+		if (! navigator || ! navigator.clipboard) {
+			return;
+		}
+		await navigator.clipboard.writeText(item.getAttribute('data-short-url'));
+		copy.classList.add('shlink-item__copy--success');
+		setTimeout(() => {
+			copy.classList.remove('shlink-item__copy--success');
+		}, 2000);
 	}
 
 	encodeFormData(data) {

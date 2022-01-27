@@ -153,3 +153,25 @@
 	color: #50575e;
 	font-size: 14px;
 }
+
+.shlink-item__copy {
+	vertical-align: top;
+	cursor: pointer;
+
+	&:hover .shlink-item__copy-link svg {
+		fill: #0096dd;
+	}
+
+	.shlink-item__copy-success {
+		display: none;
+	}
+
+	&--success {
+		.shlink-item__copy-link {
+			display: none;
+		}
+		.shlink-item__copy-success {
+			display: inline-block;
+		}
+	}
+}
