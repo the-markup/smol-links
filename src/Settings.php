@@ -126,6 +126,15 @@ class Settings {
 			'shlink',
 			'shlink-generate'
 		);
+		if (! empty($this->options->get('domains'))) {
+			add_settings_field(
+				'shlink-default-domain',
+				__('Default domain', 'wp-shlink'),
+				[$this, 'default_domain_field'],
+				'shlink',
+				'shlink-generate'
+			);
+		}
 	}
 
 	function base_url_field() {
@@ -141,5 +150,16 @@ class Settings {
 	function generate_on_save_field() {
 		$value = htmlentities($this->options->get('generate_on_save'));
 		echo '<input type="checkbox" name="shlink_options[generate_on_save]" value="1" ' . checked( 1, $value, false ) . '>';
+	}
+
+	function default_domain_field() {
+		$domains = $this->options->get('domains');
+		$default = $this->options->get('default_domain');
+		echo "<select name=\"shlink_options[default_domain]\">\n";
+		foreach ($domains as $domain) {
+			$selected = ($default == $domain) ? ' selected="selected"' : '';
+			echo "<option value=\"$domain\">$domain</option>\n";
+		}
+		echo "</select>\n";
 	}
 }
