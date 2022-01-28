@@ -57,14 +57,24 @@
 	font-size: 14px;
 }
 
+.shlink-edit-field {
+	padding-bottom: 15px;
+}
+
 .shlink-label {
 	display: block;
 	font-weight: bold;
 	padding-bottom: 5px;
 }
 
-.shlink-edit-field {
-	padding-bottom: 15px;
+.shlink-long-url,
+.shlink-title {
+	width: 100%;
+	max-width: 600px;
+}
+
+.shlink-short-code {
+	width: 200px;
 }
 
 .shlink-list {

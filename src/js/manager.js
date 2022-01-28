@@ -1,5 +1,5 @@
 import '../css/manager.scss';
-var octicons = require('@primer/octicons');
+import { copy, check } from '@primer/octicons';
 
 class ShlinkManager {
 
@@ -80,10 +80,10 @@ class ShlinkManager {
 		return `
 			<span class="shlink-item__copy">
 				<span class="shlink-item__copy-link">
-					${octicons.copy.toSVG()}
+					${copy.toSVG()}
 				</span>
 				<span class="shlink-item__copy-success">
-					${octicons.check.toSVG()}
+					${check.toSVG()}
 				</span>
 			</span>
 		`;
@@ -220,11 +220,11 @@ class ShlinkManager {
 					<h3 class="shlink-edit-heading">${this.getCopyHTML()} ${shortUrl}</h3>
 					<div class="shlink-edit-field">
 						<label for="shlink-edit-title" class="shlink-label">Title</label>
-						<input type="text" id="shlink-edit-title" name="title" class="shlink-edit-title regular-text ltr" value="${item.getAttribute('data-title')}">
+						<input type="text" id="shlink-edit-title" name="title" class="shlink-title regular-text ltr" value="${item.getAttribute('data-title')}">
 					</div>
 					<div class="shlink-edit-field">
 						<label for="shlink-edit-long-url" class="shlink-label">Long URL</label>
-						<input type="text" id="shlink-edit-long-url" name="long_url" class="shlink-edit-long-url regular-text ltr" value="${item.getAttribute('data-long-url')}">
+						<input type="text" id="shlink-edit-long-url" name="long_url" class="shlink-long-url regular-text ltr" value="${item.getAttribute('data-long-url')}">
 					</div>
 					<div class="shlink-edit-buttons">
 						<input type="submit" value="Save" class="shlink-save button button-primary">
@@ -246,8 +246,8 @@ class ShlinkManager {
 		event.preventDefault();
 
 		let item = event.target.closest('.shlink-item');
-		let title = item.querySelector('.shlink-edit-title').value;
-		let longUrl = item.querySelector('.shlink-edit-long-url').value;
+		let title = item.querySelector('.shlink-title').value;
+		let longUrl = item.querySelector('.shlink-long-url').value;
 
 		item.classList.remove('shlink-item--is-editing');
 		item.classList.add('shlink-item--is-saving');
