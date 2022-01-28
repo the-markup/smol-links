@@ -49,6 +49,12 @@ class API {
 		return $this->request('GET', $endpoint, $args);
 	}
 
+	function get_domains() {
+		$base_url = $this->options->get('base_url');
+		$endpoint = "$base_url/rest/v2/domains";
+		return $this->request('GET', $endpoint);
+	}
+
 	function request($method, $endpoint, $args = null) {
 		$url = $endpoint;
 		$request = [

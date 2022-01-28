@@ -3,13 +3,60 @@
 namespace WP_Shlink;
 
 use WP_Shlink\Options;
+use WP_Shlink\API;
 
 class Settings {
 
 	function __construct() {
 		$this->options = Options::init();
+		$this->setup_domains();
 		add_action('admin_menu', [$this, 'on_admin_menu']);
 		add_action('admin_init', [$this, 'on_admin_init']);
+	}
+
+	function setup_domains() {
+		if (! $this->options->get('base_url') || ! $this->options->get('api_key')) {
+			return;
+		}
+		$domains = $this->options->get('domains');
+		$default = $this->options->get('default_domain');
+		if (empty($domains) || empty($default)) {
+			$domains = $this->load_domains();
+			if ($domains) {
+				$this->set_domains_option($domains);
+				$this->set_default_domain_option($domains);
+			}
+		}
+	}
+
+	function load_domains() {
+		$api = API::init();
+		$result = $api->get_domains();
+		if (! empty($result['domains']['data'])) {
+			return $result['domains']['data'];
+		}
+		return false;
+	}
+
+	function set_domains_option($domains) {
+		$domain_list = [];
+		foreach ($domains as $domain) {
+			$domain_list[] = $domain['domain'];
+		}
+		$this->options->set('domains', $domain_list);
+	}
+
+	function set_default_domain_option($domains) {
+		$default = null;
+		foreach ($domains as $domain) {
+			if (! empty($domain['isDefault'])) {
+				$default = $domain['domain'];
+			}
+		}
+		if (empty($default)) {
+			$default = $domains[0]['domain'];
+		}
+		$this->options->set('default_domain', $default);
 	}
 
 	function on_admin_menu() {
