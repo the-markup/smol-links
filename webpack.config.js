@@ -7,7 +7,8 @@ module.exports = {
 	...{
 		entry: {
 			editor: path.resolve(process.cwd(), 'src', 'js', 'editor.js'),
-			manager: path.resolve(process.cwd(), 'src', 'js', 'manager.js')
+			manager: path.resolve(process.cwd(), 'src', 'js', 'manager.js'),
+			settings: path.resolve(process.cwd(), 'src', 'js', 'settings.js')
 		},
 		performance: {
 			hints: false,

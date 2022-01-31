@@ -12,6 +12,8 @@ class Settings {
 		$this->setup_domains();
 		add_action('admin_menu', [$this, 'on_admin_menu']);
 		add_action('admin_init', [$this, 'on_admin_init']);
+		add_action('admin_enqueue_scripts', [$this, 'on_enqueue_assets']);
+		add_action('wp_ajax_reload_domains', [$this, 'ajax_reload_domains']);
 	}
 
 	function setup_domains() {
@@ -44,6 +46,7 @@ class Settings {
 			$domain_list[] = $domain['domain'];
 		}
 		$this->options->set('domains', $domain_list);
+		return $domain_list;
 	}
 
 	function set_default_domain_option($domains) {
@@ -57,6 +60,7 @@ class Settings {
 			$default = $domains[0]['domain'];
 		}
 		$this->options->set('default_domain', $default);
+		return $default;
 	}
 
 	function on_admin_menu() {
@@ -155,11 +159,48 @@ class Settings {
 	function default_domain_field() {
 		$domains = $this->options->get('domains');
 		$default = $this->options->get('default_domain');
-		echo "<select name=\"shlink_options[default_domain]\">\n";
+		echo "<select name=\"shlink_options[default_domain]\" class=\"shlink-domain-list\">\n";
 		foreach ($domains as $domain) {
 			$selected = ($default == $domain) ? ' selected="selected"' : '';
 			echo "<option value=\"$domain\">$domain</option>\n";
 		}
 		echo "</select>\n";
+		echo "<p><a href=\"#\" class=\"shlink-reload-domains\">Reload domain list</a></p>\n";
+	}
+
+	function on_enqueue_assets($suffix) {
+		if ($suffix != 'settings_page_shlink') {
+			return;
+		}
+
+		wp_enqueue_script(
+			'wp-shlink-settings',
+			plugins_url('build/settings.js', __DIR__),
+			[],
+			filemtime(plugin_dir_path(__DIR__) . 'build/settings.js')
+		);
+
+		wp_enqueue_style(
+			'wp-shlink-manager',
+			plugins_url('build/settings.css', __DIR__),
+			[],
+			filemtime(plugin_dir_path(__DIR__) . 'build/settings.css')
+		);
+	}
+
+	function ajax_reload_domains() {
+		$domains = $this->load_domains();
+		if ($domains) {
+			$list = $this->set_domains_option($domains);
+			$default = $this->set_default_domain_option($domains);
+			header('Content-Type: application/json');
+			echo wp_json_encode([
+				'ok' => true,
+				'domains' => $list,
+				'default_domain' => $default
+			]);
+		}
+
+		exit;
 	}
 }

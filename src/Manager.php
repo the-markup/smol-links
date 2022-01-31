@@ -36,7 +36,7 @@ class Manager {
 		wp_enqueue_script(
 			'wp-shlink-manager',
 			plugins_url('build/manager.js', __DIR__),
-			['jquery'],
+			[],
 			filemtime(plugin_dir_path(__DIR__) . 'build/manager.js')
 		);
 
