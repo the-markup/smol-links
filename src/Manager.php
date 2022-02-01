@@ -95,9 +95,9 @@ class Manager {
 		if (count($domains) == 1) {
 			$domain = htmlentities($domains[0]);
 			echo "<span class=\"shlink-short-code-domain\">https://$domain/</span>";
-			echo "<input type=\"hidden\" name=\"domain\" value=\"$domain\">";
+			echo "<input type=\"hidden\" name=\"domain\" value=\"$domain\" class=\"shlink-domain\">";
 		} else {
-			echo "<select class=\"shlink-short-code-domain\">\n";
+			echo "<select class=\"shlink-short-code-domain shlink-domain\">\n";
 			foreach ($domains as $domain) {
 				$selected = ($domain == $default) ? ' selected="selected"' : '';
 				$domain = htmlentities($domain);

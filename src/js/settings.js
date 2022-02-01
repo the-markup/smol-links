@@ -18,6 +18,7 @@ class ShlinkSettings {
 		let linkOriginalLabel = link.innerHTML;
 		link.innerHTML = 'Loading domains...';
 		link.classList.add('is-loading');
+		link.blur();
 		let select = document.querySelector('.shlink-domain-list');
 		select.setAttribute('disabled', 'disabled');
 		let selectedDomain = select.options[select.selectedIndex].value;
@@ -47,7 +48,7 @@ class ShlinkSettings {
 			}
 			link.innerHTML = linkOriginalLabel;
 		} else {
-			link.innerHTML = 'Error loading domains';
+			link.innerHTML = result.error || 'Error reloading domains';
 		}
 		link.classList.remove('is-loading');
 		select.removeAttribute('disabled');

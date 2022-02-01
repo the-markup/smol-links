@@ -104,6 +104,7 @@ class ShlinkManager {
 		let longURLField = form.querySelector('.shlink-long-url');
 		let shortCodeField = form.querySelector('.shlink-short-code');
 		let titleField = form.querySelector('.shlink-title');
+		let domainField = form.querySelector('.shlink-domain');
 
 		if (longURLField.value == '') {
 			feedback.innerHTML = `
@@ -119,6 +120,7 @@ class ShlinkManager {
 		longURLField.setAttribute('readonly', 'readonly');
 		shortCodeField.setAttribute('readonly', 'readonly');
 		titleField.setAttribute('readonly', 'readonly');
+		domainField.setAttribute('disabled', 'disabled');
 
 		let list = document.querySelector('.shlink-list');
 		list.innerHTML = this.getItemHTML({
@@ -141,7 +143,8 @@ class ShlinkManager {
 				action: 'create_shlink',
 				long_url: longURLField.value,
 				short_code: shortCodeField.value,
-				title: titleField.value
+				title: titleField.value,
+				domain: this.getDomain()
 			})
 		});
 
@@ -152,6 +155,7 @@ class ShlinkManager {
 		longURLField.removeAttribute('readonly');
 		shortCodeField.removeAttribute('readonly');
 		titleField.removeAttribute('readonly');
+		domainField.removeAttribute('disabled');
 
 		if (response.shlink && response.shlink.shortCode) {
 			item.innerHTML = this.getItemContentHTML(response.shlink);
@@ -176,6 +180,15 @@ class ShlinkManager {
 					<p>${title}. ${detail}.</p>
 				</div>
 			`;
+		}
+	}
+
+	getDomain() {
+		let field = document.querySelector('.shlink-domain');
+		if (field.nodeName.toLowerCase == 'select') {
+			return field.options[field.selectedIndex].value;
+		} else {
+			return field.value;
 		}
 	}
 

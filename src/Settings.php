@@ -189,18 +189,27 @@ class Settings {
 	}
 
 	function ajax_reload_domains() {
-		$domains = $this->load_domains();
-		if ($domains) {
-			$list = $this->set_domains_option($domains);
-			$default = $this->set_default_domain_option($domains);
-			header('Content-Type: application/json');
-			echo wp_json_encode([
-				'ok' => true,
-				'domains' => $list,
-				'default_domain' => $default
-			]);
+		$errorMessage = 'Could not reload domains.';
+		try {
+			$domains = $this->load_domains();
+			if ($domains) {
+				$list = $this->set_domains_option($domains);
+				$default = $this->set_default_domain_option($domains);
+				header('Content-Type: application/json');
+				echo wp_json_encode([
+					'ok' => true,
+					'domains' => $list,
+					'default_domain' => $default
+				]);
+				exit;
+			}
+		} catch (Exception $error) {
+			$errorMessage = $error->getMessage();
 		}
-
+		echo wp_json_encode([
+			'ok' => false,
+			'error' => $errorMessage
+		]);
 		exit;
 	}
 }
