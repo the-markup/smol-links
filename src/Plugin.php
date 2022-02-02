@@ -99,19 +99,21 @@ class Plugin {
 				return;
 			}
 
-			$shlink = $this->get_post_shlink($post);
-			$site_url = parse_url(get_site_url());
-
 			$request = [
 				'longUrl' => $long_url,
-				'title' => $post->post_title,
-				'tags' => [
+				'title' => $post->post_title
+			];
+
+			$site_url = parse_url(get_site_url());
+			if (! empty($site_url['host'])) {
+				$request['tags'] = [
 					'wp-shlink-onsave',
 					"wp-shlink-site:{$site_url['host']}",
 					"wp-shlink-post:{$post->ID}"
-				]
-			];
+				];
+			}
 
+			$shlink = $this->get_post_shlink($post);
 			if (empty($shlink)) {
 				$response = $this->api->create_shlink($request);
 				$this->save_post_response($response, $post);
