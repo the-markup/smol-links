@@ -117,14 +117,13 @@ class Plugin {
 			if (empty($shlink)) {
 				$response = $this->api->create_shlink($request);
 				$this->save_post_response($response, $post);
-			} else if ($shlink['long_url'] != $long_url) {
+			} else {
 				$short_code = $shlink['short_code'];
 				$response = $this->api->update_shlink($short_code, $request);
 				$this->save_post_response($response, $post);
 			}
 
 		} catch (\Exception $err) {
-			\dbug($err->getMessage());
 			if ( function_exists( '\wp_sentry_safe' ) ) {
 				\wp_sentry_safe( function ( $client ) use ( $err ) {
 					$client->captureException( $err );
