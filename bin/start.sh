@@ -27,6 +27,5 @@ echo
 npm install
 echo
 
-echo "Starting dev server..."
-echo
+echo "Starting webpack..."
 npm run start
