@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shlink 0.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-shlink\n"
-"POT-Creation-Date: 2022-01-14 21:34:10+00:00\n"
+"POT-Creation-Date: 2022-02-03 22:27:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,12 +24,16 @@ msgstr ""
 "X-Textdomain-Support: yes\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
-#: src/Manager.php:20 src/Manager.php:53
+#: src/Manager.php:21 src/Manager.php:60 src/Manager.php:94
 msgid "Shlink Manager"
 msgstr ""
 
-#: src/Manager.php:21
+#: src/Manager.php:22
 msgid "Shlinks"
+msgstr ""
+
+#: src/Manager.php:98
+msgid "Please configure Shlink API settings."
 msgstr ""
 
 #: src/Settings.php:17 src/Settings.php:44

@@ -20,6 +20,26 @@ A WordPress dashboard interface for managing a self-hosted [Shlink URL shortener
 * Create and edit Shlinks short links from a manager interface
 * Optionally generate new short URLs upon saving new posts
 
+# Developer setup #
+
+__Developer dependencies:__
+
+* [node.js](https://nodejs.org/) (tested on v16)
+* [Docker Desktop](https://www.docker.com/products/docker-desktop)
+
+__Build and start:__
+
+```
+./bin/build.sh
+./bin/start.sh
+```
+
+__Running tests:__
+
+```
+docker-compose exec web composer --working-dir="/var/www/html/wp-content/plugins/wp-shlink" test
+```
+
 ## Installation ##
 
 1. Upload `wp-shlink` folder to the `/wp-content/plugins/` directory
