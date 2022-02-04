@@ -99,23 +99,31 @@ class Plugin {
 				return;
 			}
 
-			$shlink = $this->get_post_shlink($post);
-			$site_url = parse_url(get_site_url());
-
 			$request = [
 				'longUrl' => $long_url,
-				'title' => $post->post_title,
-				'tags' => [
+				'title' => $post->post_title
+			];
+
+			$site_url = parse_url(get_site_url());
+
+			// This conditional exists because in some conditions, for example
+			// when a save is cron-initiated, we cannot expect a valid URL from
+			// get_site_url(). And if you omit the 'tags' part of a shlink
+			// update, the tags assigned previously are still retained.
+			// (dphiffer/2022-02-04)
+			if (! empty($site_url['host'])) {
+				$request['tags'] = [
 					'wp-shlink-onsave',
 					"wp-shlink-site:{$site_url['host']}",
 					"wp-shlink-post:{$post->ID}"
-				]
-			];
+				];
+			}
 
+			$shlink = $this->get_post_shlink($post);
 			if (empty($shlink)) {
 				$response = $this->api->create_shlink($request);
 				$this->save_post_response($response, $post);
-			} else if ($shlink['long_url'] != $long_url) {
+			} else {
 				$short_code = $shlink['short_code'];
 				$response = $this->api->update_shlink($short_code, $request);
 				$this->save_post_response($response, $post);
