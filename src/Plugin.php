@@ -105,12 +105,13 @@ class Plugin {
 			];
 
 			$site_url = parse_url(get_site_url());
+
+			// This conditional exists because in some conditions, for example
+			// when a save is cron-initiated, we cannot expect a valid URL from
+			// get_site_url(). And if you omit the 'tags' part of a shlink
+			// update, the tags assigned previously are still retained.
+			// (dphiffer/2022-02-04)
 			if (! empty($site_url['host'])) {
-				// This conditional exists because in some conditions, for example
-				// when a save is cron-initiated, we cannot expect a valid URL from
-				// get_site_url(). And if you omit the 'tags' part of a shlink
-				// update, the tags assigned previously are still retained.
-				// (dphiffer/2022-02-04)
 				$request['tags'] = [
 					'wp-shlink-onsave',
 					"wp-shlink-site:{$site_url['host']}",
