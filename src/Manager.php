@@ -36,7 +36,7 @@ class Manager {
 		wp_enqueue_script(
 			'wp-shlink-manager',
 			plugins_url('build/manager.js', __DIR__),
-			['jquery'],
+			[],
 			filemtime(plugin_dir_path(__DIR__) . 'build/manager.js')
 		);
 
@@ -66,12 +66,12 @@ class Manager {
 					<input type="text" name="long_url" id="shlink-create__long-url" class="shlink-long-url regular-text ltr">
 				</div>
 				<div class="shlink-edit-field">
-					<label for="shlink-create__short-code" class="shlink-label shlink-label--optional">Short code</label>
-					<input type="text" name="short_code" id="shlink-create__short-code" class="shlink-short-code regular-text ltr">
-				</div>
-				<div class="shlink-edit-field">
 					<label for="shlink-create__title" class="shlink-label shlink-label--optional">Title</label>
 					<input type="text" name="title" id="shlink-create__title" class="shlink-title regular-text ltr">
+				</div>
+				<div class="shlink-edit-field">
+					<label for="shlink-create__short-code" class="shlink-label shlink-label--optional">Short code</label>
+					<?php $this->short_code_domain(); ?><input type="text" name="short_code" id="shlink-create__short-code" class="shlink-short-code regular-text ltr">
 				</div>
 				<div class="shlink-buttons">
 					<input type="submit" value="Shorten" class="shlinkn-submit button button-primary">
@@ -86,6 +86,25 @@ class Manager {
 			</div>
 		</div>
 		<?php
+	}
+
+	function short_code_domain() {
+		$options = Options::init();
+		$domains = $options->get('domains');
+		$default = $options->get('default_domain');
+		if (count($domains) == 1) {
+			$domain = htmlentities($domains[0]);
+			echo "<span class=\"shlink-short-code-domain\">https://$domain/</span>";
+			echo "<input type=\"hidden\" name=\"domain\" value=\"$domain\" class=\"shlink-domain\">";
+		} else {
+			echo "<select class=\"shlink-short-code-domain shlink-domain\">\n";
+			foreach ($domains as $domain) {
+				$selected = ($domain == $default) ? ' selected="selected"' : '';
+				$domain = htmlentities($domain);
+				echo "<option value=\"$domain\"$selected>https://$domain</option>\n";
+			}
+			echo "</select> /\n";
+		}
 	}
 
 	function config_error() {

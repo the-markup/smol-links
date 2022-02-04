@@ -122,7 +122,6 @@ class Plugin {
 			}
 
 		} catch (\Exception $err) {
-			\dbug($err->getMessage());
 			if ( function_exists( '\wp_sentry_safe' ) ) {
 				\wp_sentry_safe( function ( $client ) use ( $err ) {
 					$client->captureException( $err );

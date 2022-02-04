@@ -29,7 +29,9 @@ class Options {
 		$defaults = [
 			'base_url' => '',
 			'api_key' => '',
-			'generate_on_save' => false
+			'generate_on_save' => false,
+			'domains' => [],
+			'default_domain' => null
 		];
 		$saved_options = get_option('shlink_options') ?: [];
 		$this->options = array_merge($defaults, $saved_options);
