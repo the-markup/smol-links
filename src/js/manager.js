@@ -8,7 +8,7 @@ class ShlinkManager {
 	}
 
 	load() {
-		return fetch(`/wp-admin/admin-ajax.php?action=get_shlinks&_wpnonce=${nonces.get_shlinks}`);
+		return fetch(`/wp-admin/admin-ajax.php?action=get_shlinks&_wpnonce=${shlink_nonces.get_shlinks}`);
 	}
 
 	async showResults(result) {
@@ -154,7 +154,7 @@ class ShlinkManager {
 				short_code: shortCodeField.value,
 				title: titleField.value,
 				domain: this.getDomain(),
-				_wpnonce: nonces.create_shlink
+				_wpnonce: shlink_nonces.create_shlink
 			})
 		});
 
@@ -240,7 +240,7 @@ class ShlinkManager {
 			form.setAttribute('method', 'POST');
 			form.classList.add('shlink-item__edit');
 			form.innerHTML = `
-					<input type="hidden" name="_wpnonce" value="${this.escape(nonces.save_shlink)}">
+					<input type="hidden" name="_wpnonce" value="${this.escape(shlink_nonces.save_shlink)}">
 					<h3 class="shlink-edit-heading">${this.getCopyHTML()} ${shortUrl}</h3>
 					<div class="shlink-edit-field">
 						<label for="shlink-edit-title" class="shlink-label">Title</label>
@@ -286,7 +286,7 @@ class ShlinkManager {
 				title: title,
 				long_url: longUrl,
 				short_code: item.getAttribute('data-short-code'),
-				_wpnonce: nonces.update_shlink
+				_wpnonce: shlink_nonces.update_shlink
 			})
 		});
 		let response = await result.json();
