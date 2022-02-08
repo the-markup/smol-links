@@ -46,6 +46,12 @@ class Manager {
 			[],
 			filemtime(plugin_dir_path(__DIR__) . 'build/manager.css')
 		);
+
+		wp_add_inline_script('wp-shlink-manager', 'var shlink_nonces = ' . wp_json_encode([
+			'get_shlinks'   => wp_create_nonce('get_shlinks'),
+			'create_shlink' => wp_create_nonce('create_shlink'),
+			'update_shlink'   => wp_create_nonce('update_shlink')
+		]) . ';', 'before');
 	}
 
 	function manager_page() {
@@ -123,6 +129,7 @@ class Manager {
 
 	function ajax_get_shlinks() {
 		try {
+			check_ajax_referer('get_shlinks');
 			$response = $this->api->get_shlinks([
 				'page'         => 1,
 				'itemsPerPage' => 25,
@@ -145,6 +152,7 @@ class Manager {
 	}
 
 	function ajax_create_shlink() {
+		check_ajax_referer('create_shlink');
 		$request = [
 			'longUrl' => $_POST['long_url'],
 			'title'   => $_POST['title']
@@ -162,6 +170,7 @@ class Manager {
 	}
 
 	function ajax_update_shlink() {
+		check_ajax_referer('update_shlink');
 		$response = $this->api->update_shlink($_POST['short_code'], [
 			'longUrl' => $_POST['long_url'],
 			'title'   => $_POST['title']
