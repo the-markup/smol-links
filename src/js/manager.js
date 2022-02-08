@@ -8,25 +8,34 @@ class ShlinkManager {
 	}
 
 	load() {
-		return fetch('/wp-admin/admin-ajax.php?action=get_shlinks');
+		return fetch(`/wp-admin/admin-ajax.php?action=get_shlinks&_wpnonce=${nonces.get_shlinks}`);
 	}
 
 	async showResults(result) {
-		let response = await result.json();
-		let html = 'Oops, something unexpected happened';
+		try {
+			let response = await result.json();
+			let html = 'Oops, something unexpected happened';
 
-		if (! response.ok || ! response.shlink) {
-			html = 'Error: ' + (response.error || 'something went wrong loading shlinks. Try again?');
-		} else {
-			html = this.getListHTML(response.shlink.shortUrls.data);
+			if (! response.ok || ! response.shlink) {
+				html = 'Error: ' + (response.error || 'something went wrong loading shlinks. Try again?');
+			} else {
+				html = this.getListHTML(response.shlink.shortUrls.data);
+			}
+
+			let el = document.querySelector('.shlink-manager');
+			el.innerHTML = html;
+			el.addEventListener('click', this.clickHandler.bind(this));
+
+			let form = document.querySelector('.shlink-create');
+			form.addEventListener('submit', this.createShlink.bind(this));
+		} catch(err) {
+			let loading = document.querySelector('.shlink-loading');
+			loading.innerHTML = `
+				<div class="notice notice-error is-dismissible">
+					<p>There was an error loading shlinks.</p>
+				</div>
+			`;
 		}
-
-		let el = document.querySelector('.shlink-manager');
-		el.innerHTML = html;
-		el.addEventListener('click', this.clickHandler.bind(this));
-
-		let form = document.querySelector('.shlink-create');
-		form.addEventListener('submit', this.createShlink.bind(this));
 	}
 
 	getListHTML(data) {
@@ -144,7 +153,8 @@ class ShlinkManager {
 				long_url: longURLField.value,
 				short_code: shortCodeField.value,
 				title: titleField.value,
-				domain: this.getDomain()
+				domain: this.getDomain(),
+				_wpnonce: nonces.create_shlink
 			})
 		});
 
@@ -230,6 +240,7 @@ class ShlinkManager {
 			form.setAttribute('method', 'POST');
 			form.classList.add('shlink-item__edit');
 			form.innerHTML = `
+					<input type="hidden" name="_wpnonce" value="${this.escape(nonces.save_shlink)}">
 					<h3 class="shlink-edit-heading">${this.getCopyHTML()} ${shortUrl}</h3>
 					<div class="shlink-edit-field">
 						<label for="shlink-edit-title" class="shlink-label">Title</label>
@@ -274,7 +285,8 @@ class ShlinkManager {
 				action: 'update_shlink',
 				title: title,
 				long_url: longUrl,
-				short_code: item.getAttribute('data-short-code')
+				short_code: item.getAttribute('data-short-code'),
+				_wpnonce: nonces.update_shlink
 			})
 		});
 		let response = await result.json();
@@ -302,6 +314,8 @@ class ShlinkManager {
 				}
 			}
 		}
+		item.classList.add('shlink-item--is-editing');
+		item.classList.remove('shlink-item--is-saving');
 		alert('Sorry, there was a problem saving changes to the Shlink.');
 		return false;
 	}
