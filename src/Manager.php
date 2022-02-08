@@ -47,11 +47,11 @@ class Manager {
 			filemtime(plugin_dir_path(__DIR__) . 'build/manager.css')
 		);
 
-		wp_localize_script('wp-shlink-manager', 'nonces', [
+		wp_add_inline_script('wp-shlink-manager', 'var nonces = ' . wp_json_encode([
 			'get_shlinks'   => wp_create_nonce('get_shlinks'),
 			'create_shlink' => wp_create_nonce('create_shlink'),
 			'update_shlink'   => wp_create_nonce('update_shlink')
-		]);
+		]), 'before');
 	}
 
 	function manager_page() {
