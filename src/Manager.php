@@ -51,7 +51,7 @@ class Manager {
 			'get_shlinks'   => wp_create_nonce('get_shlinks'),
 			'create_shlink' => wp_create_nonce('create_shlink'),
 			'update_shlink'   => wp_create_nonce('update_shlink')
-		]), 'before');
+		]) . ';', 'before');
 	}
 
 	function manager_page() {
