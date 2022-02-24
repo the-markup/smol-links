@@ -155,7 +155,8 @@ class Manager {
 		check_ajax_referer('create_shlink');
 		$request = [
 			'longUrl' => $_POST['long_url'],
-			'title'   => $_POST['title']
+			'title'   => $_POST['title'],
+			'tags'    => $this->get_tags()
 		];
 		if (! empty($_POST['short_code'])) {
 			$request['customSlug'] = $_POST['short_code'];
@@ -181,6 +182,19 @@ class Manager {
 			'shlink' => $response
 		]);
 		exit;
+	}
+
+	function get_tags() {
+		$user = wp_get_current_user();
+		$tags = [
+			'wp-shlink-manager',
+			"wp-shlink-user:{$user->user_login}"
+		];
+		$site_url = parse_url(get_site_url());
+		if (! empty($site_url['host'])) {
+			$tags[] = "wp-shlink-site:{$site_url['host']}";
+		}
+		return $tags;
 	}
 
 }
