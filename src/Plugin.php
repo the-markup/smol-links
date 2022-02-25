@@ -198,7 +198,7 @@ class Plugin {
 	}
 
 	/**
-	 * Adds tags to shlinks prior.
+	 * Adds standard tags to shlinks
 	 *
 	 * @param array $tags array of base tags to apply
 	 */
