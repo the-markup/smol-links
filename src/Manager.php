@@ -130,6 +130,7 @@ class Manager {
 	function ajax_get_shlinks() {
 		try {
 			check_ajax_referer('get_shlinks');
+
 			$response = $this->api->get_shlinks([
 				'page'         => 1,
 				'itemsPerPage' => 25,
@@ -153,15 +154,23 @@ class Manager {
 
 	function ajax_create_shlink() {
 		check_ajax_referer('create_shlink');
+
 		$request = [
-			'longUrl' => $_POST['long_url'],
-			'title'   => $_POST['title'],
-			'tags'    => $this->get_tags()
+			'longUrl' => apply_filters('shlink_long_url', $_POST['long_url']),
+			'title'   => $_POST['title']
 		];
+
 		if (! empty($_POST['short_code'])) {
 			$request['customSlug'] = $_POST['short_code'];
 		}
+
+		$tags = apply_filters('shlink_tags', ['wp-shlink-manager']);
+		if (is_array($tags)) {
+			$request['tags'] = $tags;
+		}
+
 		$response = $this->api->create_shlink($request);
+
 		header('Content-Type: application/json');
 		echo wp_json_encode([
 			'ok' => true,
@@ -172,29 +181,25 @@ class Manager {
 
 	function ajax_update_shlink() {
 		check_ajax_referer('update_shlink');
-		$response = $this->api->update_shlink($_POST['short_code'], [
-			'longUrl' => $_POST['long_url'],
+
+		$request = [
+			'longUrl' => apply_filters('shlink_long_url', $_POST['long_url']),
 			'title'   => $_POST['title']
-		]);
+		];
+
+		$tags = apply_filters('shlink_tags', ['wp-shlink-manager']);
+		if (is_array($tags)) {
+			$request['tags'] = $tags;
+		}
+
+		$response = $this->api->update_shlink($_POST['short_code'], $request);
+
 		header('Content-Type: application/json');
 		echo wp_json_encode([
 			'ok' => true,
 			'shlink' => $response
 		]);
 		exit;
-	}
-
-	function get_tags() {
-		$user = wp_get_current_user();
-		$tags = [
-			'wp-shlink-manager',
-			"wp-shlink-user:{$user->user_login}"
-		];
-		$site_url = parse_url(get_site_url());
-		if (! empty($site_url['host'])) {
-			$tags[] = "wp-shlink-site:{$site_url['host']}";
-		}
-		return $tags;
 	}
 
 }
