@@ -7,7 +7,7 @@ use WP_Shlink\Options;
 
 class Manager {
 
-	var $tabs = [
+	var $default_tabs = [
 		'All'       => [],
 		'Manual'    => ['tags[]' => 'wp-shlink-manager'],
 		'Automatic' => ['tags[]' => 'wp-shlink-onsave']
@@ -15,6 +15,7 @@ class Manager {
 
 	function __construct() {
 		$this->api = API::init();
+		$this->tabs = apply_filters('shlink_manager_tabs', $this->default_tabs);
 		add_action('admin_menu', [$this, 'on_admin_menu']);
 		add_action('admin_enqueue_scripts', [$this, 'on_enqueue_assets']);
 		add_action('wp_ajax_get_shlinks', [$this, 'ajax_get_shlinks']);
