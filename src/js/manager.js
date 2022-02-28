@@ -44,7 +44,7 @@ class ShlinkManager {
 	}
 
 	getListHTML(data) {
-		let html = '<ul class="shlink-list">';
+		let html = '<ul>';
 		for (let shlink of data) {
 			html += this.getItemHTML(shlink);
 		}
@@ -136,7 +136,7 @@ class ShlinkManager {
 		titleField.setAttribute('readonly', 'readonly');
 		domainField.setAttribute('disabled', 'disabled');
 
-		let list = document.querySelector('.shlink-list');
+		let list = document.querySelector('.shlink-list ul');
 		list.innerHTML = this.getItemHTML({
 			longUrl: longURLField.value,
 			shortCode: shortCodeField.value,
