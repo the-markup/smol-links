@@ -7,13 +7,25 @@ use WP_Shlink\Options;
 
 class Manager {
 
+	var $default_tabs = [
+		'All'            => [],
+		'Manual'         => ['tags[]' => 'wp-shlink-manager'],
+		'Auto-generated' => ['tags[]' => 'wp-shlink-onsave']
+	];
+
 	function __construct() {
 		$this->api = API::init();
+		add_filter('shlink_manager_tabs', [$this, 'add_my_links_tab']);
+		add_action('init', [$this, 'on_init']);
 		add_action('admin_menu', [$this, 'on_admin_menu']);
 		add_action('admin_enqueue_scripts', [$this, 'on_enqueue_assets']);
 		add_action('wp_ajax_get_shlinks', [$this, 'ajax_get_shlinks']);
 		add_action('wp_ajax_create_shlink', [$this, 'ajax_create_shlink']);
 		add_action('wp_ajax_update_shlink', [$this, 'ajax_update_shlink']);
+	}
+
+	function on_init() {
+		$this->tabs = apply_filters('shlink_manager_tabs', $this->default_tabs);
 	}
 
 	function on_admin_menu() {
@@ -84,14 +96,62 @@ class Manager {
 				</div>
 			</form>
 			<div class="shlink-manager">
-				<div class="shlink-loading">
-					<span class="shlink-loading-dot shlink-loading-dot--1"></span>
-					<span class="shlink-loading-dot shlink-loading-dot--2"></span>
-					<span class="shlink-loading-dot shlink-loading-dot--3"></span>
+				<?php $this->manager_tabs(); ?>
+				<div class="shlink-list">
+					<div class="shlink-loading">
+						<span class="shlink-loading-dot shlink-loading-dot--1"></span>
+						<span class="shlink-loading-dot shlink-loading-dot--2"></span>
+						<span class="shlink-loading-dot shlink-loading-dot--3"></span>
+					</div>
 				</div>
 			</div>
 		</div>
 		<?php
+	}
+
+	function add_my_links_tab($tabs) {
+		$user = wp_get_current_user();
+		$new_tabs = [];
+		foreach ($tabs as $key => $query) {
+			$new_tabs[$key] = $query;
+			if ($key == 'All') {
+				// Add a 'My Links' tab right after 'All'
+				$new_tabs['My Links'] = ['tags[]' => "wp-shlink-user:{$user->user_login}"];
+			}
+		}
+		return $new_tabs;
+	}
+
+	function manager_tabs() {
+		?>
+		<div class="shlink-tabs">
+			<ul>
+				<?php
+
+				foreach ($this->tabs as $tab => $query) {
+					$selected = ($this->current_tab() == $tab) ? ' class="selected"' : '';
+					echo "<li><a href=\"?page=shlinks&tab=$tab\"$selected>$tab</a></li>";
+				}
+
+				?>
+			</ul>
+		</div>
+		<?php
+	}
+
+	function current_tab() {
+		// Check for a 'tab' query string
+		if (! empty($_GET['tab'])) {
+			$tab = $_GET['tab'];
+			if (isset($this->tabs[$tab])) {
+				return $tab;
+			}
+		}
+
+		// Otherwise default to the the first tab
+		foreach ($this->tabs as $tab => $query) {
+			return $tab;
+		}
 	}
 
 	function short_code_domain() {
@@ -130,12 +190,24 @@ class Manager {
 	function ajax_get_shlinks() {
 		try {
 			check_ajax_referer('get_shlinks');
-
-			$response = $this->api->get_shlinks([
+			$request = [
 				'page'         => 1,
 				'itemsPerPage' => 25,
 				'orderBy'      => 'dateCreated-DESC'
-			]);
+			];
+
+			$tab = 'All';
+			if (! empty($_GET['tab'])) {
+				$tab = $_GET['tab'];
+			}
+
+			if (! isset($this->tabs[$tab])) {
+				$tab = 'All';
+			}
+
+			$query = $this->tabs[$tab];
+			$request = array_merge($request, $query);
+			$response = $this->api->get_shlinks($request);
 
 			header('Content-Type: application/json');
 			echo wp_json_encode([

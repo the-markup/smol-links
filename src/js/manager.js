@@ -8,7 +8,12 @@ class ShlinkManager {
 	}
 
 	load() {
-		return fetch(`/wp-admin/admin-ajax.php?action=get_shlinks&_wpnonce=${shlink_nonces.get_shlinks}`);
+		let tab = 'All';
+		let tabQueryString = location.search.match(/tab=([^&]+)/);
+		if (tabQueryString) {
+			tab = tabQueryString[1];
+		}
+		return fetch(`/wp-admin/admin-ajax.php?action=get_shlinks&tab=${tab}&_wpnonce=${shlink_nonces.get_shlinks}`);
 	}
 
 	async showResults(result) {
@@ -22,7 +27,7 @@ class ShlinkManager {
 				html = this.getListHTML(response.shlink.shortUrls.data);
 			}
 
-			let el = document.querySelector('.shlink-manager');
+			let el = document.querySelector('.shlink-list');
 			el.innerHTML = html;
 			el.addEventListener('click', this.clickHandler.bind(this));
 
@@ -39,7 +44,7 @@ class ShlinkManager {
 	}
 
 	getListHTML(data) {
-		let html = '<ul class="shlink-list">';
+		let html = '<ul>';
 		for (let shlink of data) {
 			html += this.getItemHTML(shlink);
 		}
@@ -131,7 +136,7 @@ class ShlinkManager {
 		titleField.setAttribute('readonly', 'readonly');
 		domainField.setAttribute('disabled', 'disabled');
 
-		let list = document.querySelector('.shlink-list');
+		let list = document.querySelector('.shlink-list ul');
 		list.innerHTML = this.getItemHTML({
 			longUrl: longURLField.value,
 			shortCode: shortCodeField.value,
