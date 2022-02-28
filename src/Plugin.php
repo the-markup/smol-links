@@ -54,6 +54,7 @@ class Plugin {
 		$this->api = API::init();
 		$this->admin = new Admin($this->options);
 		add_action('save_post', [$this, 'on_save_post']);
+		add_filter('shlink_tags', [$this, 'shlink_tags']);
 	}
 
 	/**
@@ -100,23 +101,16 @@ class Plugin {
 			}
 
 			$request = [
-				'longUrl' => $long_url,
-				'title' => $post->post_title
+				'longUrl' => apply_filters('shlink_long_url', $long_url),
+				'title'   => $post->post_title
 			];
 
-			$site_url = parse_url(get_site_url());
-
-			// This conditional exists because in some conditions, for example
-			// when a save is cron-initiated, we cannot expect a valid URL from
-			// get_site_url(). And if you omit the 'tags' part of a shlink
-			// update, the tags assigned previously are still retained.
-			// (dphiffer/2022-02-04)
-			if (! empty($site_url['host'])) {
-				$request['tags'] = [
-					'wp-shlink-onsave',
-					"wp-shlink-site:{$site_url['host']}",
-					"wp-shlink-post:{$post->ID}"
-				];
+			$tags = apply_filters('shlink_tags', [
+				'wp-shlink-onsave',
+				"wp-shlink-post:{$post->ID}"
+			]);
+			if (is_array($tags)) {
+				$request['tags'] = $tags;
 			}
 
 			$shlink = $this->get_post_shlink($post);
@@ -201,6 +195,30 @@ class Plugin {
 		} else {
 			throw new \Exception("wp-shlink: no 'shortUrl' found in API response");
 		}
+	}
+
+	/**
+	 * Adds standard tags to shlinks
+	 *
+	 * @param array $tags array of base tags to apply
+	 */
+	function shlink_tags($tags = []) {
+		$site_url = parse_url(get_site_url());
+		$user = wp_get_current_user();
+
+		// This conditional exists because in some conditions, for example
+		// when a save is cron-initiated, we cannot expect a valid URL from
+		// get_site_url(). And if you omit the 'tags' part of a shlink
+		// update, the tags assigned previously are still retained.
+		// (dphiffer/2022-02-04)
+		if (empty($site_url['host']) || empty($user->user_login)) {
+			return null;
+		}
+
+		$tags[] = "wp-shlink-site:{$site_url['host']}";
+		$tags[] = "wp-shlink-user:{$user->user_login}";
+
+		return $tags;
 	}
 
 }
