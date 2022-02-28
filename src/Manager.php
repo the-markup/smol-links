@@ -8,9 +8,9 @@ use WP_Shlink\Options;
 class Manager {
 
 	var $default_tabs = [
-		'All'       => [],
-		'Manual'    => ['tags[]' => 'wp-shlink-manager'],
-		'Automatic' => ['tags[]' => 'wp-shlink-onsave']
+		'All'            => [],
+		'Custom'         => ['tags[]' => 'wp-shlink-manager'],
+		'Auto-generated' => ['tags[]' => 'wp-shlink-onsave']
 	];
 
 	function __construct() {
@@ -119,17 +119,32 @@ class Manager {
 			</ul>
 		</div>
 		<?php
+
+		$user = wp_get_current_user();
+		if ($user->shlink_manager_tab != $this->current_tab()) {
+			// Remember which tab the user has selected
+			update_user_meta($user->ID, 'shlink_manager_tab', $this->current_tab());
+		}
 	}
 
 	function current_tab() {
+		// Check for a 'tab' query string
 		if (! empty($_GET['tab'])) {
 			$tab = $_GET['tab'];
 			if (isset($this->tabs[$tab])) {
 				return $tab;
 			}
 		}
+
+		// Check for the last tab this user requested
+		$user = wp_get_current_user();
+		if (! empty($user->shlink_manager_tab) &&
+		    isset($this->tabs[$user->shlink_manager_tab])) {
+				return $user->shlink_manager_tab;
+		}
+
+		// Otherwise default to the the first tab
 		foreach ($this->tabs as $tab => $query) {
-			// Return the first item's key
 			return $tab;
 		}
 	}
