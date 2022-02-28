@@ -7,6 +7,12 @@ use WP_Shlink\Options;
 
 class Manager {
 
+	var $tabs = [
+		'All'       => [],
+		'Manual'    => ['tags[]' => 'wp-shlink-manager'],
+		'Automatic' => ['tags[]' => 'wp-shlink-onsave']
+	];
+
 	function __construct() {
 		$this->api = API::init();
 		add_action('admin_menu', [$this, 'on_admin_menu']);
@@ -84,14 +90,47 @@ class Manager {
 				</div>
 			</form>
 			<div class="shlink-manager">
-				<div class="shlink-loading">
-					<span class="shlink-loading-dot shlink-loading-dot--1"></span>
-					<span class="shlink-loading-dot shlink-loading-dot--2"></span>
-					<span class="shlink-loading-dot shlink-loading-dot--3"></span>
+				<?php $this->manager_tabs(); ?>
+				<div class="shlink-list">
+					<div class="shlink-loading">
+						<span class="shlink-loading-dot shlink-loading-dot--1"></span>
+						<span class="shlink-loading-dot shlink-loading-dot--2"></span>
+						<span class="shlink-loading-dot shlink-loading-dot--3"></span>
+					</div>
 				</div>
 			</div>
 		</div>
 		<?php
+	}
+
+	function manager_tabs() {
+		?>
+		<div class="shlink-tabs">
+			<ul>
+				<?php
+
+				foreach ($this->tabs as $tab => $query) {
+					$selected = ($this->current_tab() == $tab) ? ' class="selected"' : '';
+					echo "<li><a href=\"?page=shlinks&tab=$tab\"$selected>$tab</a></li>";
+				}
+
+				?>
+			</ul>
+		</div>
+		<?php
+	}
+
+	function current_tab() {
+		if (! empty($_GET['tab'])) {
+			$tab = $_GET['tab'];
+			if (isset($this->tabs[$tab])) {
+				return $tab;
+			}
+		}
+		foreach ($this->tabs as $tab => $query) {
+			// Return the first item's key
+			return $tab;
+		}
 	}
 
 	function short_code_domain() {
@@ -130,12 +169,24 @@ class Manager {
 	function ajax_get_shlinks() {
 		try {
 			check_ajax_referer('get_shlinks');
-
-			$response = $this->api->get_shlinks([
+			$request = [
 				'page'         => 1,
 				'itemsPerPage' => 25,
 				'orderBy'      => 'dateCreated-DESC'
-			]);
+			];
+
+			$tab = 'All';
+			if (! empty($_GET['tab'])) {
+				$tab = $_GET['tab'];
+			}
+
+			if (! isset($this->tabs[$tab])) {
+				$tab = 'All';
+			}
+
+			$query = $this->tabs[$tab];
+			$request = array_merge($request, $query);
+			$response = $this->api->get_shlinks($request);
 
 			header('Content-Type: application/json');
 			echo wp_json_encode([

@@ -27,9 +27,43 @@
 .shlink-manager {
 	font-size: 14px;
 
-	> .shlink-loading {
+	.shlink-loading {
 		padding: 15px;
 		margin-left: 5px;
+	}
+}
+
+.shlink-tabs {
+	border-bottom: 2px solid #135e96;
+	font-size: 16px;
+	line-height: 39px;
+
+	ul {
+		display: flex;
+		margin-bottom: 0;
+		margin-left: 15px;
+	}
+
+	li {
+		list-style: none;
+		margin: 0 1px 0 0;
+	}
+
+	a {
+		background: #dedede;
+		text-decoration: none;
+		padding: 10px 15px;
+		height: 30px;
+		transition: background-color 0.1s ease-out;
+
+		&:hover {
+			background-color: #ccc;
+		}
+
+		&.selected {
+			color: #fff;
+			background-color: #135e96;
+		}
 	}
 }
 
@@ -93,7 +127,7 @@
 	}
 
 	.shlink-item__clicks {
-		min-width: 100px;
+		min-width: 125px;
 	}
 
 	.shlink-item__long-url {
@@ -150,7 +184,6 @@
 
 		.shlink-loading {
 			display: block;
-			margin-top: 5px;
 		}
 	}
 }
