@@ -9,18 +9,23 @@ class Manager {
 
 	var $default_tabs = [
 		'All'            => [],
-		'Custom'         => ['tags[]' => 'wp-shlink-manager'],
+		'Manual'         => ['tags[]' => 'wp-shlink-manager'],
 		'Auto-generated' => ['tags[]' => 'wp-shlink-onsave']
 	];
 
 	function __construct() {
 		$this->api = API::init();
-		$this->tabs = apply_filters('shlink_manager_tabs', $this->default_tabs);
+		add_filter('shlink_manager_tabs', [$this, 'add_my_links_tab']);
+		add_action('init', [$this, 'on_init']);
 		add_action('admin_menu', [$this, 'on_admin_menu']);
 		add_action('admin_enqueue_scripts', [$this, 'on_enqueue_assets']);
 		add_action('wp_ajax_get_shlinks', [$this, 'ajax_get_shlinks']);
 		add_action('wp_ajax_create_shlink', [$this, 'ajax_create_shlink']);
 		add_action('wp_ajax_update_shlink', [$this, 'ajax_update_shlink']);
+	}
+
+	function on_init() {
+		$this->tabs = apply_filters('shlink_manager_tabs', $this->default_tabs);
 	}
 
 	function on_admin_menu() {
@@ -104,6 +109,19 @@ class Manager {
 		<?php
 	}
 
+	function add_my_links_tab($tabs) {
+		$user = wp_get_current_user();
+		$new_tabs = [];
+		foreach ($tabs as $key => $query) {
+			$new_tabs[$key] = $query;
+			if ($key == 'All') {
+				// Add a 'My Links' tab right after 'All'
+				$new_tabs['My Links'] = ['tags[]' => "wp-shlink-user:{$user->user_login}"];
+			}
+		}
+		return $new_tabs;
+	}
+
 	function manager_tabs() {
 		?>
 		<div class="shlink-tabs">
@@ -119,12 +137,6 @@ class Manager {
 			</ul>
 		</div>
 		<?php
-
-		$user = wp_get_current_user();
-		if ($user->shlink_manager_tab != $this->current_tab()) {
-			// Remember which tab the user has selected
-			update_user_meta($user->ID, 'shlink_manager_tab', $this->current_tab());
-		}
 	}
 
 	function current_tab() {
@@ -134,13 +146,6 @@ class Manager {
 			if (isset($this->tabs[$tab])) {
 				return $tab;
 			}
-		}
-
-		// Check for the last tab this user requested
-		$user = wp_get_current_user();
-		if (! empty($user->shlink_manager_tab) &&
-		    isset($this->tabs[$user->shlink_manager_tab])) {
-				return $user->shlink_manager_tab;
 		}
 
 		// Otherwise default to the the first tab
