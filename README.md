@@ -3,7 +3,7 @@
 **Donate link:** https://themarkup.org/donate  
 **Tags:** short url, shlink  
 **Requires at least:** 4.5  
-**Tested up to:** 5.8.3  
+**Tested up to:** 5.9.2  
 **Requires PHP:** 7.3  
 **Stable tag:** 0.0.1  
 **License:** GPLv2 or later  
