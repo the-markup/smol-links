@@ -152,9 +152,8 @@ class Manager {
 	}
 
 	function short_code_domain() {
-		$options = Options::init();
-		$domains = $options->get('domains');
-		$default = $options->get('default_domain');
+		$domains = $this->plugin->options->get('domains');
+		$default = $this->plugin->options->get('default_domain');
 		if (count($domains) == 1) {
 			$domain = htmlentities($domains[0]);
 			echo "<span class=\"shlink-short-code-domain\">https://$domain/</span>";
