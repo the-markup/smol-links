@@ -2,9 +2,6 @@
 
 namespace WP_Shlink;
 
-use WP_Shlink\API;
-use WP_Shlink\Options;
-
 class Manager {
 
 	var $default_tabs = [
@@ -13,8 +10,8 @@ class Manager {
 		'Auto-generated' => ['tags[]' => 'wp-shlink-onsave']
 	];
 
-	function __construct() {
-		$this->api = API::init();
+	function __construct($plugin) {
+		$this->plugin = $plugin;
 		add_filter('shlink_manager_tabs', [$this, 'add_my_links_tab']);
 		add_action('init', [$this, 'on_init']);
 		add_action('admin_menu', [$this, 'on_admin_menu']);
@@ -68,8 +65,8 @@ class Manager {
 
 	function manager_page() {
 
-		$options = Options::init();
-		if (! $options->get('base_url') || ! $options->get('api_key')) {
+		if (! $this->plugin->options->get('base_url') ||
+		    ! $this->plugin->options->get('api_key')) {
 			return $this->config_error();
 		}
 
@@ -207,7 +204,7 @@ class Manager {
 
 			$query = $this->tabs[$tab];
 			$request = array_merge($request, $query);
-			$response = $this->api->get_shlinks($request);
+			$response = $this->plugin->api->get_shlinks($request);
 
 			header('Content-Type: application/json');
 			echo wp_json_encode([
@@ -241,7 +238,7 @@ class Manager {
 			$request['tags'] = $tags;
 		}
 
-		$response = $this->api->create_shlink($request);
+		$response = $this->plugin->api->create_shlink($request);
 
 		header('Content-Type: application/json');
 		echo wp_json_encode([
@@ -264,7 +261,7 @@ class Manager {
 			$request['tags'] = $tags;
 		}
 
-		$response = $this->api->update_shlink($_POST['short_code'], $request);
+		$response = $this->plugin->api->update_shlink($_POST['short_code'], $request);
 
 		header('Content-Type: application/json');
 		echo wp_json_encode([

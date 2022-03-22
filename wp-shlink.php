@@ -20,5 +20,8 @@
  * Text Domain:       wp-shlink
  */
 
-require_once(__DIR__ . '/src/Plugin.php');
-\WP_Shlink\Plugin::init();
+require_once(__DIR__ . '/vendor/autoload.php');
+add_action('plugins_loaded', function() {
+	global $wp_shlink_plugin;
+	$wp_shlink_plugin = new WP_Shlink\Plugin();
+});
