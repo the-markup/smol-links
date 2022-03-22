@@ -2,13 +2,10 @@
 
 namespace WP_Shlink;
 
-use WP_Shlink\Options;
-use WP_Shlink\API;
-
 class Settings {
 
-	function __construct() {
-		$this->options = Options::init();
+	function __construct($plugin) {
+		$this->plugin = $plugin;
 		$this->setup_domains();
 		add_action('admin_menu', [$this, 'on_admin_menu']);
 		add_action('admin_init', [$this, 'on_admin_init']);
@@ -17,11 +14,12 @@ class Settings {
 	}
 
 	function setup_domains() {
-		if (! $this->options->get('base_url') || ! $this->options->get('api_key')) {
+		if (! $this->plugin->options->get('base_url') ||
+		    ! $this->plugin->options->get('api_key')) {
 			return;
 		}
-		$domains = $this->options->get('domains');
-		$default = $this->options->get('default_domain');
+		$domains = $this->plugin->options->get('domains');
+		$default = $this->plugin->options->get('default_domain');
 		if (empty($domains) || empty($default)) {
 			$domains = $this->load_domains();
 			if ($domains) {
@@ -32,8 +30,7 @@ class Settings {
 	}
 
 	function load_domains() {
-		$api = API::init();
-		$result = $api->get_domains();
+		$result = $this->plugin->api->get_domains();
 		if (! empty($result['domains']['data'])) {
 			return $result['domains']['data'];
 		}
@@ -45,7 +42,7 @@ class Settings {
 		foreach ($domains as $domain) {
 			$domain_list[] = $domain['domain'];
 		}
-		$this->options->set('domains', $domain_list);
+		$this->plugin->options->set('domains', $domain_list);
 		return $domain_list;
 	}
 
@@ -59,7 +56,7 @@ class Settings {
 		if (empty($default)) {
 			$default = $domains[0]['domain'];
 		}
-		$this->options->set('default_domain', $default);
+		$this->plugin->options->set('default_domain', $default);
 		return $default;
 	}
 
@@ -130,7 +127,7 @@ class Settings {
 			'shlink',
 			'shlink-generate'
 		);
-		if (! empty($this->options->get('domains'))) {
+		if (! empty($this->plugin->options->get('domains'))) {
 			add_settings_field(
 				'shlink-default-domain',
 				__('Default domain', 'wp-shlink'),
@@ -142,23 +139,23 @@ class Settings {
 	}
 
 	function base_url_field() {
-		$value = htmlentities($this->options->get('base_url'));
+		$value = htmlentities($this->plugin->options->get('base_url'));
 		echo '<input type="text" name="shlink_options[base_url]" class="regular-text ltr" value="' . $value . '">';
 	}
 
 	function api_key_field() {
-		$value = htmlentities($this->options->get('api_key'));
+		$value = htmlentities($this->plugin->options->get('api_key'));
 		echo '<input type="text" name="shlink_options[api_key]" class="regular-text ltr" value="' . $value . '">';
 	}
 
 	function generate_on_save_field() {
-		$value = htmlentities($this->options->get('generate_on_save'));
+		$value = htmlentities($this->plugin->options->get('generate_on_save'));
 		echo '<input type="checkbox" name="shlink_options[generate_on_save]" value="1" ' . checked( 1, $value, false ) . '>';
 	}
 
 	function default_domain_field() {
-		$domains = $this->options->get('domains');
-		$default = $this->options->get('default_domain');
+		$domains = $this->plugin->options->get('domains');
+		$default = $this->plugin->options->get('default_domain');
 		echo "<select name=\"shlink_options[default_domain]\" class=\"shlink-domain-list\">\n";
 		foreach ($domains as $domain) {
 			$selected = ($default == $domain) ? ' selected="selected"' : '';

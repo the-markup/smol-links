@@ -9,26 +9,19 @@
  * @copyright 2022 The Markup
  */
 
-namespace WP_Shlink;
+class TestAPI extends WP_Shlink\API {
 
-require_once(dirname(__DIR__) . '/src/API.php');
+	function request($method, $endpoint, $args = null) {
+		$tags = isset($args['tags']) ? $args['tags'] : [];
+		$domain = isset($args['domain']) ? $args['domain'] : null;
+		$title = isset($args['title']) ? $args['title'] : null;
+		$crawlable = isset($args['crawlable']) ? $args['crawlable'] : true;
+		$forwardQuery = isset($args['forwardQuery']) ? $args['forwardQuery'] : true;
 
-use WP_Shlink\API;
-
-class TestAPI extends API {
-
-	function request($method, $endpoint, $request) {
-
-		$tags = isset($request['tags']) ? $request['tags'] : [];
-		$domain = isset($request['domain']) ? $request['domain'] : null;
-		$title = isset($request['title']) ? $request['title'] : null;
-		$crawlable = isset($request['crawlable']) ? $request['crawlable'] : true;
-		$forwardQuery = isset($request['forwardQuery']) ? $request['forwardQuery'] : true;
-
-		$response = [
+		return [
 			"shortCode"      => "xxxxx",
 			"shortUrl"       => "https://example.com/xxxxx",
-			"longUrl"        => $request['longUrl'],
+			"longUrl"        => $args['longUrl'],
 			"dateCreated"    => current_time(DATE_RFC3339),
 			"visitsCount"    => 0,
 			"tags"           => $tags,
@@ -41,14 +34,6 @@ class TestAPI extends API {
 			"title"          => $title,
 			"crawlable"      => $crawlable,
 			"forwardQuery"   => $forwardQuery
-		];
-
-		return [
-			'response' => [
-				'code' => 200,
-				'message' => 'OK'
-			],
-			'body' => json_encode($response)
 		];
 	}
 

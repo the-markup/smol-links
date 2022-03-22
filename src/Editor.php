@@ -4,7 +4,8 @@ namespace WP_Shlink;
 
 class Editor {
 
-	function __construct() {
+	function __construct($plugin) {
+		$this->plugin = $plugin;
 		add_action('init', [$this, 'on_init']);
 		add_action('enqueue_block_editor_assets', [$this, 'on_editor_assets']);
 	}

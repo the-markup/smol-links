@@ -11,37 +11,7 @@
 
 namespace WP_Shlink;
 
-require_once(__DIR__ . '/Options.php');
-require_once(__DIR__ . '/Admin.php');
-require_once(__DIR__ . '/API.php');
-
-use WP_Shlink\Options;
-use WP_Shlink\Admin;
-use WP_Shlink\API;
-
-/**
- * Initial configuration, WordPress hooks, and high level behavior
- */
 class Plugin {
-
-	/**
-	 * The unique singleton instance of the plugin
-	 *
-	 * @var WP_Shlink\Plugin
-	 */
-	static $instance;
-
-	/**
-	 * Gets the unique singleton instance of the plugin
-	 *
-	 * @return WP_Shlink\Plugin
-	 */
-	static function init() {
-		if (! self::$instance) {
-			self::$instance = new self();
-		}
-		return self::$instance;
-	}
 
 	/**
 	 * Setup contingent object instances (Options, Admin, and API) and WordPress
@@ -50,9 +20,11 @@ class Plugin {
 	 * @return void
 	 */
 	function __construct() {
-		$this->options = Options::init();
-		$this->api = API::init();
-		$this->admin = new Admin($this->options);
+		$this->options =  new Options($this);
+		$this->api =      new API($this);
+		$this->settings = new Settings($this);
+		$this->manager =  new Manager($this);
+		$this->editor =   new Editor($this);
 		add_action('save_post', [$this, 'on_save_post']);
 		add_filter('shlink_tags', [$this, 'shlink_tags']);
 	}
