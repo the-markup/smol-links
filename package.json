@@ -1,5 +1,5 @@
 {
-	"name": "wp-shlink",
+	"name": "shlinkify",
 	"version": "0.0.1",
 	"description": "Create and manage Shlink short links from WordPress",
 	"main": "build/index.js",
@@ -19,7 +19,7 @@
 		"@primer/octicons": "^16.3.0",
 		"@wordpress/i18n": "^4.2.4",
 		"@wordpress/scripts": "^22.2.1",
-		"grunt": "~1.4.1",
+		"grunt": "~1.5.3",
 		"grunt-cli": "^1.4.3",
 		"grunt-wp-i18n": "~1.0.3",
 		"grunt-wp-readme-to-markdown": "~2.1.0"
