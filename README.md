@@ -1,9 +1,9 @@
-# WP Shlink #
+# Shlinkify #
 **Contributors:** [dphiffer](https://profiles.wordpress.org/dphiffer/)  
 **Donate link:** https://themarkup.org/donate  
 **Tags:** short url, shlink  
 **Requires at least:** 4.5  
-**Tested up to:** 5.9.2  
+**Tested up to:** 6.0.0  
 **Requires PHP:** 7.3  
 **Stable tag:** 0.0.1  
 **License:** GPLv2 or later  
