@@ -1,6 +1,6 @@
 <?php
 
-namespace WP_Shlink;
+namespace Shlinkify;
 
 class Manager {
 

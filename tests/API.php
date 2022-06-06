@@ -9,7 +9,7 @@
  * @copyright 2022 The Markup
  */
 
-class TestAPI extends WP_Shlink\API {
+class TestAPI extends Shlinkify\API {
 
 	function request($method, $endpoint, $args = null) {
 		$tags = isset($args['tags']) ? $args['tags'] : [];

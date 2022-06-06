@@ -14,8 +14,8 @@ require_once(__DIR__ . '/API.php');
 class TestPlugin extends WP_UnitTestCase {
 
 	function setUp() {
-		global $wp_shlink_plugin;
-		$this->plugin = $wp_shlink_plugin;
+		global $shlinkify_plugin;
+		$this->plugin = $shlinkify_plugin;
 		$this->plugin->api = new TestAPI($this->plugin);
 
 		// Let's pretend we have a server config

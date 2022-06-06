@@ -9,7 +9,7 @@
  * @copyright 2022 The Markup
  */
 
-namespace WP_Shlink;
+namespace Shlinkify;
 
 /**
  * Interface to the Shlink REST API
