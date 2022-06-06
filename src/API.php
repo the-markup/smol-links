@@ -64,13 +64,13 @@ class API {
 		$response = wp_remote_request($url, $request);
 		$status = wp_remote_retrieve_response_code($response);
 		if (is_wp_error($response)) {
-			throw new \Exception('wp-shlink: ' . $response->get_error_message());
+			throw new \Exception('shlinkify: ' . $response->get_error_message());
 		} else if ($status != 200) {
-			throw new \Exception("wp-shlink: HTTP $status {$response['body']}");
+			throw new \Exception("shlinkify: HTTP $status {$response['body']}");
 		} else if (! empty($response['body'])) {
 			return json_decode($response['body'], 'array');
 		} else {
-			throw new \Exception("wp-shlink: error loading $endpoint");
+			throw new \Exception("shlinkify: error loading $endpoint");
 		}
 	}
 

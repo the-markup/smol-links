@@ -10,9 +10,9 @@ echo
 
 echo "Running composer install..."
 echo
-docker-compose exec web composer --working-dir="/var/www/html/wp-content/plugins/wp-shlink" install
-docker-compose exec web /var/www/html/wp-content/plugins/wp-shlink/bin/drop-database.sh
-docker-compose exec web /var/www/html/wp-content/plugins/wp-shlink/bin/install-wp-tests.sh wordpress wordpress wordpress db
+docker-compose exec web composer --working-dir="/var/www/html/wp-content/plugins/shlinkify" install
+docker-compose exec web /var/www/html/wp-content/plugins/shlinkify/bin/drop-database.sh
+docker-compose exec web /var/www/html/wp-content/plugins/shlinkify/bin/install-wp-tests.sh wordpress wordpress wordpress db
 echo
 
 echo "Installing node.js dependencies and building front-end assets..."

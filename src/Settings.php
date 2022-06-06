@@ -62,7 +62,7 @@ class Settings {
 
 	function on_admin_menu() {
 		add_options_page(
-			__('Shlink Settings', 'wp-shlink'),
+			__('Shlink Settings', 'shlinkify'),
 			'Shlink',
 			'manage_options',
 			'shlink',
@@ -74,13 +74,13 @@ class Settings {
 		register_setting('shlink', 'shlink_options');
 		add_settings_section(
 			'shlink-server',
-			__('Server', 'wp-shlink'),
+			__('Server', 'shlinkify'),
 			[$this, 'server_settings'],
 			'shlink'
 		);
 		add_settings_section(
 			'shlink-generate',
-			__('Generating Shlinks', 'wp-shlink'),
+			__('Generating Shlinks', 'shlinkify'),
 			[$this, 'generate_settings'],
 			'shlink'
 		);
@@ -89,7 +89,7 @@ class Settings {
 	function settings_page() {
 		?>
 		<div class="wrap">
-			<h1><?php _e('Shlink Settings', 'wp-shlink'); ?></h1>
+			<h1><?php _e('Shlink Settings', 'shlinkify'); ?></h1>
 
 			<p>Create and manage Shlink short links from WordPress</p>
 
@@ -105,14 +105,14 @@ class Settings {
 	function server_settings() {
 		add_settings_field(
 			'shlink-base-url',
-			__('Base URL', 'wp-shlink'),
+			__('Base URL', 'shlinkify'),
 			[$this, 'base_url_field'],
 			'shlink',
 			'shlink-server'
 		);
 		add_settings_field(
 			'shlink-api-key',
-			__('API Key', 'wp-shlink'),
+			__('API Key', 'shlinkify'),
 			[$this, 'api_key_field'],
 			'shlink',
 			'shlink-server'
@@ -122,7 +122,7 @@ class Settings {
 	function generate_settings() {
 		add_settings_field(
 			'shlink-generate-on-save',
-			__('Generate upon saving a post', 'wp-shlink'),
+			__('Generate upon saving a post', 'shlinkify'),
 			[$this, 'generate_on_save_field'],
 			'shlink',
 			'shlink-generate'
@@ -130,7 +130,7 @@ class Settings {
 		if (! empty($this->plugin->options->get('domains'))) {
 			add_settings_field(
 				'shlink-default-domain',
-				__('Default domain', 'wp-shlink'),
+				__('Default domain', 'shlinkify'),
 				[$this, 'default_domain_field'],
 				'shlink',
 				'shlink-generate'
@@ -171,14 +171,14 @@ class Settings {
 		}
 
 		wp_enqueue_script(
-			'wp-shlink-settings',
+			'shlinkify-settings',
 			plugins_url('build/settings.js', __DIR__),
 			[],
 			filemtime(plugin_dir_path(__DIR__) . 'build/settings.js')
 		);
 
 		wp_enqueue_style(
-			'wp-shlink-manager',
+			'shlinkify-manager',
 			plugins_url('build/settings.css', __DIR__),
 			[],
 			filemtime(plugin_dir_path(__DIR__) . 'build/settings.css')
