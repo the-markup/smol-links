@@ -1,4 +1,4 @@
-wp-shlink plugin creates and manages Shlink short links
+Shlinkify plugin creates and manages Shlink short links
 Copyright (C) 2022 The Markup
 
 This program is free software; you can redistribute it and/or
@@ -356,9 +356,9 @@ Public License instead of this License.
 WRITTEN OFFER
 
 The source code for any program binaries or compressed scripts that are
-included with wp-shlink can be freely obtained at the following URL:
+included with Shlinkify can be freely obtained at the following URL:
 
-	https://github.com/the-markup/wp-shlink
+	https://github.com/the-markup/shlinkify
 
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software

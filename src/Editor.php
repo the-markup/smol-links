@@ -37,14 +37,14 @@ class Editor {
 		}
 
 		wp_enqueue_script(
-			'wp-shlink-editor',
+			'shlinkify-editor',
 			plugins_url('build/editor.js', __DIR__),
 			['wp-edit-post', 'wp-components', 'wp-plugins', 'wp-data'],
 			filemtime(plugin_dir_path(__DIR__) . 'build/editor.js')
 		);
 
 		wp_enqueue_style(
-			'wp-shlink-editor',
+			'shlinkify-editor',
 			plugins_url('build/editor.css', __DIR__),
 			[],
 			filemtime(plugin_dir_path(__DIR__) . 'build/editor.css')

@@ -1,5 +1,5 @@
 {
-    "name": "the-markup/wp-shlink",
+    "name": "the-markup/shlinkify",
     "description": "Create and manage Shlink short links from WordPress",
     "type": "wordpress-plugin",
     "require-dev": {

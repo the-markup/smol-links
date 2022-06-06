@@ -9,7 +9,7 @@ module.exports = function( grunt ) {
 
 		addtextdomain: {
 			options: {
-				textdomain: 'wp-shlink',
+				textdomain: 'shlinkify',
 			},
 			update_all_domains: {
 				options: {
@@ -32,8 +32,8 @@ module.exports = function( grunt ) {
 				options: {
 					domainPath: '/languages',
 					exclude: [ '\.git/*', 'bin/*', 'node_modules/*', 'tests/*' ],
-					mainFile: 'wp-shlink.php',
-					potFilename: 'wp-shlink.pot',
+					mainFile: 'shlinkify.php',
+					potFilename: 'shlinkify.pot',
 					potHeaders: {
 						poedit: true,
 						'x-poedit-keywordslist': true

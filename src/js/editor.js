@@ -18,7 +18,7 @@ import '../css/editor.scss';
 			return (
 				<TextControl
 					className="shlink-input"
-					label={__('Short URL', 'wp-shlink')}
+					label={__('Short URL', 'shlinkify')}
 					value={shortUrl}
 					readOnly="readOnly"
 					onFocus={event => {

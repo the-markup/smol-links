@@ -37,14 +37,14 @@ __Build and start:__
 __Running tests:__
 
 ```
-docker-compose exec web composer --working-dir="/var/www/html/wp-content/plugins/wp-shlink" test
+docker-compose exec web composer --working-dir="/var/www/html/wp-content/plugins/shlinkify" test
 ```
 
 ## Installation ##
 
-1. Upload `wp-shlink` folder to the `/wp-content/plugins/` directory
+1. Upload `shlinkify` folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Configure the __Shlink__ settings from your WordPress dashboard
+3. Configure the __Shlinkify__ settings from your WordPress dashboard
 
 ## Changelog ##
 

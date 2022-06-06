@@ -3,8 +3,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Shlink 0.0.1\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-shlink\n"
-"POT-Creation-Date: 2022-02-03 22:27:29+00:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/shlinkify\n"
+"POT-Creation-Date: 2022-05-27 19:25:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,40 +24,44 @@ msgstr ""
 "X-Textdomain-Support: yes\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
-#: src/Manager.php:21 src/Manager.php:60 src/Manager.php:94
+#: src/Manager.php:30 src/Manager.php:75 src/Manager.php:175
 msgid "Shlink Manager"
 msgstr ""
 
-#: src/Manager.php:22
+#: src/Manager.php:31
 msgid "Shlinks"
 msgstr ""
 
-#: src/Manager.php:98
+#: src/Manager.php:179
 msgid "Please configure Shlink API settings."
 msgstr ""
 
-#: src/Settings.php:17 src/Settings.php:44
+#: src/Settings.php:65 src/Settings.php:92
 msgid "Shlink Settings"
 msgstr ""
 
-#: src/Settings.php:29
+#: src/Settings.php:77
 msgid "Server"
 msgstr ""
 
-#: src/Settings.php:35
+#: src/Settings.php:83
 msgid "Generating Shlinks"
 msgstr ""
 
-#: src/Settings.php:60
+#: src/Settings.php:108
 msgid "Base URL"
 msgstr ""
 
-#: src/Settings.php:67
+#: src/Settings.php:115
 msgid "API Key"
 msgstr ""
 
-#: src/Settings.php:77
+#: src/Settings.php:125
 msgid "Generate upon saving a post"
+msgstr ""
+
+#: src/Settings.php:133
+msgid "Default domain"
 msgstr ""
 
 #. Plugin Name of the plugin/theme

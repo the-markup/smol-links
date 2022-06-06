@@ -37,9 +37,9 @@ class Plugin {
 	 * post.
 	 *
 	 * The Shlink record includes the post's title and the following tags:
-	 * - `wp-shlink-onsave`
-	 * - `wp-shlink-site:[WordPress site hostname]`
-	 * - `wp-shlink-post:[numeric post ID]`
+	 * - `shlinkify-onsave`
+	 * - `shlinkify-site:[WordPress site hostname]`
+	 * - `shlinkify-post:[numeric post ID]`
 	 *
 	 * @param number $post_id The post's numeric ID
 	 * @return void
@@ -78,8 +78,8 @@ class Plugin {
 			];
 
 			$tags = apply_filters('shlink_tags', [
-				'wp-shlink-onsave',
-				"wp-shlink-post:{$post->ID}"
+				'shlinkify-onsave',
+				"shlinkify-post:{$post->ID}"
 			]);
 			if (is_array($tags)) {
 				$request['tags'] = $tags;
@@ -165,7 +165,7 @@ class Plugin {
 			update_post_meta($post->ID, 'shlink_short_url', $shlink['shortUrl']);
 			update_post_meta($post->ID, 'shlink_short_code', $shlink['shortCode']);
 		} else {
-			throw new \Exception("wp-shlink: no 'shortUrl' found in API response");
+			throw new \Exception("shlinkify: no 'shortUrl' found in API response");
 		}
 	}
 
@@ -187,8 +187,8 @@ class Plugin {
 			return null;
 		}
 
-		$tags[] = "wp-shlink-site:{$site_url['host']}";
-		$tags[] = "wp-shlink-user:{$user->user_login}";
+		$tags[] = "shlinkify-site:{$site_url['host']}";
+		$tags[] = "shlinkify-user:{$user->user_login}";
 
 		return $tags;
 	}

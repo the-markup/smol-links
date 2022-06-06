@@ -6,13 +6,13 @@ class Manager {
 
 	var $default_tabs = [
 		'All'            => [],
-		'Manual'         => ['tags[]' => 'wp-shlink-manager'],
-		'Auto-generated' => ['tags[]' => 'wp-shlink-onsave']
+		'Manual'         => ['tags[]' => 'shlinkify-manual'],
+		'Auto-generated' => ['tags[]' => 'shlinkify-auto']
 	];
 
 	function __construct($plugin) {
 		$this->plugin = $plugin;
-		add_filter('shlink_manager_tabs', [$this, 'add_my_links_tab']);
+		add_filter('shlinkify_manager_tabs', [$this, 'add_my_links_tab']);
 		add_action('init', [$this, 'on_init']);
 		add_action('admin_menu', [$this, 'on_admin_menu']);
 		add_action('admin_enqueue_scripts', [$this, 'on_enqueue_assets']);
@@ -22,15 +22,15 @@ class Manager {
 	}
 
 	function on_init() {
-		$this->tabs = apply_filters('shlink_manager_tabs', $this->default_tabs);
+		$this->tabs = apply_filters('shlinkify_manager_tabs', $this->default_tabs);
 	}
 
 	function on_admin_menu() {
 		add_menu_page(
-			__('Shlink Manager', 'wp-shlink'),
-			__('Shlinks', 'wp-shlink'),
+			__('Shlinkify Manager', 'shlinkify'),
+			__('Shlinkify', 'shlinkify'),
 			'edit_posts',
-			'shlinks',
+			'shlinkify',
 			[$this, 'manager_page'],
 			'dashicons-admin-links',
 			20
@@ -38,25 +38,25 @@ class Manager {
 	}
 
 	function on_enqueue_assets($suffix) {
-		if ($suffix != 'toplevel_page_shlinks') {
+		if ($suffix != 'toplevel_page_shlinkify') {
 			return;
 		}
 
 		wp_enqueue_script(
-			'wp-shlink-manager',
+			'shlinkify-manager',
 			plugins_url('build/manager.js', __DIR__),
 			[],
 			filemtime(plugin_dir_path(__DIR__) . 'build/manager.js')
 		);
 
 		wp_enqueue_style(
-			'wp-shlink-manager',
+			'shlinkify-manager',
 			plugins_url('build/manager.css', __DIR__),
 			[],
 			filemtime(plugin_dir_path(__DIR__) . 'build/manager.css')
 		);
 
-		wp_add_inline_script('wp-shlink-manager', 'var shlink_nonces = ' . wp_json_encode([
+		wp_add_inline_script('shlinkify-manager', 'var shlinkify_nonces = ' . wp_json_encode([
 			'get_shlinks'   => wp_create_nonce('get_shlinks'),
 			'create_shlink' => wp_create_nonce('create_shlink'),
 			'update_shlink'   => wp_create_nonce('update_shlink')
@@ -72,11 +72,11 @@ class Manager {
 
 		?>
 		<div class="wrap">
-			<h1><?php _e('Shlink Manager', 'wp-shlink'); ?></h1>
-			<form action="/wp-admin/admin-ajax.php" method="post" class="shlink-create">
+			<h1><?php _e('Shlinkify Manager', 'shlinkify'); ?></h1>
+			<form action="/wp-admin/admin-ajax.php" method="post" class="shlinkify-create">
 				<input type="hidden" name="action" value="create_shlink">
-				<div class="shlink-create-feedback"></div>
-				<div class="shlink-edit-field">
+				<div class="shlinkify-create-feedback"></div>
+				<div class="shlinkify-edit-field">
 					<label for="shlink-create__long-url" class="shlink-label">URL to shorten</label>
 					<input type="text" name="long_url" id="shlink-create__long-url" class="shlink-long-url regular-text ltr">
 				</div>
@@ -113,7 +113,7 @@ class Manager {
 			$new_tabs[$key] = $query;
 			if ($key == 'All') {
 				// Add a 'My Links' tab right after 'All'
-				$new_tabs['My Links'] = ['tags[]' => "wp-shlink-user:{$user->user_login}"];
+				$new_tabs['My Links'] = ['tags[]' => "shlinkify-user:{$user->user_login}"];
 			}
 		}
 		return $new_tabs;
@@ -172,11 +172,11 @@ class Manager {
 	function config_error() {
 		?>
 		<div class="wrap">
-			<h1><?php _e('Shlink Manager', 'wp-shlink'); ?></h1>
+			<h1><?php _e('Shlink Manager', 'shlinkify'); ?></h1>
 			<div class="notice notice-warning">
 				<p>
 					Cannot connect to Shlink Server.
-					<a href="/wp-admin/options-general.php?page=shlink"><?php _e('Please configure Shlink API settings.', 'wp-shlink'); ?></a>
+					<a href="/wp-admin/options-general.php?page=shlink"><?php _e('Please configure Shlink API settings.', 'shlinkify'); ?></a>
 				</p>
 			</div>
 		</div>
@@ -232,7 +232,7 @@ class Manager {
 			$request['customSlug'] = $_POST['short_code'];
 		}
 
-		$tags = apply_filters('shlink_tags', ['wp-shlink-manager']);
+		$tags = apply_filters('shlink_tags', ['shlinkify-manager']);
 		if (is_array($tags)) {
 			$request['tags'] = $tags;
 		}
@@ -255,7 +255,7 @@ class Manager {
 			'title'   => $_POST['title']
 		];
 
-		$tags = apply_filters('shlink_tags', ['wp-shlink-manager']);
+		$tags = apply_filters('shlink_tags', ['shlinkify-manager']);
 		if (is_array($tags)) {
 			$request['tags'] = $tags;
 		}
