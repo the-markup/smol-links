@@ -1,4 +1,4 @@
-FROM wordpress:5.9.2-php7.4-apache
+FROM wordpress:6.0.0-php7.4-apache
 
 # Dependencies
 RUN apt-get update && apt-get install -y \
