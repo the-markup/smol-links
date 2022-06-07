@@ -26,7 +26,7 @@ class Plugin {
 		$this->manager =  new Manager($this);
 		$this->editor =   new Editor($this);
 		add_action('save_post', [$this, 'on_save_post']);
-		add_filter('shlink_tags', [$this, 'shlink_tags']);
+		add_filter('shlinkify_tags', [$this, 'on_shlinkify_tags']);
 	}
 
 	/**
@@ -73,11 +73,11 @@ class Plugin {
 			}
 
 			$request = [
-				'longUrl' => apply_filters('shlink_long_url', $long_url),
+				'longUrl' => apply_filters('shlinkify_long_url', $long_url),
 				'title'   => $post->post_title
 			];
 
-			$tags = apply_filters('shlink_tags', [
+			$tags = apply_filters('shlinkify_tags', [
 				'shlinkify-onsave',
 				"shlinkify-post:{$post->ID}"
 			]);
@@ -117,9 +117,9 @@ class Plugin {
 	 *                    and `short_code`
 	 */
 	function get_post_shlink($post) {
-		$long_url   = get_post_meta($post->ID, 'shlink_long_url', true);
-		$short_url  = get_post_meta($post->ID, 'shlink_short_url', true);
-		$short_code = get_post_meta($post->ID, 'shlink_short_code', true);
+		$long_url   = get_post_meta($post->ID, 'shlinkify_long_url', true);
+		$short_url  = get_post_meta($post->ID, 'shlinkify_short_url', true);
+		$short_code = get_post_meta($post->ID, 'shlinkify_short_code', true);
 		if (empty($short_url) || empty($long_url) || empty($short_code)) {
 			return null;
 		}
@@ -161,9 +161,9 @@ class Plugin {
 	 */
 	function save_post_response($shlink, $post) {
 		if (! empty($shlink['shortUrl'])) {
-			update_post_meta($post->ID, 'shlink_long_url', $shlink['longUrl']);
-			update_post_meta($post->ID, 'shlink_short_url', $shlink['shortUrl']);
-			update_post_meta($post->ID, 'shlink_short_code', $shlink['shortCode']);
+			update_post_meta($post->ID, 'shlinkify_long_url', $shlink['longUrl']);
+			update_post_meta($post->ID, 'shlinkify_short_url', $shlink['shortUrl']);
+			update_post_meta($post->ID, 'shlinkify_short_code', $shlink['shortCode']);
 		} else {
 			throw new \Exception("shlinkify: no 'shortUrl' found in API response");
 		}
@@ -174,7 +174,7 @@ class Plugin {
 	 *
 	 * @param array $tags array of base tags to apply
 	 */
-	function shlink_tags($tags = []) {
+	function on_shlinkify_tags($tags = []) {
 		$site_url = parse_url(get_site_url());
 		$user = wp_get_current_user();
 

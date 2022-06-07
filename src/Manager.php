@@ -27,7 +27,7 @@ class Manager {
 
 	function on_admin_menu() {
 		add_menu_page(
-			__('Shlinkify Manager', 'shlinkify'),
+			__('Shlinkify', 'shlinkify'),
 			__('Shlinkify', 'shlinkify'),
 			'edit_posts',
 			'shlinkify',
@@ -57,9 +57,9 @@ class Manager {
 		);
 
 		wp_add_inline_script('shlinkify-manager', 'var shlinkify_nonces = ' . wp_json_encode([
-			'get_shlinks'   => wp_create_nonce('get_shlinks'),
-			'create_shlink' => wp_create_nonce('create_shlink'),
-			'update_shlink'   => wp_create_nonce('update_shlink')
+			'load'   => wp_create_nonce('shlinkify_load'),
+			'create' => wp_create_nonce('shlinkify_create'),
+			'update' => wp_create_nonce('shlinkify_update')
 		]) . ';', 'before');
 	}
 
@@ -77,28 +77,28 @@ class Manager {
 				<input type="hidden" name="action" value="create_shlink">
 				<div class="shlinkify-create-feedback"></div>
 				<div class="shlinkify-edit-field">
-					<label for="shlink-create__long-url" class="shlink-label">URL to shorten</label>
-					<input type="text" name="long_url" id="shlink-create__long-url" class="shlink-long-url regular-text ltr">
+					<label for="shlinkify-create__long-url" class="shlinkify-label">URL to shorten</label>
+					<input type="text" name="long_url" id="shlinkify-create__long-url" class="shlinkify-long-url regular-text ltr">
 				</div>
-				<div class="shlink-edit-field">
-					<label for="shlink-create__title" class="shlink-label shlink-label--optional">Title</label>
-					<input type="text" name="title" id="shlink-create__title" class="shlink-title regular-text ltr">
+				<div class="shlinkify-edit-field">
+					<label for="shlinkify-create__title" class="shlinkify-label shlinkify-label--optional">Title</label>
+					<input type="text" name="title" id="shlinkify-create__title" class="shlinkify-title regular-text ltr">
 				</div>
-				<div class="shlink-edit-field">
-					<label for="shlink-create__short-code" class="shlink-label shlink-label--optional">Short code</label>
-					<?php $this->short_code_domain(); ?><input type="text" name="short_code" id="shlink-create__short-code" class="shlink-short-code regular-text ltr">
+				<div class="shlinkify-edit-field">
+					<label for="shlinkify-create__short-code" class="shlinkify-label shlinkify-label--optional">Short code</label>
+					<?php $this->short_code_domain(); ?><input type="text" name="short_code" id="shlinkify-create__short-code" class="shlinkify-short-code regular-text ltr">
 				</div>
-				<div class="shlink-buttons">
+				<div class="shlinkify-buttons">
 					<input type="submit" value="Shorten" class="shlinkn-submit button button-primary">
 				</div>
 			</form>
-			<div class="shlink-manager">
+			<div class="shlinkify-manager">
 				<?php $this->manager_tabs(); ?>
-				<div class="shlink-list">
-					<div class="shlink-loading">
-						<span class="shlink-loading-dot shlink-loading-dot--1"></span>
-						<span class="shlink-loading-dot shlink-loading-dot--2"></span>
-						<span class="shlink-loading-dot shlink-loading-dot--3"></span>
+				<div class="shlinkify-list">
+					<div class="shlinkify-loading">
+						<span class="shlinkify-loading-dot shlinkify-loading-dot--1"></span>
+						<span class="shlinkify-loading-dot shlinkify-loading-dot--2"></span>
+						<span class="shlinkify-loading-dot shlinkify-loading-dot--3"></span>
 					</div>
 				</div>
 			</div>
@@ -121,7 +121,7 @@ class Manager {
 
 	function manager_tabs() {
 		?>
-		<div class="shlink-tabs">
+		<div class="shlinkify-tabs">
 			<ul>
 				<?php
 
@@ -156,10 +156,10 @@ class Manager {
 		$default = $this->plugin->options->get('default_domain');
 		if (count($domains) == 1) {
 			$domain = htmlentities($domains[0]);
-			echo "<span class=\"shlink-short-code-domain\">https://$domain/</span>";
-			echo "<input type=\"hidden\" name=\"domain\" value=\"$domain\" class=\"shlink-domain\">";
+			echo "<span class=\"shlinkify-short-code-domain\">https://$domain/</span>";
+			echo "<input type=\"hidden\" name=\"domain\" value=\"$domain\" class=\"shlinkify-domain\">";
 		} else {
-			echo "<select class=\"shlink-short-code-domain shlink-domain\">\n";
+			echo "<select class=\"shlinkify-short-code-domain shlinkify-domain\">\n";
 			foreach ($domains as $domain) {
 				$selected = ($domain == $default) ? ' selected="selected"' : '';
 				$domain = htmlentities($domain);
@@ -172,11 +172,11 @@ class Manager {
 	function config_error() {
 		?>
 		<div class="wrap">
-			<h1><?php _e('Shlink Manager', 'shlinkify'); ?></h1>
+			<h1><?php _e('Shlinkify', 'shlinkify'); ?></h1>
 			<div class="notice notice-warning">
 				<p>
 					Cannot connect to Shlink Server.
-					<a href="/wp-admin/options-general.php?page=shlink"><?php _e('Please configure Shlink API settings.', 'shlinkify'); ?></a>
+					<a href="/wp-admin/options-general.php?page=shlinkify-settings"><?php _e('Please configure Shlink API settings.', 'shlinkify'); ?></a>
 				</p>
 			</div>
 		</div>
@@ -224,7 +224,7 @@ class Manager {
 		check_ajax_referer('create_shlink');
 
 		$request = [
-			'longUrl' => apply_filters('shlink_long_url', $_POST['long_url']),
+			'longUrl' => apply_filters('shlinkify_long_url', $_POST['long_url']),
 			'title'   => $_POST['title']
 		];
 
@@ -232,7 +232,7 @@ class Manager {
 			$request['customSlug'] = $_POST['short_code'];
 		}
 
-		$tags = apply_filters('shlink_tags', ['shlinkify-manager']);
+		$tags = apply_filters('shlinkify_tags', ['shlinkify-manager']);
 		if (is_array($tags)) {
 			$request['tags'] = $tags;
 		}
@@ -251,11 +251,11 @@ class Manager {
 		check_ajax_referer('update_shlink');
 
 		$request = [
-			'longUrl' => apply_filters('shlink_long_url', $_POST['long_url']),
+			'longUrl' => apply_filters('shlinkify_long_url', $_POST['long_url']),
 			'title'   => $_POST['title']
 		];
 
-		$tags = apply_filters('shlink_tags', ['shlinkify-manager']);
+		$tags = apply_filters('shlinkify_tags', ['shlinkify-manager']);
 		if (is_array($tags)) {
 			$request['tags'] = $tags;
 		}

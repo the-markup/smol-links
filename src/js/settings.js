@@ -1,6 +1,6 @@
 import '../css/settings.scss';
 
-class ShlinkSettings {
+class ShlinkifySettings {
 
 	constructor() {
 		this.setupDomainsRefresh();
@@ -56,5 +56,5 @@ class ShlinkSettings {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-	new ShlinkSettings();
+	new ShlinkifySettings();
 });

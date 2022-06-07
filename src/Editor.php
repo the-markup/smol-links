@@ -11,17 +11,17 @@ class Editor {
 	}
 
 	function on_init() {
-		register_meta('post', 'shlink_long_url', array(
+		register_meta('post', 'shlinkify_long_url', array(
 			'show_in_rest' => true,
 			'type' => 'string',
 			'single' => true
 		));
-		register_meta('post', 'shlink_short_url', array(
+		register_meta('post', 'shlinkify_short_url', array(
 			'show_in_rest' => true,
 			'type' => 'string',
 			'single' => true
 		));
-		register_meta('post', 'shlink_short_code', array(
+		register_meta('post', 'shlinkify_short_code', array(
 			'show_in_rest' => true,
 			'type' => 'string',
 			'single' => true

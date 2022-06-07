@@ -62,40 +62,40 @@ class Settings {
 
 	function on_admin_menu() {
 		add_options_page(
-			__('Shlink Settings', 'shlinkify'),
-			'Shlink',
+			__('Shlinkify Settings', 'shlinkify'),
+			'Shlinkify',
 			'manage_options',
-			'shlink',
+			'shlinkify-settings',
 			[$this, 'settings_page']
 		);
 	}
 
 	function on_admin_init() {
-		register_setting('shlink', 'shlink_options');
+		register_setting('shlinkify', 'shlinkify_options');
 		add_settings_section(
-			'shlink-server',
+			'shlinkify-server',
 			__('Server', 'shlinkify'),
 			[$this, 'server_settings'],
-			'shlink'
+			'shlinkify'
 		);
 		add_settings_section(
-			'shlink-generate',
+			'shlinkify-generate',
 			__('Generating Shlinks', 'shlinkify'),
 			[$this, 'generate_settings'],
-			'shlink'
+			'shlinkify'
 		);
 	}
 
 	function settings_page() {
 		?>
 		<div class="wrap">
-			<h1><?php _e('Shlink Settings', 'shlinkify'); ?></h1>
+			<h1><?php _e('Shlinkify Settings', 'shlinkify'); ?></h1>
 
 			<p>Create and manage Shlink short links from WordPress</p>
 
 			<form action="options.php" method="post">
-				<?php \settings_fields( 'shlink' ); ?>
-				<?php \do_settings_sections( 'shlink' ); ?>
+				<?php \settings_fields( 'shlinkify' ); ?>
+				<?php \do_settings_sections( 'shlinkify' ); ?>
 				<?php \submit_button( 'Save' ); ?>
 			</form>
 		</div>
@@ -104,69 +104,69 @@ class Settings {
 
 	function server_settings() {
 		add_settings_field(
-			'shlink-base-url',
+			'shlinkify-base-url',
 			__('Base URL', 'shlinkify'),
 			[$this, 'base_url_field'],
-			'shlink',
-			'shlink-server'
+			'shlinkify',
+			'shlinkify-server'
 		);
 		add_settings_field(
-			'shlink-api-key',
+			'shlinkify-api-key',
 			__('API Key', 'shlinkify'),
 			[$this, 'api_key_field'],
-			'shlink',
-			'shlink-server'
+			'shlinkify',
+			'shlinkify-server'
 		);
 	}
 
 	function generate_settings() {
 		add_settings_field(
-			'shlink-generate-on-save',
+			'shlinkify-generate-on-save',
 			__('Generate upon saving a post', 'shlinkify'),
 			[$this, 'generate_on_save_field'],
-			'shlink',
-			'shlink-generate'
+			'shlinkify',
+			'shlinkify-generate'
 		);
 		if (! empty($this->plugin->options->get('domains'))) {
 			add_settings_field(
-				'shlink-default-domain',
+				'shlinkify-default-domain',
 				__('Default domain', 'shlinkify'),
 				[$this, 'default_domain_field'],
-				'shlink',
-				'shlink-generate'
+				'shlinkify',
+				'shlinkify-generate'
 			);
 		}
 	}
 
 	function base_url_field() {
 		$value = htmlentities($this->plugin->options->get('base_url'));
-		echo '<input type="text" name="shlink_options[base_url]" class="regular-text ltr" value="' . $value . '">';
+		echo '<input type="text" name="shlinkify_options[base_url]" class="regular-text ltr" value="' . $value . '">';
 	}
 
 	function api_key_field() {
 		$value = htmlentities($this->plugin->options->get('api_key'));
-		echo '<input type="text" name="shlink_options[api_key]" class="regular-text ltr" value="' . $value . '">';
+		echo '<input type="text" name="shlinkify_options[api_key]" class="regular-text ltr" value="' . $value . '">';
 	}
 
 	function generate_on_save_field() {
 		$value = htmlentities($this->plugin->options->get('generate_on_save'));
-		echo '<input type="checkbox" name="shlink_options[generate_on_save]" value="1" ' . checked( 1, $value, false ) . '>';
+		echo '<input type="checkbox" name="shlinkify_options[generate_on_save]" value="1" ' . checked( 1, $value, false ) . '>';
 	}
 
 	function default_domain_field() {
 		$domains = $this->plugin->options->get('domains');
 		$default = $this->plugin->options->get('default_domain');
-		echo "<select name=\"shlink_options[default_domain]\" class=\"shlink-domain-list\">\n";
+		echo "<select name=\"shlinkify_options[default_domain]\" class=\"shlink-domain-list\">\n";
 		foreach ($domains as $domain) {
 			$selected = ($default == $domain) ? ' selected="selected"' : '';
 			echo "<option value=\"$domain\">$domain</option>\n";
 		}
 		echo "</select>\n";
-		echo "<p><a href=\"#\" class=\"shlink-reload-domains\">Reload domain list</a></p>\n";
+		echo "<p><a href=\"#\" class=\"shlinkify-reload-domains\">Reload domain list</a></p>\n";
 	}
 
 	function on_enqueue_assets($suffix) {
-		if ($suffix != 'settings_page_shlink') {
+		if ($suffix != 'settings_page_shlinkify') {
 			return;
 		}
 

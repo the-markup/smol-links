@@ -25,7 +25,7 @@ class Options {
 			'domains' => [],
 			'default_domain' => null
 		];
-		$saved_options = get_option('shlink_options') ?: [];
+		$saved_options = get_option('shlinkify_options') ?: [];
 		$this->options = array_merge($defaults, $saved_options);
 	}
 
@@ -38,6 +38,6 @@ class Options {
 
 	function set($key, $value) {
 		$this->options[$key] = $value;
-		update_option('shlink_options', $this->options, false);
+		update_option('shlinkify_options', $this->options, false);
 	}
 }

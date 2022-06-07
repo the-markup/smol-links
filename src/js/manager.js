@@ -1,7 +1,7 @@
 import '../css/manager.scss';
 import { copy, check } from '@primer/octicons';
 
-class ShlinkManager {
+class ShlinkifyManager {
 
 	constructor() {
 		this.load().then(this.showResults.bind(this));
@@ -13,7 +13,7 @@ class ShlinkManager {
 		if (tabQueryString) {
 			tab = tabQueryString[1];
 		}
-		return fetch(`/wp-admin/admin-ajax.php?action=get_shlinks&tab=${tab}&_wpnonce=${shlink_nonces.get_shlinks}`);
+		return fetch(`/wp-admin/admin-ajax.php?action=shlinkify_load&tab=${tab}&_wpnonce=${shlinkify_nonces.load}`);
 	}
 
 	async showResults(result) {
@@ -21,20 +21,20 @@ class ShlinkManager {
 			let response = await result.json();
 			let html = 'Oops, something unexpected happened';
 
-			if (! response.ok || ! response.shlink) {
+			if (! response.ok || ! response.shlinkify) {
 				html = 'Error: ' + (response.error || 'something went wrong loading shlinks. Try again?');
 			} else {
-				html = this.getListHTML(response.shlink.shortUrls.data);
+				html = this.getListHTML(response.shlinkify.shortUrls.data);
 			}
 
-			let el = document.querySelector('.shlink-list');
+			let el = document.querySelector('.shlinkify-list');
 			el.innerHTML = html;
 			el.addEventListener('click', this.clickHandler.bind(this));
 
-			let form = document.querySelector('.shlink-create');
+			let form = document.querySelector('.shlinkify-create');
 			form.addEventListener('submit', this.createShlink.bind(this));
 		} catch(err) {
-			let loading = document.querySelector('.shlink-loading');
+			let loading = document.querySelector('.shlinkify-loading');
 			loading.innerHTML = `
 				<div class="notice notice-error is-dismissible">
 					<p>There was an error loading shlinks.</p>
@@ -55,7 +55,7 @@ class ShlinkManager {
 	getItemHTML(shlink) {
 		let dataAttrs = this.getItemDataAttrs(shlink);
 		let contentHTML = this.getItemContentHTML(shlink);
-		return `<li class="shlink-item"${dataAttrs}>
+		return `<li class="shlinkify-item"${dataAttrs}>
 			${contentHTML}
 		</li>`;
 	}
@@ -71,20 +71,20 @@ class ShlinkManager {
 
 	getItemContentHTML(shlink) {
 		let title = shlink.title || shlink.longUrl;
-		return `<div class="shlink-item__content">
-			<div class="shlink-item__clicks">
+		return `<div class="shlinkify-item__content">
+			<div class="shlinkify-item__clicks">
 				${shlink.visitsCount} clicks
 			</div>
-			<div class="shlink-item__links">
-				<div class="shlink-item__long-url">${title}</div>
-				<div class="shlink-item__short-url">
+			<div class="shlinkify-item__links">
+				<div class="shlinkify-item__long-url">${title}</div>
+				<div class="shlinkify-item__short-url">
 					${this.getCopyHTML()}
 					${shlink.shortUrl}
 				</div>
-				<div class="shlink-loading">
-					<span class="shlink-loading-dot shlink-loading-dot--1"></span>
-					<span class="shlink-loading-dot shlink-loading-dot--2"></span>
-					<span class="shlink-loading-dot shlink-loading-dot--3"></span>
+				<div class="shlinkify-loading">
+					<span class="shlinkify-loading-dot shlinkify-loading-dot--1"></span>
+					<span class="shlinkify-loading-dot shlinkify-loading-dot--2"></span>
+					<span class="shlinkify-loading-dot shlinkify-loading-dot--3"></span>
 				</div>
 			</div>
 		</div>`;
@@ -92,11 +92,11 @@ class ShlinkManager {
 
 	getCopyHTML() {
 		return `
-			<span class="shlink-item__copy">
-				<span class="shlink-item__copy-link">
+			<span class="shlinkify-item__copy">
+				<span class="shlinkify-item__copy-link">
 					${copy.toSVG()}
 				</span>
-				<span class="shlink-item__copy-success">
+				<span class="shlinkify-item__copy-success">
 					${check.toSVG()}
 				</span>
 			</span>
@@ -112,13 +112,13 @@ class ShlinkManager {
 		}
 
 		let url = form.getAttribute('action');
-		let feedback = document.querySelector('.shlink-create-feedback');
+		let feedback = document.querySelector('.shlinkify-create-feedback');
 		feedback.innerHTML = '';
 
-		let longURLField = form.querySelector('.shlink-long-url');
-		let shortCodeField = form.querySelector('.shlink-short-code');
-		let titleField = form.querySelector('.shlink-title');
-		let domainField = form.querySelector('.shlink-domain');
+		let longURLField = form.querySelector('.shlinkify-long-url');
+		let shortCodeField = form.querySelector('.shlinkify-short-code');
+		let titleField = form.querySelector('.shlinkify-title');
+		let domainField = form.querySelector('.shlinkify-domain');
 
 		if (longURLField.value == '') {
 			feedback.innerHTML = `
@@ -136,7 +136,7 @@ class ShlinkManager {
 		titleField.setAttribute('readonly', 'readonly');
 		domainField.setAttribute('disabled', 'disabled');
 
-		let list = document.querySelector('.shlink-list ul');
+		let list = document.querySelector('.shlinkify-list ul');
 		list.innerHTML = this.getItemHTML({
 			longUrl: longURLField.value,
 			shortCode: shortCodeField.value,
@@ -145,8 +145,8 @@ class ShlinkManager {
 			visitsCount: 0
 		}) + list.innerHTML;
 
-		let item = list.querySelectorAll('.shlink-item')[0];
-		item.classList.add('shlink-item--is-saving');
+		let item = list.querySelectorAll('.shlinkify-item')[0];
+		item.classList.add('shlinkify-item--is-saving');
 
 		let result = await fetch(url, {
 			method: 'POST',
@@ -154,17 +154,17 @@ class ShlinkManager {
 				'Content-Type': 'application/x-www-form-urlencoded'
 			},
 			body: this.encodeFormData({
-				action: 'create_shlink',
+				action: 'shlinkify_create',
 				long_url: longURLField.value,
 				short_code: shortCodeField.value,
 				title: titleField.value,
 				domain: this.getDomain(),
-				_wpnonce: shlink_nonces.create_shlink
+				_wpnonce: shlinkify_nonces.create
 			})
 		});
 
 		let response = await result.json();
-		item.classList.remove('shlink-item--is-saving');
+		item.classList.remove('shlinkify-item--is-saving');
 
 		form.classList.remove('is-saving');
 		longURLField.removeAttribute('readonly');
@@ -172,11 +172,11 @@ class ShlinkManager {
 		titleField.removeAttribute('readonly');
 		domainField.removeAttribute('disabled');
 
-		if (response.shlink && response.shlink.shortCode) {
-			item.innerHTML = this.getItemContentHTML(response.shlink);
-			item.setAttribute('data-title', response.shlink.title || '');
-			item.setAttribute('data-short-code', response.shlink.shortCode);
-			item.setAttribute('data-short-url', response.shlink.shortUrl);
+		if (response.shlinkify && response.shlinkify.shortCode) {
+			item.innerHTML = this.getItemContentHTML(response.shlinkify);
+			item.setAttribute('data-title', response.shlinkify.title || '');
+			item.setAttribute('data-short-code', response.shlinkify.shortCode);
+			item.setAttribute('data-short-url', response.shlinkify.shortUrl);
 			longURLField.value = '';
 			shortCodeField.value = '';
 			titleField.value = '';
@@ -184,11 +184,11 @@ class ShlinkManager {
 			list.removeChild(item);
 			let title = 'Error';
 			let detail = 'Could not create shlink';
-			if (response.shlink && response.shlink.title) {
-				title = response.shlink.title;
+			if (response.shlinkify && response.shlinkify.title) {
+				title = response.shlinkify.title;
 			}
-			if (response.shlink && response.shlink.detail) {
-				detail = response.shlink.detail;
+			if (response.shlinkify && response.shlinkify.detail) {
+				detail = response.shlinkify.detail;
 			}
 			feedback.innerHTML = `
 				<div class="notice notice-error is-dismissible">
@@ -199,7 +199,7 @@ class ShlinkManager {
 	}
 
 	getDomain() {
-		let field = document.querySelector('.shlink-domain');
+		let field = document.querySelector('.shlinkify-domain');
 		if (field.nodeName.toLowerCase == 'select') {
 			return field.options[field.selectedIndex].value;
 		} else {
@@ -212,15 +212,15 @@ class ShlinkManager {
 		if (event.target.classList.contains('button')) {
 			return;
 		}
-		if (event.target.classList.contains('shlink-item')) {
+		if (event.target.classList.contains('shlinkify-item')) {
 			item = event.target;
-		} else if (event.target.closest('.shlink-item')) {
-			item = event.target.closest('.shlink-item');
+		} else if (event.target.closest('.shlinkify-item')) {
+			item = event.target.closest('.shlinkify-item');
 		} else {
 			return true;
 		}
-		let copy = event.target.classList.contains('shlink-item__copy') ||
-		           event.target.closest('.shlink-item__copy');
+		let copy = event.target.classList.contains('shlinkify-item__copy') ||
+		           event.target.closest('.shlinkify-item__copy');
 		if (copy) {
 			this.copyLink(item, copy);
 			return;
@@ -229,44 +229,44 @@ class ShlinkManager {
 	}
 
 	editShlink(item) {
-		let current = document.querySelector('.shlink-item--is-editing');
+		let current = document.querySelector('.shlinkify-item--is-editing');
 		if (current) {
-			current.classList.remove('shlink-item--is-editing');
+			current.classList.remove('shlinkify-item--is-editing');
 		}
-		item.classList.add('shlink-item--is-editing');
+		item.classList.add('shlinkify-item--is-editing');
 
 		var form;
-		if (item.querySelector('.shlink-item__edit')) {
-			form = item.querySelector('.shlink-item__edit');
+		if (item.querySelector('.shlinkify-item__edit')) {
+			form = item.querySelector('.shlinkify-item__edit');
 		} else {
 			let shortUrl = item.getAttribute('data-short-url');
 			form = item.appendChild(document.createElement('form'));
 			form.setAttribute('action', '/wp-admin/admin-ajax.php');
 			form.setAttribute('method', 'POST');
-			form.classList.add('shlink-item__edit');
+			form.classList.add('shlinkify-item__edit');
 			form.innerHTML = `
-					<input type="hidden" name="_wpnonce" value="${this.escape(shlink_nonces.save_shlink)}">
-					<h3 class="shlink-edit-heading">${this.getCopyHTML()} ${shortUrl}</h3>
-					<div class="shlink-edit-field">
-						<label for="shlink-edit-title" class="shlink-label">Title</label>
-						<input type="text" id="shlink-edit-title" name="title" class="shlink-title regular-text ltr" value="${item.getAttribute('data-title')}">
+					<input type="hidden" name="_wpnonce" value="${this.escape(shlinkify_nonces.update)}">
+					<h3 class="shlinkify-edit-heading">${this.getCopyHTML()} ${shortUrl}</h3>
+					<div class="shlinkify-edit-field">
+						<label for="shlinkify-edit-title" class="shlinkify-label">Title</label>
+						<input type="text" id="shlinkify-edit-title" name="title" class="shlinkify-title regular-text ltr" value="${item.getAttribute('data-title')}">
 					</div>
-					<div class="shlink-edit-field">
-						<label for="shlink-edit-long-url" class="shlink-label">Long URL</label>
-						<input type="text" id="shlink-edit-long-url" name="long_url" class="shlink-long-url regular-text ltr" value="${item.getAttribute('data-long-url')}">
+					<div class="shlinkify-edit-field">
+						<label for="shlinkify-edit-long-url" class="shlinkify-label">Long URL</label>
+						<input type="text" id="shlinkify-edit-long-url" name="long_url" class="shlinkify-long-url regular-text ltr" value="${item.getAttribute('data-long-url')}">
 					</div>
-					<div class="shlink-edit-buttons">
-						<input type="submit" value="Save" class="shlink-save button button-primary">
-						<input type="button" value="Cancel" class="shlink-cancel button">
+					<div class="shlinkify-edit-buttons">
+						<input type="submit" value="Save" class="shlinkify-save button button-primary">
+						<input type="button" value="Cancel" class="shlinkify-cancel button">
 					</div>
 			`;
 			form.addEventListener('submit', this.saveShlink.bind(this));
 
-			let cancel = form.querySelector('.shlink-cancel');
+			let cancel = form.querySelector('.shlinkify-cancel');
 			cancel.addEventListener('click', event => {
 				event.preventDefault();
-				let item = event.target.closest('.shlink-item');
-				item.classList.remove('shlink-item--is-editing');
+				let item = event.target.closest('.shlinkify-item');
+				item.classList.remove('shlinkify-item--is-editing');
 			});
 		}
 	}
@@ -274,12 +274,12 @@ class ShlinkManager {
 	async saveShlink(event) {
 		event.preventDefault();
 
-		let item = event.target.closest('.shlink-item');
-		let title = item.querySelector('.shlink-title').value;
-		let longUrl = item.querySelector('.shlink-long-url').value;
+		let item = event.target.closest('.shlinkify-item');
+		let title = item.querySelector('.shlinkify-title').value;
+		let longUrl = item.querySelector('.shlinkify-long-url').value;
 
-		item.classList.remove('shlink-item--is-editing');
-		item.classList.add('shlink-item--is-saving');
+		item.classList.remove('shlinkify-item--is-editing');
+		item.classList.add('shlinkify-item--is-saving');
 
 		let result = await fetch('/wp-admin/admin-ajax.php', {
 			method: 'POST',
@@ -287,11 +287,11 @@ class ShlinkManager {
 				'Content-Type': 'application/x-www-form-urlencoded'
 			},
 			body: this.encodeFormData({
-				action: 'update_shlink',
+				action: 'shlinkify_update',
 				title: title,
 				long_url: longUrl,
 				short_code: item.getAttribute('data-short-code'),
-				_wpnonce: shlink_nonces.update_shlink
+				_wpnonce: shlinkify_nonces.update
 			})
 		});
 		let response = await result.json();
@@ -300,18 +300,18 @@ class ShlinkManager {
 
 			if (shlink.shortCode) {
 				item.innerHTML = this.getItemContentHTML(response.shlink);
-				item.classList.remove('shlink-item--is-saving');
+				item.classList.remove('shlinkify-item--is-saving');
 
 				item.setAttribute('data-title', shlink.title);
 				item.setAttribute('data-long-url', shlink.longUrl);
 				item.setAttribute('data-short-code', shlink.shortCode);
 
-				let longURL = item.querySelector('.shlink-item__long-url');
+				let longURL = item.querySelector('.shlinkify-item__long-url');
 				longURL.innerHTML = title || longUrl;
 				return true;
 			} else {
-				item.classList.add('shlink-item--is-editing');
-				item.classList.remove('shlink-item--is-saving');
+				item.classList.add('shlinkify-item--is-editing');
+				item.classList.remove('shlinkify-item--is-saving');
 
 				if (shlink.title && shlink.detail) {
 					alert(`Error: ${shlink.title}. ${shlink.detail}.`);
@@ -319,8 +319,8 @@ class ShlinkManager {
 				}
 			}
 		}
-		item.classList.add('shlink-item--is-editing');
-		item.classList.remove('shlink-item--is-saving');
+		item.classList.add('shlinkify-item--is-editing');
+		item.classList.remove('shlinkify-item--is-saving');
 		alert('Sorry, there was a problem saving changes to the Shlink.');
 		return false;
 	}
@@ -330,9 +330,9 @@ class ShlinkManager {
 			return;
 		}
 		await navigator.clipboard.writeText(item.getAttribute('data-short-url'));
-		copy.classList.add('shlink-item__copy--success');
+		copy.classList.add('shlinkify-item__copy--success');
 		setTimeout(() => {
-			copy.classList.remove('shlink-item__copy--success');
+			copy.classList.remove('shlinkify-item__copy--success');
 		}, 2000);
 	}
 
@@ -359,4 +359,4 @@ class ShlinkManager {
 
 }
 
-new ShlinkManager();
+new ShlinkifyManager();
