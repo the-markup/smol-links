@@ -11,6 +11,10 @@ echo
 echo "Running composer install..."
 echo
 docker-compose exec web composer --working-dir="/var/www/html/wp-content/plugins/shlinkify" install
+echo
+
+echo "Installing testing scaffolding..."
+echo
 docker-compose exec web /var/www/html/wp-content/plugins/shlinkify/bin/drop-database.sh
 docker-compose exec web /var/www/html/wp-content/plugins/shlinkify/bin/install-wp-tests.sh wordpress wordpress wordpress db
 echo
