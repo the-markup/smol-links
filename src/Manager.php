@@ -127,7 +127,7 @@ class Manager {
 
 				foreach ($this->tabs as $tab => $query) {
 					$selected = ($this->current_tab() == $tab) ? ' class="selected"' : '';
-					echo "<li><a href=\"?page=shlinks&tab=$tab\"$selected>$tab</a></li>";
+					echo "<li><a href=\"?page=shlinkify&tab=$tab\"$selected>$tab</a></li>";
 				}
 
 				?>
