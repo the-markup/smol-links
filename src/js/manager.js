@@ -295,11 +295,11 @@ class ShlinkifyManager {
 			})
 		});
 		let response = await result.json();
-		if (response && response.ok && response.shlink) {
-			let shlink = response.shlink;
+		if (response && response.ok && response.shlinkify) {
+			let shlink = response.shlinkify;
 
 			if (shlink.shortCode) {
-				item.innerHTML = this.getItemContentHTML(response.shlink);
+				item.innerHTML = this.getItemContentHTML(shlink);
 				item.classList.remove('shlinkify-item--is-saving');
 
 				item.setAttribute('data-title', shlink.title);

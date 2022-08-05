@@ -242,7 +242,7 @@ class Manager {
 		header('Content-Type: application/json');
 		echo wp_json_encode([
 			'ok' => true,
-			'shlink' => $response
+			'shlinkify' => $response
 		]);
 		exit;
 	}
@@ -265,7 +265,7 @@ class Manager {
 		header('Content-Type: application/json');
 		echo wp_json_encode([
 			'ok' => true,
-			'shlink' => $response
+			'shlinkify' => $response
 		]);
 		exit;
 	}
