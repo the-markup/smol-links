@@ -16,9 +16,9 @@ class Manager {
 		add_action('init', [$this, 'on_init']);
 		add_action('admin_menu', [$this, 'on_admin_menu']);
 		add_action('admin_enqueue_scripts', [$this, 'on_enqueue_assets']);
-		add_action('wp_ajax_get_shlinks', [$this, 'ajax_get_shlinks']);
-		add_action('wp_ajax_create_shlink', [$this, 'ajax_create_shlink']);
-		add_action('wp_ajax_update_shlink', [$this, 'ajax_update_shlink']);
+		add_action('wp_ajax_shlinkify_load', [$this, 'ajax_load']);
+		add_action('wp_ajax_shlinkify_create', [$this, 'ajax_create']);
+		add_action('wp_ajax_shlinkify_update', [$this, 'ajax_update']);
 	}
 
 	function on_init() {
@@ -72,7 +72,7 @@ class Manager {
 
 		?>
 		<div class="wrap">
-			<h1><?php _e('Shlinkify Manager', 'shlinkify'); ?></h1>
+			<h1><?php _e('Shlinkify', 'shlinkify'); ?></h1>
 			<form action="/wp-admin/admin-ajax.php" method="post" class="shlinkify-create">
 				<input type="hidden" name="action" value="create_shlink">
 				<div class="shlinkify-create-feedback"></div>
@@ -183,9 +183,9 @@ class Manager {
 		<?php
 	}
 
-	function ajax_get_shlinks() {
+	function ajax_load() {
 		try {
-			check_ajax_referer('get_shlinks');
+			check_ajax_referer('shlinkify_load');
 			$request = [
 				'page'         => 1,
 				'itemsPerPage' => 25,
@@ -208,7 +208,7 @@ class Manager {
 			header('Content-Type: application/json');
 			echo wp_json_encode([
 				'ok' => true,
-				'shlink' => $response
+				'shlinkify' => $response
 			]);
 		} catch (\Exception $error) {
 			header('Content-Type: application/json');
@@ -220,8 +220,8 @@ class Manager {
 		exit;
 	}
 
-	function ajax_create_shlink() {
-		check_ajax_referer('create_shlink');
+	function ajax_create() {
+		check_ajax_referer('shlinkify_create');
 
 		$request = [
 			'longUrl' => apply_filters('shlinkify_long_url', $_POST['long_url']),
@@ -247,8 +247,8 @@ class Manager {
 		exit;
 	}
 
-	function ajax_update_shlink() {
-		check_ajax_referer('update_shlink');
+	function ajax_update() {
+		check_ajax_referer('shlinkify_update');
 
 		$request = [
 			'longUrl' => apply_filters('shlinkify_long_url', $_POST['long_url']),
