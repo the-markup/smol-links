@@ -8,7 +8,7 @@
 }
 
 .shlinkify-create {
-	padding: 15px;
+	padding: 15px 15px 0 15px;
 
 	.shlinkify-label {
 		display: block;
@@ -216,5 +216,13 @@
 		.shlinkify-item__copy-success {
 			display: inline-block;
 		}
+	}
+}
+
+.shlinkify-create-feedback {
+	margin-top: 20px;
+
+	.wrap & .notice {
+		margin-bottom: 0;
 	}
 }

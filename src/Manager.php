@@ -75,7 +75,6 @@ class Manager {
 			<h1><?php _e('Shlinkify', 'shlinkify'); ?></h1>
 			<form action="/wp-admin/admin-ajax.php" method="post" class="shlinkify-create">
 				<input type="hidden" name="action" value="create_shlink">
-				<div class="shlinkify-create-feedback"></div>
 				<div class="shlinkify-edit-field">
 					<label for="shlinkify-create__long-url" class="shlinkify-label">URL to shorten</label>
 					<input type="text" name="long_url" id="shlinkify-create__long-url" class="shlinkify-long-url regular-text ltr">
@@ -91,6 +90,7 @@ class Manager {
 				<div class="shlinkify-buttons">
 					<input type="submit" value="Shorten" class="shlinkn-submit button button-primary">
 				</div>
+				<div class="shlinkify-create-feedback"></div>
 			</form>
 			<div class="shlinkify-manager">
 				<?php $this->manager_tabs(); ?>
@@ -237,11 +237,19 @@ class Manager {
 			$request['tags'] = $tags;
 		}
 
-		$response = $this->plugin->api->create_shlink($request);
+		$ok = true;
+		try {
+			$response = $this->plugin->api->create_shlink($request);
+		} catch (ShlinkException $err) {
+			$ok = false;
+			$response = [
+				'detail' => $err->getMessage()
+			];
+		}
 
 		header('Content-Type: application/json');
 		echo wp_json_encode([
-			'ok' => true,
+			'ok' => $ok,
 			'shlinkify' => $response
 		]);
 		exit;
