@@ -6,8 +6,8 @@ class Manager {
 
 	var $default_tabs = [
 		'All'            => [],
-		'Manual'         => ['tags[]' => 'shlinkify-manual'],
-		'Auto-generated' => ['tags[]' => 'shlinkify-auto']
+		'Manual'         => ['tags[]' => 'shlinkify-manager'],
+		'Auto-generated' => ['tags[]' => 'shlinkify-onsave']
 	];
 
 	function __construct($plugin) {
