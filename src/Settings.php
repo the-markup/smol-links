@@ -25,7 +25,6 @@ class Settings {
 			if ($domains) {
 				$this->set_domains_option($domains);
 				$this->set_default_domain_option($domains);
-				delete_transient('shlinkify_error');
 			}
 		}
 	}
@@ -36,6 +35,7 @@ class Settings {
 			if (! empty($result['domains']['data'])) {
 				return $result['domains']['data'];
 			}
+			delete_transient('shlinkify_error');
 		} catch (ShlinkException $err) {
 			set_transient('shlinkify_error', $err->getMessage());
 		}
