@@ -25,14 +25,19 @@ class Settings {
 			if ($domains) {
 				$this->set_domains_option($domains);
 				$this->set_default_domain_option($domains);
+				delete_transient('shlinkify_error');
 			}
 		}
 	}
 
 	function load_domains() {
-		$result = $this->plugin->api->get_domains();
-		if (! empty($result['domains']['data'])) {
-			return $result['domains']['data'];
+		try {
+			$result = $this->plugin->api->get_domains();
+			if (! empty($result['domains']['data'])) {
+				return $result['domains']['data'];
+			}
+		} catch (ShlinkException $err) {
+			set_transient('shlinkify_error', $err->getMessage());
 		}
 		return false;
 	}
@@ -200,7 +205,7 @@ class Settings {
 				]);
 				exit;
 			}
-		} catch (Exception $error) {
+		} catch (\Exception $error) {
 			$errorMessage = $error->getMessage();
 		}
 		echo wp_json_encode([

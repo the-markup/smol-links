@@ -11,4 +11,14 @@
 
 namespace Shlinkify;
 
-class ShlinkException extends \Exception {}
+class ShlinkException extends \Exception {
+
+	public $response;
+
+	function __construct($response) {
+		$this->response = $response;
+		$message = $response['detail'] ?: 'Unknown error';
+		parent::__construct($message);
+	}
+
+}

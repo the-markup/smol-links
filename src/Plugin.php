@@ -27,6 +27,7 @@ class Plugin {
 		$this->editor =   new Editor($this);
 		add_action('save_post', [$this, 'on_save_post']);
 		add_filter('shlinkify_tags', [$this, 'on_shlinkify_tags']);
+		add_action('admin_notices', [$this, 'on_admin_notices']);
 	}
 
 	/**
@@ -191,6 +192,21 @@ class Plugin {
 		$tags[] = "shlinkify-user:{$user->user_login}";
 
 		return $tags;
+	}
+
+	/**
+	 * Displays any Shlink API errors
+	 **/
+	function on_admin_notices() {
+		$error = get_transient('shlinkify_error');
+		delete_transient('shlinkify_error');
+		if (! empty($error)) {
+			?>
+			<div class="notice notice-error is-dismissible">
+				<p>Shlinkify: <?php echo $error; ?></p>
+			</div>
+			<?php
+		}
 	}
 
 }

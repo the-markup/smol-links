@@ -67,8 +67,8 @@ class API {
 			throw new \Exception('shlinkify: ' . $response->get_error_message());
 		} else if ($status != 200) {
 			$rsp = json_decode($response['body'], 'array');
-			if (! empty($rsp['detail'])) {
-				throw new ShlinkException($rsp['detail']);
+			if ($rsp) {
+				throw new ShlinkException($rsp);
 			}
 			throw new \Exception("shlinkify: HTTP $status {$response['body']}");
 		} else if (! empty($response['body'])) {
