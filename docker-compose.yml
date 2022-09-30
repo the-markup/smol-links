@@ -1,30 +1,30 @@
-version: "3.5"
+version: '3.5'
 services:
-  web:
-    build:
-      context: ./
-    ports:
-      - 8080:80
-    environment:
-      WORDPRESS_DB_HOST: db
-      WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD: wordpress
-      WORDPRESS_DB_NAME: wordpress
-      WORDPRESS_DEBUG: '1'
-      WORDPRESS_CONFIG_EXTRA: "define( 'WP_DEBUG_LOG', '/tmp/debug.log' ); define( 'WP_DEBUG_DISPLAY', false );"
-    volumes:
-      - .:/var/www/html/wp-content/plugins/shlinkify
-  db:
-    image: mariadb:10.5.8
-    ports:
-      - 33006:3306
-    restart: always
-    environment:
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: wordpress
-      MYSQL_PASSWORD: wordpress
-      MYSQL_RANDOM_ROOT_PASSWORD: '1'
-    volumes:
-      - db:/var/lib/mysql
+    web:
+        build:
+            context: ./
+        ports:
+            - 8080:80
+        environment:
+            WORDPRESS_DB_HOST: db
+            WORDPRESS_DB_USER: wordpress
+            WORDPRESS_DB_PASSWORD: wordpress
+            WORDPRESS_DB_NAME: wordpress
+            WORDPRESS_DEBUG: '1'
+            WORDPRESS_CONFIG_EXTRA: "define( 'WP_DEBUG_LOG', '/tmp/debug.log' ); define( 'WP_DEBUG_DISPLAY', false );"
+        volumes:
+            - .:/var/www/html/wp-content/plugins/shlinkify
+    db:
+        image: mariadb:10.5.8
+        ports:
+            - 33006:3306
+        restart: always
+        environment:
+            MYSQL_DATABASE: wordpress
+            MYSQL_USER: wordpress
+            MYSQL_PASSWORD: wordpress
+            MYSQL_RANDOM_ROOT_PASSWORD: '1'
+        volumes:
+            - db:/var/lib/mysql
 volumes:
-  db: {}
+    db: {}

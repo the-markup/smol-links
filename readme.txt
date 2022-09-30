@@ -19,6 +19,16 @@ A WordPress dashboard interface for managing a self-hosted [Shlink URL shortener
 
 * Create and edit Shlinks short links from a manager interface
 * Optionally generate new short URLs upon saving new posts
+* Manage multiple short URL domains, with an assigned default
+* Automatically tag each short link, configurable with a filter hook
+* Customize long URLs automatically using a filter hook (e.g., to add query arguments)
+* Integrates with [WordPress Sentry](https://wordpress.org/plugins/wp-sentry-integration/) plugin, if installed
+
+__Filter hooks__
+
+* `shlinkify_tags` - assigns tags to each saved short link (default: `["shlinkify-server:$hostname", "shlinkify-user:$username"]`)
+* `shlinkify_long_url` - automatically adjust the long URL redirect
+* `shlinkify_manager_tabs` - customizes the manager tabs (array: ["Tab label" => [*Shlink API query*]])
 
 === Developer setup ===
 

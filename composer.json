@@ -1,24 +1,24 @@
 {
-    "name": "the-markup/shlinkify",
-    "description": "Create and manage Shlink short links from WordPress",
-    "type": "wordpress-plugin",
-    "require-dev": {
-        "phpunit/phpunit": "^7.5",
-        "yoast/phpunit-polyfills": "^1.0"
-    },
-    "license": "GPL-2.0-or-later",
-    "authors": [
-        {
-            "name": "The Markup",
-            "email": "infra@themarkup.org"
-        }
-    ],
-    "scripts": {
-        "test": "@php ./vendor/phpunit/phpunit/phpunit"
-    },
-    "autoload": {
-        "psr-4": {
-            "Shlinkify\\": "src/"
-        }
-    }
+	"name": "the-markup/shlinkify",
+	"description": "Create and manage Shlink short links from WordPress",
+	"type": "wordpress-plugin",
+	"require-dev": {
+		"phpunit/phpunit": "^7.5",
+		"yoast/phpunit-polyfills": "^1.0"
+	},
+	"license": "GPL-2.0-or-later",
+	"authors": [
+		{
+			"name": "The Markup",
+			"email": "infra@themarkup.org"
+		}
+	],
+	"scripts": {
+		"test": "@php ./vendor/phpunit/phpunit/phpunit"
+	},
+	"autoload": {
+		"psr-4": {
+			"Shlinkify\\": "src/"
+		}
+	}
 }
