@@ -22,13 +22,13 @@ class SmolLinksManager {
 			let response = await result.json();
 			let html = 'Oops, something unexpected happened';
 
-			if (!response.ok || !response.smol_links) {
+			if (!response.ok || !response.shlink) {
 				html =
 					'Error: ' +
 					(response.error ||
 						'something went wrong loading shlinks. Try again?');
 			} else {
-				html = this.getListHTML(response.smol_links.shortUrls.data);
+				html = this.getListHTML(response.shlink.shortUrls.data);
 			}
 
 			let el = document.querySelector('.smol-links-list');
@@ -177,11 +177,11 @@ class SmolLinksManager {
 		titleField.removeAttribute('readonly');
 		domainField.removeAttribute('disabled');
 
-		if (response.smol_links && response.smol_links.shortCode) {
-			item.innerHTML = this.getItemContentHTML(response.smol_links);
-			item.setAttribute('data-title', response.smol_links.title || '');
-			item.setAttribute('data-short-code', response.smol_links.shortCode);
-			item.setAttribute('data-short-url', response.smol_links.shortUrl);
+		if (response.shlink && response.shlink.shortCode) {
+			item.innerHTML = this.getItemContentHTML(response.shlink);
+			item.setAttribute('data-title', response.shlink.title || '');
+			item.setAttribute('data-short-code', response.shlink.shortCode);
+			item.setAttribute('data-short-url', response.shlinnk.shortUrl);
 			longURLField.value = '';
 			shortCodeField.value = '';
 			titleField.value = '';
@@ -189,11 +189,11 @@ class SmolLinksManager {
 			list.removeChild(item);
 			let title = 'Error';
 			let detail = 'Could not create shlink';
-			if (response.smol_links && response.smol_links.title) {
-				title = response.smol_links.title;
+			if (response.shlink && response.shlink.title) {
+				title = response.shlink.title;
 			}
-			if (response.smol_links && response.smol_links.detail) {
-				detail = response.smol_links.detail;
+			if (response.shlink && response.shlink.detail) {
+				detail = response.shlink.detail;
 			}
 			feedback.innerHTML = `
 				<div class="notice notice-error is-dismissible">
@@ -307,8 +307,8 @@ class SmolLinksManager {
 			}),
 		});
 		let response = await result.json();
-		if (response && response.ok && response.smol_links) {
-			let shlink = response.smol_links;
+		if (response && response.ok && response.shlink) {
+			let shlink = response.shlink;
 
 			if (shlink.shortCode) {
 				item.innerHTML = this.getItemContentHTML(shlink);
