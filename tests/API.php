@@ -2,14 +2,14 @@
 /**
  * Class TestAPI
  *
- * @package   Shlink
+ * @package   Smol Links
  * @author    The Markup
  * @license   GPL-2.0-or-later
  * @link      https://themarkup.org/
  * @copyright 2022 The Markup
  */
 
-class TestAPI extends Shlinkify\API {
+class TestAPI extends SmolLinks\API {
 
 	function request($method, $endpoint, $args = null) {
 		$tags = isset($args['tags']) ? $args['tags'] : [];

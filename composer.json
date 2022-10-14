@@ -1,5 +1,5 @@
 {
-	"name": "the-markup/shlinkify",
+	"name": "the-markup/smol-links",
 	"description": "Create and manage Shlink short links from WordPress",
 	"type": "wordpress-plugin",
 	"require-dev": {
@@ -18,7 +18,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Shlinkify\\": "src/"
+			"SmolLinks\\": "src/"
 		}
 	}
 }

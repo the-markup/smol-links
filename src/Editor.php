@@ -1,6 +1,15 @@
 <?php
+/**
+ * Class Editor
+ *
+ * @package   Smol Links
+ * @author    The Markup
+ * @license   GPL-2.0-or-later
+ * @link      https://themarkup.org/
+ * @copyright 2022 The Markup
+ */
 
-namespace Shlinkify;
+namespace SmolLinks;
 
 class Editor {
 
@@ -11,17 +20,17 @@ class Editor {
 	}
 
 	function on_init() {
-		register_meta('post', 'shlinkify_long_url', array(
+		register_meta('post', 'smol_links_long_url', array(
 			'show_in_rest' => true,
 			'type' => 'string',
 			'single' => true
 		));
-		register_meta('post', 'shlinkify_short_url', array(
+		register_meta('post', 'smol_links_short_url', array(
 			'show_in_rest' => true,
 			'type' => 'string',
 			'single' => true
 		));
-		register_meta('post', 'shlinkify_short_code', array(
+		register_meta('post', 'smol_links_short_code', array(
 			'show_in_rest' => true,
 			'type' => 'string',
 			'single' => true
@@ -37,14 +46,14 @@ class Editor {
 		}
 
 		wp_enqueue_script(
-			'shlinkify-editor',
+			'smol-links-editor',
 			plugins_url('build/editor.js', __DIR__),
 			['wp-edit-post', 'wp-components', 'wp-plugins', 'wp-data'],
 			filemtime(plugin_dir_path(__DIR__) . 'build/editor.js')
 		);
 
 		wp_enqueue_style(
-			'shlinkify-editor',
+			'smol-links-editor',
 			plugins_url('build/editor.css', __DIR__),
 			[],
 			filemtime(plugin_dir_path(__DIR__) . 'build/editor.css')

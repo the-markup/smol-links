@@ -2,14 +2,14 @@
 /**
  * Class API
  *
- * @package   Shlinkify
+ * @package   Smol Links
  * @author    The Markup
  * @license   GPL-2.0-or-later
  * @link      https://themarkup.org/
  * @copyright 2022 The Markup
  */
 
-namespace Shlinkify;
+namespace SmolLinks;
 
 /**
  * Interface to the Shlink REST API
@@ -64,17 +64,17 @@ class API {
 		$response = wp_remote_request($url, $request);
 		$status = wp_remote_retrieve_response_code($response);
 		if (is_wp_error($response)) {
-			throw new \Exception('shlinkify: ' . $response->get_error_message());
+			throw new \Exception('Smol Links: ' . $response->get_error_message());
 		} else if ($status != 200) {
 			$rsp = json_decode($response['body'], 'array');
 			if ($rsp) {
 				throw new ShlinkException($rsp);
 			}
-			throw new \Exception("shlinkify: HTTP $status {$response['body']}");
+			throw new \Exception("Smol Links: HTTP $status {$response['body']}");
 		} else if (! empty($response['body'])) {
 			return json_decode($response['body'], 'array');
 		} else {
-			throw new \Exception("shlinkify: error loading $endpoint");
+			throw new \Exception("Smol Links: error loading $endpoint");
 		}
 	}
 

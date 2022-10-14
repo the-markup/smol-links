@@ -1,36 +1,45 @@
 <?php
+/**
+ * Class Manager
+ *
+ * @package   Smol Links
+ * @author    The Markup
+ * @license   GPL-2.0-or-later
+ * @link      https://themarkup.org/
+ * @copyright 2022 The Markup
+ */
 
-namespace Shlinkify;
+namespace SmolLinks;
 
 class Manager {
 
 	var $default_tabs = [
 		'All'            => [],
-		'Manual'         => ['tags[]' => 'shlinkify-manager'],
-		'Auto-generated' => ['tags[]' => 'shlinkify-onsave']
+		'Manual'         => ['tags[]' => 'smol-links-manager'],
+		'Auto-generated' => ['tags[]' => 'smol-links-onsave']
 	];
 
 	function __construct($plugin) {
 		$this->plugin = $plugin;
-		add_filter('shlinkify_manager_tabs', [$this, 'add_my_links_tab']);
+		add_filter('smol_links_manager_tabs', [$this, 'add_my_links_tab']);
 		add_action('init', [$this, 'on_init']);
 		add_action('admin_menu', [$this, 'on_admin_menu']);
 		add_action('admin_enqueue_scripts', [$this, 'on_enqueue_assets']);
-		add_action('wp_ajax_shlinkify_load', [$this, 'ajax_load']);
-		add_action('wp_ajax_shlinkify_create', [$this, 'ajax_create']);
-		add_action('wp_ajax_shlinkify_update', [$this, 'ajax_update']);
+		add_action('wp_ajax_smol_links_load', [$this, 'ajax_load']);
+		add_action('wp_ajax_smol_links_create', [$this, 'ajax_create']);
+		add_action('wp_ajax_smol_links_update', [$this, 'ajax_update']);
 	}
 
 	function on_init() {
-		$this->tabs = apply_filters('shlinkify_manager_tabs', $this->default_tabs);
+		$this->tabs = apply_filters('smol_links_manager_tabs', $this->default_tabs);
 	}
 
 	function on_admin_menu() {
 		add_menu_page(
-			__('Shlinkify', 'shlinkify'),
-			__('Shlinkify', 'shlinkify'),
+			__('Smol Links', 'smol-links'),
+			__('Smol Links', 'smol-links'),
 			'edit_posts',
-			'shlinkify',
+			'smol-links',
 			[$this, 'manager_page'],
 			'dashicons-admin-links',
 			20
@@ -38,28 +47,28 @@ class Manager {
 	}
 
 	function on_enqueue_assets($suffix) {
-		if ($suffix != 'toplevel_page_shlinkify') {
+		if ($suffix != 'toplevel_page_smol-links') {
 			return;
 		}
 
 		wp_enqueue_script(
-			'shlinkify-manager',
+			'smol-links-manager',
 			plugins_url('build/manager.js', __DIR__),
 			[],
 			filemtime(plugin_dir_path(__DIR__) . 'build/manager.js')
 		);
 
 		wp_enqueue_style(
-			'shlinkify-manager',
+			'smol-links-manager',
 			plugins_url('build/manager.css', __DIR__),
 			[],
 			filemtime(plugin_dir_path(__DIR__) . 'build/manager.css')
 		);
 
-		wp_add_inline_script('shlinkify-manager', 'var shlinkify_nonces = ' . wp_json_encode([
-			'load'   => wp_create_nonce('shlinkify_load'),
-			'create' => wp_create_nonce('shlinkify_create'),
-			'update' => wp_create_nonce('shlinkify_update')
+		wp_add_inline_script('smol-links-manager', 'var smol_links_nonces = ' . wp_json_encode([
+			'load'   => wp_create_nonce('smol_links_load'),
+			'create' => wp_create_nonce('smol_links_create'),
+			'update' => wp_create_nonce('smol_links_update')
 		]) . ';', 'before');
 	}
 
@@ -72,33 +81,33 @@ class Manager {
 
 		?>
 		<div class="wrap">
-			<h1><?php _e('Shlinkify', 'shlinkify'); ?></h1>
-			<form action="/wp-admin/admin-ajax.php" method="post" class="shlinkify-create">
+			<h1><?php _e('Smol Links', 'smol-links'); ?></h1>
+			<form action="/wp-admin/admin-ajax.php" method="post" class="smol-links-create">
 				<input type="hidden" name="action" value="create_shlink">
-				<div class="shlinkify-edit-field">
-					<label for="shlinkify-create__long-url" class="shlinkify-label">URL to shorten</label>
-					<input type="text" name="long_url" id="shlinkify-create__long-url" class="shlinkify-long-url regular-text ltr">
+				<div class="smol-links-edit-field">
+					<label for="smol-links-create__long-url" class="smol-links-label">URL to shorten</label>
+					<input type="text" name="long_url" id="smol-links-create__long-url" class="smol-links-long-url regular-text ltr">
 				</div>
-				<div class="shlinkify-edit-field">
-					<label for="shlinkify-create__title" class="shlinkify-label shlinkify-label--optional">Title</label>
-					<input type="text" name="title" id="shlinkify-create__title" class="shlinkify-title regular-text ltr">
+				<div class="smol-links-edit-field">
+					<label for="smol-links-create__title" class="smol-links-label smol-links-label--optional">Title</label>
+					<input type="text" name="title" id="smol-links-create__title" class="smol-links-title regular-text ltr">
 				</div>
-				<div class="shlinkify-edit-field">
-					<label for="shlinkify-create__short-code" class="shlinkify-label shlinkify-label--optional">Short code</label>
-					<?php $this->short_code_domain(); ?><input type="text" name="short_code" id="shlinkify-create__short-code" class="shlinkify-short-code regular-text ltr">
+				<div class="smol-links-edit-field">
+					<label for="smol-links-create__short-code" class="smol-links-label smol-links-label--optional">Short code</label>
+					<?php $this->short_code_domain(); ?><input type="text" name="short_code" id="smol-links-create__short-code" class="smol-links-short-code regular-text ltr">
 				</div>
-				<div class="shlinkify-buttons">
+				<div class="smol-links-buttons">
 					<input type="submit" value="Shorten" class="shlinkn-submit button button-primary">
 				</div>
-				<div class="shlinkify-create-feedback"></div>
+				<div class="smol-links-create-feedback"></div>
 			</form>
-			<div class="shlinkify-manager">
+			<div class="smol-links-manager">
 				<?php $this->manager_tabs(); ?>
-				<div class="shlinkify-list">
-					<div class="shlinkify-loading">
-						<span class="shlinkify-loading-dot shlinkify-loading-dot--1"></span>
-						<span class="shlinkify-loading-dot shlinkify-loading-dot--2"></span>
-						<span class="shlinkify-loading-dot shlinkify-loading-dot--3"></span>
+				<div class="smol-links-list">
+					<div class="smol-links-loading">
+						<span class="smol-links-loading-dot smol-links-loading-dot--1"></span>
+						<span class="smol-links-loading-dot smol-links-loading-dot--2"></span>
+						<span class="smol-links-loading-dot smol-links-loading-dot--3"></span>
 					</div>
 				</div>
 			</div>
@@ -113,7 +122,7 @@ class Manager {
 			$new_tabs[$key] = $query;
 			if ($key == 'All') {
 				// Add a 'My Links' tab right after 'All'
-				$new_tabs['My Links'] = ['tags[]' => "shlinkify-user:{$user->user_login}"];
+				$new_tabs['My Links'] = ['tags[]' => "smol-links-user:{$user->user_login}"];
 			}
 		}
 		return $new_tabs;
@@ -121,13 +130,13 @@ class Manager {
 
 	function manager_tabs() {
 		?>
-		<div class="shlinkify-tabs">
+		<div class="smol-links-tabs">
 			<ul>
 				<?php
 
 				foreach ($this->tabs as $tab => $query) {
 					$selected = ($this->current_tab() == $tab) ? ' class="selected"' : '';
-					echo "<li><a href=\"?page=shlinkify&tab=$tab\"$selected>$tab</a></li>";
+					echo "<li><a href=\"?page=smol-links&tab=$tab\"$selected>$tab</a></li>";
 				}
 
 				?>
@@ -156,10 +165,10 @@ class Manager {
 		$default = $this->plugin->options->get('default_domain');
 		if (count($domains) == 1) {
 			$domain = htmlentities($domains[0]);
-			echo "<span class=\"shlinkify-short-code-domain\">https://$domain/</span>";
-			echo "<input type=\"hidden\" name=\"domain\" value=\"$domain\" class=\"shlinkify-domain\">";
+			echo "<span class=\"smol-links-short-code-domain\">https://$domain/</span>";
+			echo "<input type=\"hidden\" name=\"domain\" value=\"$domain\" class=\"smol-links-domain\">";
 		} else {
-			echo "<select class=\"shlinkify-short-code-domain shlinkify-domain\">\n";
+			echo "<select class=\"smol-links-short-code-domain smol-links-domain\">\n";
 			foreach ($domains as $domain) {
 				$selected = ($domain == $default) ? ' selected="selected"' : '';
 				$domain = htmlentities($domain);
@@ -172,11 +181,11 @@ class Manager {
 	function config_error() {
 		?>
 		<div class="wrap">
-			<h1><?php _e('Shlinkify', 'shlinkify'); ?></h1>
+			<h1><?php _e('Smol Links', 'smol-links'); ?></h1>
 			<div class="notice notice-warning">
 				<p>
 					Cannot connect to Shlink Server.
-					<a href="/wp-admin/options-general.php?page=shlinkify-settings"><?php _e('Please configure Shlink API settings.', 'shlinkify'); ?></a>
+					<a href="/wp-admin/options-general.php?page=smol-links-settings"><?php _e('Please configure Shlink API settings.', 'smol-links'); ?></a>
 				</p>
 			</div>
 		</div>
@@ -185,7 +194,7 @@ class Manager {
 
 	function ajax_load() {
 		try {
-			check_ajax_referer('shlinkify_load');
+			check_ajax_referer('smol_links_load');
 			$request = [
 				'page'         => 1,
 				'itemsPerPage' => 25,
@@ -208,7 +217,7 @@ class Manager {
 			header('Content-Type: application/json');
 			echo wp_json_encode([
 				'ok' => true,
-				'shlinkify' => $response
+				'smol-links' => $response
 			]);
 		} catch (\Exception $error) {
 			header('Content-Type: application/json');
@@ -221,10 +230,10 @@ class Manager {
 	}
 
 	function ajax_create() {
-		check_ajax_referer('shlinkify_create');
+		check_ajax_referer('smol_links_create');
 
 		$request = [
-			'longUrl' => apply_filters('shlinkify_long_url', $_POST['long_url']),
+			'longUrl' => apply_filters('smol_links_long_url', $_POST['long_url']),
 			'title'   => $_POST['title']
 		];
 
@@ -232,7 +241,7 @@ class Manager {
 			$request['customSlug'] = $_POST['short_code'];
 		}
 
-		$tags = apply_filters('shlinkify_tags', ['shlinkify-manager']);
+		$tags = apply_filters('smol_links_tags', ['smol-links-manager']);
 		if (is_array($tags)) {
 			$request['tags'] = $tags;
 		}
@@ -250,20 +259,20 @@ class Manager {
 		header('Content-Type: application/json');
 		echo wp_json_encode([
 			'ok' => $ok,
-			'shlinkify' => $response
+			'smol-links' => $response
 		]);
 		exit;
 	}
 
 	function ajax_update() {
-		check_ajax_referer('shlinkify_update');
+		check_ajax_referer('smol_links_update');
 
 		$request = [
-			'longUrl' => apply_filters('shlinkify_long_url', $_POST['long_url']),
+			'longUrl' => apply_filters('smol_links_long_url', $_POST['long_url']),
 			'title'   => $_POST['title']
 		];
 
-		$tags = apply_filters('shlinkify_tags', ['shlinkify-manager']);
+		$tags = apply_filters('smol_links_tags', ['smol-links-manager']);
 		if (is_array($tags)) {
 			$request['tags'] = $tags;
 		}
@@ -273,7 +282,7 @@ class Manager {
 		header('Content-Type: application/json');
 		echo wp_json_encode([
 			'ok' => true,
-			'shlinkify' => $response
+			'smol-links' => $response
 		]);
 		exit;
 	}
