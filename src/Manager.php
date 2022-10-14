@@ -217,7 +217,7 @@ class Manager {
 			header('Content-Type: application/json');
 			echo wp_json_encode([
 				'ok' => true,
-				'smol-links' => $response
+				'shlink' => $response
 			]);
 		} catch (\Exception $error) {
 			header('Content-Type: application/json');
@@ -259,7 +259,7 @@ class Manager {
 		header('Content-Type: application/json');
 		echo wp_json_encode([
 			'ok' => $ok,
-			'smol-links' => $response
+			'shlink' => $response
 		]);
 		exit;
 	}
@@ -282,7 +282,7 @@ class Manager {
 		header('Content-Type: application/json');
 		echo wp_json_encode([
 			'ok' => true,
-			'smol-links' => $response
+			'shlink' => $response
 		]);
 		exit;
 	}
