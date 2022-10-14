@@ -19,7 +19,7 @@ echo
 
 echo "Running composer install..."
 echo
-docker-compose exec web composer --working-dir="/var/www/html/wp-content/plugins/shlinkify" install
+docker-compose exec web composer --working-dir="/var/www/html/wp-content/plugins/smol-links" install
 echo
 
 echo "Running npm install..."

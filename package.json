@@ -1,5 +1,5 @@
 {
-	"name": "shlinkify",
+	"name": "smol-links",
 	"version": "0.0.1",
 	"description": "Create and manage Shlink short links from WordPress",
 	"main": "build/index.js",

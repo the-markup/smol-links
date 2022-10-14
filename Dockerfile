@@ -4,7 +4,8 @@ FROM wordpress:6.0.2-php7.4-apache
 RUN apt-get update && apt-get install -y \
 	less \
 	mariadb-client \
-	subversion;
+	subversion \
+	unzip;
 
 # Setup WP-CLI
 # See: https://wp-cli.org/

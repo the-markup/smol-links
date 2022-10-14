@@ -1,4 +1,4 @@
-# Shlinkify #
+# Smol Links #
 **Contributors:** [dphiffer](https://profiles.wordpress.org/dphiffer/)  
 **Donate link:** https://themarkup.org/donate  
 **Tags:** short url, shlink  
@@ -26,9 +26,9 @@ A WordPress dashboard interface for managing a self-hosted [Shlink URL shortener
 
 __Filter hooks__
 
-* `shlinkify_tags` - assigns tags to each saved short link (default: `["shlinkify-server:$hostname", "shlinkify-user:$username"]`)
-* `shlinkify_long_url` - automatically adjust the long URL redirect
-* `shlinkify_manager_tabs` - customizes the manager tabs (array: ["Tab label" => [*Shlink API query*]])
+* `smol_links_tags` - assigns tags to each saved short link (default: `["smol-links-server:$hostname", "smol-links-user:$username"]`)
+* `smol_links_long_url` - automatically adjust the long URL redirect
+* `smol_links_manager_tabs` - customizes the manager tabs (array: ["Tab label" => [*Shlink API query*]])
 
 # Developer setup #
 
@@ -47,14 +47,14 @@ __Build and start:__
 __Running tests:__
 
 ```
-docker-compose exec web composer --working-dir="/var/www/html/wp-content/plugins/shlinkify" test
+docker-compose exec web composer --working-dir="/var/www/html/wp-content/plugins/smol-links" test
 ```
 
 ## Installation ##
 
-1. Upload `shlinkify` folder to the `/wp-content/plugins/` directory
+1. Upload `smol-links` folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Configure the __Shlinkify__ settings from your WordPress dashboard
+3. Configure the __Smol Links__ settings from your WordPress dashboard
 
 ## Changelog ##
 

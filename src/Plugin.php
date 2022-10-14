@@ -2,14 +2,14 @@
 /**
  * Class Plugin
  *
- * @package   Shlinkify
+ * @package   Smol Links
  * @author    The Markup
  * @license   GPL-2.0-or-later
  * @link      https://themarkup.org/
  * @copyright 2022 The Markup
  */
 
-namespace Shlinkify;
+namespace SmolLinks;
 
 class Plugin {
 
@@ -26,7 +26,7 @@ class Plugin {
 		$this->manager =  new Manager($this);
 		$this->editor =   new Editor($this);
 		add_action('save_post', [$this, 'on_save_post']);
-		add_filter('shlinkify_tags', [$this, 'on_shlinkify_tags']);
+		add_filter('smol_links_tags', [$this, 'on_smol_links_tags']);
 		add_action('admin_notices', [$this, 'on_admin_notices']);
 	}
 
@@ -38,9 +38,9 @@ class Plugin {
 	 * post.
 	 *
 	 * The Shlink record includes the post's title and the following tags:
-	 * - `shlinkify-onsave`
-	 * - `shlinkify-site:[WordPress site hostname]`
-	 * - `shlinkify-post:[numeric post ID]`
+	 * - `smol-links-onsave`
+	 * - `smol-links-server:[WordPress site hostname]`
+	 * - `smol-links-post:[numeric post ID]`
 	 *
 	 * @param number $post_id The post's numeric ID
 	 * @return void
@@ -74,13 +74,13 @@ class Plugin {
 			}
 
 			$request = [
-				'longUrl' => apply_filters('shlinkify_long_url', $long_url),
+				'longUrl' => apply_filters('smol_links_long_url', $long_url),
 				'title'   => $post->post_title
 			];
 
-			$tags = apply_filters('shlinkify_tags', [
-				'shlinkify-onsave',
-				"shlinkify-post:{$post->ID}"
+			$tags = apply_filters('smol_links_tags', [
+				'smol-links-onsave',
+				"smol-links-post:{$post->ID}"
 			]);
 			if (is_array($tags)) {
 				$request['tags'] = $tags;
@@ -118,9 +118,9 @@ class Plugin {
 	 *                    and `short_code`
 	 */
 	function get_post_shlink($post) {
-		$long_url   = get_post_meta($post->ID, 'shlinkify_long_url', true);
-		$short_url  = get_post_meta($post->ID, 'shlinkify_short_url', true);
-		$short_code = get_post_meta($post->ID, 'shlinkify_short_code', true);
+		$long_url   = get_post_meta($post->ID, 'smol_links_long_url', true);
+		$short_url  = get_post_meta($post->ID, 'smol_links_short_url', true);
+		$short_code = get_post_meta($post->ID, 'smol_links_short_code', true);
 		if (empty($short_url) || empty($long_url) || empty($short_code)) {
 			return null;
 		}
@@ -162,11 +162,11 @@ class Plugin {
 	 */
 	function save_post_response($shlink, $post) {
 		if (! empty($shlink['shortUrl'])) {
-			update_post_meta($post->ID, 'shlinkify_long_url', $shlink['longUrl']);
-			update_post_meta($post->ID, 'shlinkify_short_url', $shlink['shortUrl']);
-			update_post_meta($post->ID, 'shlinkify_short_code', $shlink['shortCode']);
+			update_post_meta($post->ID, 'smol_links_long_url', $shlink['longUrl']);
+			update_post_meta($post->ID, 'smol_links_short_url', $shlink['shortUrl']);
+			update_post_meta($post->ID, 'smol_links_short_code', $shlink['shortCode']);
 		} else {
-			throw new \Exception("shlinkify: no 'shortUrl' found in API response");
+			throw new \Exception("Smol Links: no 'shortUrl' found in API response");
 		}
 	}
 
@@ -175,11 +175,11 @@ class Plugin {
 	 *
 	 * @param array $tags array of base tags to apply
 	 */
-	function on_shlinkify_tags($tags = []) {
+	function on_smol_links_tags($tags = []) {
 		$site_url = parse_url(get_site_url());
 		$user = wp_get_current_user();
 
-		// This conditional exists because in some conditions, for example
+		// This conditional exists because in some situations, for example
 		// when a save is cron-initiated, we cannot expect a valid URL from
 		// get_site_url(). And if you omit the 'tags' part of a shlink
 		// update, the tags assigned previously are still retained.
@@ -188,8 +188,8 @@ class Plugin {
 			return null;
 		}
 
-		$tags[] = "shlinkify-site:{$site_url['host']}";
-		$tags[] = "shlinkify-user:{$user->user_login}";
+		$tags[] = "smol-links-site:{$site_url['host']}";
+		$tags[] = "smol-links-user:{$user->user_login}";
 
 		return $tags;
 	}
@@ -198,12 +198,12 @@ class Plugin {
 	 * Displays any Shlink API errors
 	 **/
 	function on_admin_notices() {
-		$error = get_transient('shlinkify_error');
-		delete_transient('shlinkify_error');
+		$error = get_transient('smol_links_error');
+		delete_transient('smol_links_error');
 		if (! empty($error)) {
 			?>
 			<div class="notice notice-error is-dismissible">
-				<p>Shlinkify: <?php echo $error; ?></p>
+				<p>Smol Links: <?php echo $error; ?></p>
 			</div>
 			<?php
 		}

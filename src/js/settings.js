@@ -1,48 +1,48 @@
 import '../css/settings.scss';
 
-class ShlinkifySettings {
+class SmolLinksSettings {
 	constructor() {
 		this.setupDomainsRefresh();
 	}
 
 	setupDomainsRefresh() {
-		let link = document.querySelector( '.shlink-reload-domains' );
-		link.addEventListener( 'click', this.reloadDomains.bind( this ) );
+		let link = document.querySelector('.shlink-reload-domains');
+		link.addEventListener('click', this.reloadDomains.bind(this));
 	}
 
-	async reloadDomains( event ) {
+	async reloadDomains(event) {
 		event.preventDefault();
 
-		let link = document.querySelector( '.shlink-reload-domains' );
+		let link = document.querySelector('.shlink-reload-domains');
 		let linkOriginalLabel = link.innerHTML;
 		link.innerHTML = 'Loading domains...';
-		link.classList.add( 'is-loading' );
+		link.classList.add('is-loading');
 		link.blur();
-		let select = document.querySelector( '.shlink-domain-list' );
-		select.setAttribute( 'disabled', 'disabled' );
-		let selectedDomain = select.options[ select.selectedIndex ].value;
+		let select = document.querySelector('.shlink-domain-list');
+		select.setAttribute('disabled', 'disabled');
+		let selectedDomain = select.options[select.selectedIndex].value;
 
 		let response = await fetch(
 			'/wp-admin/admin-ajax.php?action=reload_domains'
 		);
 		let result = await response.json();
-		if ( result.ok && result.domains ) {
+		if (result.ok && result.domains) {
 			let options = '';
 			let index = 0;
 			let defaultIndex = 0;
 			let selectedIndex = null;
-			for ( let domain of result.domains ) {
-				if ( domain == result.default_domain ) {
+			for (let domain of result.domains) {
+				if (domain == result.default_domain) {
 					selectedIndex = index;
 				}
-				if ( domain == selectedDomain ) {
+				if (domain == selectedDomain) {
 					selectedIndex = index;
 				}
 				index++;
-				options += `<option>${ domain }</option>`;
+				options += `<option>${domain}</option>`;
 			}
 			select.innerHTML = options;
-			if ( typeof selectedIndex == 'number' ) {
+			if (typeof selectedIndex == 'number') {
 				select.selectedIndex = selectedIndex;
 			} else {
 				select.selectedIndex = defaultIndex;
@@ -51,11 +51,11 @@ class ShlinkifySettings {
 		} else {
 			link.innerHTML = result.error || 'Error reloading domains';
 		}
-		link.classList.remove( 'is-loading' );
-		select.removeAttribute( 'disabled' );
+		link.classList.remove('is-loading');
+		select.removeAttribute('disabled');
 	}
 }
 
-window.addEventListener( 'DOMContentLoaded', () => {
-	new ShlinkifySettings();
-} );
+window.addEventListener('DOMContentLoaded', () => {
+	new SmolLinksSettings();
+});

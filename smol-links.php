@@ -1,15 +1,15 @@
 <?php
 /**
- * Shlink
+ * Smol Links
  *
- * @package   Shlinkify
+ * @package   Smol Links
  * @author    The Markup
  * @license   GPL-2.0-or-later
  * @link      https://themarkup.org/
  * @copyright 2022 The Markup
  *
  * @wordpress-plugin
- * Plugin Name:       Shlinkify
+ * Plugin Name:       Smol Links
  * Description:       Create and manage Shlink short links from WordPress
  * Requires at least: 4.5
  * Requires PHP:      7.0
@@ -18,7 +18,7 @@
  * Author URI:        https://themarkup.org/
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       shlinkify
+ * Text Domain:       smol-links
  */
 
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {
@@ -26,6 +26,6 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 }
 
 add_action('plugins_loaded', function() {
-	global $shlinkify_plugin;
-	$shlinkify_plugin = new Shlinkify\Plugin();
+	global $smol_links_plugin;
+	$smol_links_plugin = new SmolLinks\Plugin();
 });

@@ -1,6 +1,15 @@
 <?php
+/**
+ * Class Settings
+ *
+ * @package   Smol Links
+ * @author    The Markup
+ * @license   GPL-2.0-or-later
+ * @link      https://themarkup.org/
+ * @copyright 2022 The Markup
+ */
 
-namespace Shlinkify;
+namespace SmolLinks;
 
 class Settings {
 
@@ -35,9 +44,9 @@ class Settings {
 			if (! empty($result['domains']['data'])) {
 				return $result['domains']['data'];
 			}
-			delete_transient('shlinkify_error');
+			delete_transient('smol_links_error');
 		} catch (ShlinkException $err) {
-			set_transient('shlinkify_error', $err->getMessage());
+			set_transient('smol_links_error', $err->getMessage());
 		}
 		return false;
 	}
@@ -67,40 +76,40 @@ class Settings {
 
 	function on_admin_menu() {
 		add_options_page(
-			__('Shlinkify Settings', 'shlinkify'),
-			'Shlinkify',
+			__('Smol Links Settings', 'smol-links'),
+			'Smol Links',
 			'manage_options',
-			'shlinkify-settings',
+			'smol-links-settings',
 			[$this, 'settings_page']
 		);
 	}
 
 	function on_admin_init() {
-		register_setting('shlinkify', 'shlinkify_options');
+		register_setting('smol-links', 'smol_links_options');
 		add_settings_section(
-			'shlinkify-server',
-			__('Server', 'shlinkify'),
+			'smol-links-server',
+			__('Server', 'smol-links'),
 			[$this, 'server_settings'],
-			'shlinkify'
+			'smol-links'
 		);
 		add_settings_section(
-			'shlinkify-generate',
-			__('Generating Shlinks', 'shlinkify'),
+			'smol-links-generate',
+			__('Generating Shlinks', 'smol-links'),
 			[$this, 'generate_settings'],
-			'shlinkify'
+			'smol-links'
 		);
 	}
 
 	function settings_page() {
 		?>
 		<div class="wrap">
-			<h1><?php _e('Shlinkify Settings', 'shlinkify'); ?></h1>
+			<h1><?php _e('Smol Links Settings', 'smol-links'); ?></h1>
 
 			<p>Create and manage Shlink short links from WordPress</p>
 
 			<form action="options.php" method="post">
-				<?php \settings_fields( 'shlinkify' ); ?>
-				<?php \do_settings_sections( 'shlinkify' ); ?>
+				<?php \settings_fields( 'smol-links' ); ?>
+				<?php \do_settings_sections( 'smol-links' ); ?>
 				<?php \submit_button( 'Save' ); ?>
 			</form>
 		</div>
@@ -109,81 +118,81 @@ class Settings {
 
 	function server_settings() {
 		add_settings_field(
-			'shlinkify-base-url',
-			__('Base URL', 'shlinkify'),
+			'smol-links-base-url',
+			__('Base URL', 'smol-links'),
 			[$this, 'base_url_field'],
-			'shlinkify',
-			'shlinkify-server'
+			'smol-links',
+			'smol-links-server'
 		);
 		add_settings_field(
-			'shlinkify-api-key',
-			__('API Key', 'shlinkify'),
+			'smol-links-api-key',
+			__('API Key', 'smol-links'),
 			[$this, 'api_key_field'],
-			'shlinkify',
-			'shlinkify-server'
+			'smol-links',
+			'smol-links-server'
 		);
 	}
 
 	function generate_settings() {
 		add_settings_field(
-			'shlinkify-generate-on-save',
-			__('Generate upon saving a post', 'shlinkify'),
+			'smol-links-generate-on-save',
+			__('Generate upon saving a post', 'smol-links'),
 			[$this, 'generate_on_save_field'],
-			'shlinkify',
-			'shlinkify-generate'
+			'smol-links',
+			'smol-links-generate'
 		);
 		if (! empty($this->plugin->options->get('domains'))) {
 			add_settings_field(
-				'shlinkify-default-domain',
-				__('Default domain', 'shlinkify'),
+				'smol-links-default-domain',
+				__('Default domain', 'smol-links'),
 				[$this, 'default_domain_field'],
-				'shlinkify',
-				'shlinkify-generate'
+				'smol-links',
+				'smol-links-generate'
 			);
 		}
 	}
 
 	function base_url_field() {
 		$value = htmlentities($this->plugin->options->get('base_url'));
-		echo '<input type="text" name="shlinkify_options[base_url]" class="regular-text ltr" value="' . $value . '">';
+		echo '<input type="text" name="smol_links_options[base_url]" class="regular-text ltr" value="' . $value . '">';
 	}
 
 	function api_key_field() {
 		$value = htmlentities($this->plugin->options->get('api_key'));
-		echo '<input type="text" name="shlinkify_options[api_key]" class="regular-text ltr" value="' . $value . '">';
+		echo '<input type="text" name="smol_links_options[api_key]" class="regular-text ltr" value="' . $value . '">';
 	}
 
 	function generate_on_save_field() {
 		$value = htmlentities($this->plugin->options->get('generate_on_save'));
-		echo '<input type="checkbox" name="shlinkify_options[generate_on_save]" value="1" ' . checked( 1, $value, false ) . '>';
+		echo '<input type="checkbox" name="smol_links_options[generate_on_save]" value="1" ' . checked( 1, $value, false ) . '>';
 	}
 
 	function default_domain_field() {
 		$domains = $this->plugin->options->get('domains');
 		$default = $this->plugin->options->get('default_domain');
-		echo "<select name=\"shlinkify_options[default_domain]\" class=\"shlink-domain-list\">\n";
+		echo "<select name=\"smol_links_options[default_domain]\" class=\"shlink-domain-list\">\n";
 		foreach ($domains as $domain) {
 			$selected = ($default == $domain) ? ' selected="selected"' : '';
 			echo "<option value=\"$domain\">$domain</option>\n";
 		}
 		echo "</select>\n";
-		echo "<p><a href=\"#\" class=\"shlinkify-reload-domains\">Reload domain list</a></p>\n";
+		echo "<p><a href=\"#\" class=\"smol-links-reload-domains\">Reload domain list</a></p>\n";
 	}
 
 	function on_enqueue_assets($suffix) {
-		if ($suffix != 'settings_page_shlinkify') {
+		if ($suffix != 'settings_page_smol-links') {
 			return;
 		}
 
 		wp_enqueue_script(
-			'shlinkify-settings',
+			'smol-links-settings',
 			plugins_url('build/settings.js', __DIR__),
 			[],
 			filemtime(plugin_dir_path(__DIR__) . 'build/settings.js')
 		);
 
 		wp_enqueue_style(
-			'shlinkify-manager',
+			'smol-links-manager',
 			plugins_url('build/settings.css', __DIR__),
 			[],
 			filemtime(plugin_dir_path(__DIR__) . 'build/settings.css')

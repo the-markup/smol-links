@@ -2,14 +2,14 @@
 /**
  * Class Options
  *
- * @package   Shlinkify
+ * @package   Smol Links
  * @author    The Markup
  * @license   GPL-2.0-or-later
  * @link      https://themarkup.org/
  * @copyright 2022 The Markup
  */
 
-namespace Shlinkify;
+namespace SmolLinks;
 
 /**
  * Interface to WordPress options store
@@ -25,7 +25,7 @@ class Options {
 			'domains' => [],
 			'default_domain' => null
 		];
-		$saved_options = get_option('shlinkify_options') ?: [];
+		$saved_options = get_option('smol_links_options') ?: [];
 		$this->options = array_merge($defaults, $saved_options);
 	}
 
@@ -38,6 +38,6 @@ class Options {
 
 	function set($key, $value) {
 		$this->options[$key] = $value;
-		update_option('shlinkify_options', $this->options, false);
+		update_option('smol_links_options', $this->options, false);
 	}
 }
