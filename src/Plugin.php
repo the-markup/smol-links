@@ -203,7 +203,7 @@ class Plugin {
 		if (! empty($error)) {
 			?>
 			<div class="notice notice-error is-dismissible">
-				<p>Smol Links: <?php echo $error; ?></p>
+				<p>Smol Links: <?php echo esc_html($error); ?></p>
 			</div>
 			<?php
 		}
