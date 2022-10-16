@@ -134,9 +134,11 @@ class Manager {
 			<ul>
 				<?php
 
+				list($current) = $this->current_tab();
 				foreach ($this->tabs as $tab => $query) {
-					$selected = ($this->current_tab() == $tab) ? ' class="selected"' : '';
-					echo "<li><a href=\"?page=smol-links&tab=$tab\"$selected>$tab</a></li>";
+					$slug = sanitize_title($tab);
+					$selected = ($current == $slug) ? ' class="selected"' : '';
+					echo "<li><a href=\"?page=smol-links&tab=$slug\"$selected>$tab</a></li>";
 				}
 
 				?>
@@ -148,15 +150,18 @@ class Manager {
 	function current_tab() {
 		// Check for a 'tab' query string
 		if (! empty($_GET['tab'])) {
-			$tab = $_GET['tab'];
-			if (isset($this->tabs[$tab])) {
-				return $tab;
+			$slug = sanitize_title($_GET['tab']);
+			foreach ($this->tabs as $tab => $query) {
+				if (sanitize_title($tab) == $slug) {
+					return [$slug, $query];
+				}
 			}
 		}
 
 		// Otherwise default to the the first tab
 		foreach ($this->tabs as $tab => $query) {
-			return $tab;
+			$slug = sanitize_title($tab);
+			return [$slug, $query];
 		}
 	}
 
@@ -201,16 +206,7 @@ class Manager {
 				'orderBy'      => 'dateCreated-DESC'
 			];
 
-			$tab = 'All';
-			if (! empty($_GET['tab'])) {
-				$tab = $_GET['tab'];
-			}
-
-			if (! isset($this->tabs[$tab])) {
-				$tab = 'All';
-			}
-
-			$query = $this->tabs[$tab];
+			list($slug, $query) = current_tab();
 			$request = array_merge($request, $query);
 			$response = $this->plugin->api->get_shlinks($request);
 
@@ -232,13 +228,16 @@ class Manager {
 	function ajax_create() {
 		check_ajax_referer('smol_links_create');
 
+		$long_url = sanitize_text_field($_POST['long_url']);
+		$title = sanitize_text_field($_POST['title']);
+
 		$request = [
-			'longUrl' => apply_filters('smol_links_long_url', $_POST['long_url']),
-			'title'   => $_POST['title']
+			'longUrl' => apply_filters('smol_links_long_url', $long_url),
+			'title'   => $title
 		];
 
 		if (! empty($_POST['short_code'])) {
-			$request['customSlug'] = $_POST['short_code'];
+			$request['customSlug'] = sanitize_text_field($_POST['short_code']);
 		}
 
 		$tags = apply_filters('smol_links_tags', ['smol-links-manager']);
@@ -267,9 +266,13 @@ class Manager {
 	function ajax_update() {
 		check_ajax_referer('smol_links_update');
 
+		$long_url = sanitize_text_field($_POST['long_url']);
+		$title = sanitize_text_field($_POST['title']);
+		$short_code = sanitize_text_field($_POST['short_code']);
+
 		$request = [
-			'longUrl' => apply_filters('smol_links_long_url', $_POST['long_url']),
-			'title'   => $_POST['title']
+			'longUrl' => apply_filters('smol_links_long_url', $long_url),
+			'title'   => $title
 		];
 
 		$tags = apply_filters('smol_links_tags', ['smol-links-manager']);
@@ -277,7 +280,7 @@ class Manager {
 			$request['tags'] = $tags;
 		}
 
-		$response = $this->plugin->api->update_shlink($_POST['short_code'], $request);
+		$response = $this->plugin->api->update_shlink($short_code, $request);
 
 		header('Content-Type: application/json');
 		echo wp_json_encode([
