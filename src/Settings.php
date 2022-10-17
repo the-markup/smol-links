@@ -154,12 +154,12 @@ class Settings {
 
 	function base_url_field() {
 		$value = htmlentities($this->plugin->options->get('base_url'));
-		echo '<input type="text" name="smol_links_options[base_url]" class="regular-text ltr" value="' . $value . '">';
+		echo '<input type="text" name="smol_links_options[base_url]" class="regular-text ltr" value="' . esc_attr($value) . '">';
 	}
 
 	function api_key_field() {
 		$value = htmlentities($this->plugin->options->get('api_key'));
-		echo '<input type="text" name="smol_links_options[api_key]" class="regular-text ltr" value="' . $value . '">';
+		echo '<input type="text" name="smol_links_options[api_key]" class="regular-text ltr" value="' . esc_attr($value) . '">';
 	}
 
 	function generate_on_save_field() {

@@ -35,8 +35,12 @@ webpack.config.js
 wp-cli.local.yml
 yarn.lock
 tests
-vendor
+vendor/*
 node_modules
 *.sql
 *.tar.gz
 *.zip
+.phpdoc
+Dockerfile
+.nvmrc
+docker-compose.yml
