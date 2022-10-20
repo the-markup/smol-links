@@ -19,7 +19,7 @@ class Settings {
 		add_action('admin_menu', [$this, 'on_admin_menu']);
 		add_action('admin_init', [$this, 'on_admin_init']);
 		add_action('admin_enqueue_scripts', [$this, 'on_enqueue_assets']);
-		add_action('wp_ajax_reload_domains', [$this, 'ajax_reload_domains']);
+		add_action('wp_ajax_smol_links_reload_domains', [$this, 'ajax_reload_domains']);
 	}
 
 	function setup_domains() {
@@ -170,7 +170,7 @@ class Settings {
 	function default_domain_field() {
 		$domains = $this->plugin->options->get('domains');
 		$default = $this->plugin->options->get('default_domain');
-		echo "<select name=\"smol_links_options[default_domain]\" class=\"shlink-domain-list\">\n";
+		echo "<select name=\"smol_links_options[default_domain]\" class=\"smol-links-domain-list\">\n";
 		foreach ($domains as $domain) {
 			$selected = ($default == $domain) ? ' selected="selected"' : '';
 			echo '<option value="' . esc_attr($domain) . '">' . esc_html($domain) . "</option>\n";
@@ -180,7 +180,7 @@ class Settings {
 	}
 
 	function on_enqueue_assets($suffix) {
-		if ($suffix != 'settings_page_smol-links') {
+		if ($suffix != 'settings_page_smol-links-settings') {
 			return;
 		}
 
@@ -206,11 +206,10 @@ class Settings {
 			if ($domains) {
 				$list = $this->set_domains_option($domains);
 				$default = $this->set_default_domain_option($domains);
+				set_transient('smol_links_info', 'reloaded domain list.');
 				header('Content-Type: application/json');
 				echo wp_json_encode([
-					'ok' => true,
-					'domains' => $list,
-					'default_domain' => $default
+					'ok' => true
 				]);
 				exit;
 			}

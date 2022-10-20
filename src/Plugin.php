@@ -195,15 +195,25 @@ class Plugin {
 	}
 
 	/**
-	 * Displays any Shlink API errors
+	 * Displays any Shlink API error and info notices
 	 **/
 	function on_admin_notices() {
 		$error = get_transient('smol_links_error');
-		delete_transient('smol_links_error');
 		if (! empty($error)) {
+			delete_transient('smol_links_error');
 			?>
 			<div class="notice notice-error is-dismissible">
 				<p>Smol Links: <?php echo esc_html($error); ?></p>
+			</div>
+			<?php
+		}
+
+		$info = get_transient('smol_links_info');
+		if (! empty($info)) {
+			delete_transient('smol_links_info');
+			?>
+			<div class="notice notice-success is-dismissible">
+				<p>Smol Links: <?php echo esc_html($info); ?></p>
 			</div>
 			<?php
 		}
