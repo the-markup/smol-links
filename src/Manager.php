@@ -137,6 +137,7 @@ class Manager {
 				list($current) = $this->current_tab();
 				foreach ($this->tabs as $tab => $query) {
 					$slug = sanitize_title($tab);
+					$tab = esc_html($tab);
 					$selected = ($current == $slug) ? ' class="selected"' : '';
 					echo "<li><a href=\"?page=smol-links&tab=$slug\"$selected>$tab</a></li>";
 				}
@@ -169,14 +170,14 @@ class Manager {
 		$domains = $this->plugin->options->get('domains');
 		$default = $this->plugin->options->get('default_domain');
 		if (count($domains) == 1) {
-			$domain = htmlentities($domains[0]);
+			$domain = esc_html($domains[0]);
 			echo "<span class=\"smol-links-short-code-domain\">https://$domain/</span>";
 			echo "<input type=\"hidden\" name=\"domain\" value=\"$domain\" class=\"smol-links-domain\">";
 		} else {
 			echo "<select class=\"smol-links-short-code-domain smol-links-domain\">\n";
 			foreach ($domains as $domain) {
 				$selected = ($domain == $default) ? ' selected="selected"' : '';
-				$domain = htmlentities($domain);
+				$domain = esc_html($domain);
 				echo "<option value=\"$domain\"$selected>https://$domain</option>\n";
 			}
 			echo "</select> /\n";

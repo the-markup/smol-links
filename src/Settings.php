@@ -173,7 +173,7 @@ class Settings {
 		echo "<select name=\"smol_links_options[default_domain]\" class=\"shlink-domain-list\">\n";
 		foreach ($domains as $domain) {
 			$selected = ($default == $domain) ? ' selected="selected"' : '';
-			echo "<option value=\"$domain\">$domain</option>\n";
+			echo '<option value="' . esc_attr($domain) . '">' . esc_html($domain) . "</option>\n";
 		}
 		echo "</select>\n";
 		echo "<p><a href=\"#\" class=\"smol-links-reload-domains\">Reload domain list</a></p>\n";
