@@ -207,7 +207,7 @@ class Manager {
 				'orderBy'      => 'dateCreated-DESC'
 			];
 
-			list($slug, $query) = current_tab();
+			list($slug, $query) = $this->current_tab();
 			$request = array_merge($request, $query);
 			$response = $this->plugin->api->get_shlinks($request);
 
