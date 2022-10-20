@@ -1,4 +1,4 @@
-FROM wordpress:6.0.2-php7.4-apache
+FROM wordpress
 
 # Dependencies
 RUN apt-get update && apt-get install -y \
@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar; \
 	chmod +x wp-cli.phar; \
 	mv wp-cli.phar /usr/local/bin/; \
-	echo -e '#!/bin/bash\n\n/usr/local/bin/wp-cli.phar "$@" --allow-root\n' > /usr/local/bin/wp; \
+	echo "#!/bin/bash\n\n/usr/local/bin/wp-cli.phar \"\$@\" --allow-root\n" > /usr/local/bin/wp; \
 	chmod +x /usr/local/bin/wp;
 
 # Setup debug.log
