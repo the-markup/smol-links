@@ -7,14 +7,19 @@ class SmolLinksManager {
 	}
 
 	load() {
-		let tab = 'All';
+		let tab = this.getTab();
+		return fetch(
+			`/wp-admin/admin-ajax.php?action=smol_links_load&tab=${tab}&_wpnonce=${smol_links_nonces.load}`
+		);
+	}
+
+	getTab() {
+		let tab = 'all';
 		let tabQueryString = location.search.match(/tab=([^&]+)/);
 		if (tabQueryString) {
 			tab = tabQueryString[1];
 		}
-		return fetch(
-			`/wp-admin/admin-ajax.php?action=smol_links_load&tab=${tab}&_wpnonce=${smol_links_nonces.load}`
-		);
+		return tab;
 	}
 
 	async showResults(result) {
@@ -140,18 +145,20 @@ class SmolLinksManager {
 		titleField.setAttribute('readonly', 'readonly');
 		domainField.setAttribute('disabled', 'disabled');
 
-		let list = document.querySelector('.smol-links-list ul');
-		list.innerHTML =
-			this.getItemHTML({
-				longUrl: longURLField.value,
-				shortCode: shortCodeField.value,
-				title: titleField.value,
-				shortUrl: '',
-				visitsCount: 0,
-			}) + list.innerHTML;
+		if (this.getTab() != 'auto-generated') {
+			let list = document.querySelector('.smol-links-list ul');
+			list.innerHTML =
+				this.getItemHTML({
+					longUrl: longURLField.value,
+					shortCode: shortCodeField.value,
+					title: titleField.value,
+					shortUrl: '',
+					visitsCount: 0,
+				}) + list.innerHTML;
 
-		let item = list.querySelectorAll('.smol-links-item')[0];
-		item.classList.add('smol-links-item--is-saving');
+			let item = list.querySelectorAll('.smol-links-item')[0];
+			item.classList.add('smol-links-item--is-saving');
+		}
 
 		let result = await fetch(url, {
 			method: 'POST',
@@ -169,7 +176,10 @@ class SmolLinksManager {
 		});
 
 		let response = await result.json();
-		item.classList.remove('smol-links-item--is-saving');
+
+		if (this.getTab() != 'auto-generated') {
+			item.classList.remove('smol-links-item--is-saving');
+		}
 
 		form.classList.remove('is-saving');
 		longURLField.removeAttribute('readonly');
@@ -178,15 +188,19 @@ class SmolLinksManager {
 		domainField.removeAttribute('disabled');
 
 		if (response.shlink && response.shlink.shortCode) {
-			item.innerHTML = this.getItemContentHTML(response.shlink);
-			item.setAttribute('data-title', response.shlink.title || '');
-			item.setAttribute('data-short-code', response.shlink.shortCode);
-			item.setAttribute('data-short-url', response.shlinnk.shortUrl);
+			if (this.getTab() != 'auto-generated') {
+				item.innerHTML = this.getItemContentHTML(response.shlink);
+				item.setAttribute('data-title', response.shlink.title || '');
+				item.setAttribute('data-short-code', response.shlink.shortCode);
+				item.setAttribute('data-short-url', response.shlink.shortUrl);
+			}
 			longURLField.value = '';
 			shortCodeField.value = '';
 			titleField.value = '';
 		} else {
-			list.removeChild(item);
+			if (this.getTab() != 'auto-generated') {
+				list.removeChild(item);
+			}
 			let title = 'Error';
 			let detail = 'Could not create shlink';
 			if (response.shlink && response.shlink.title) {

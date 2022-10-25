@@ -172,8 +172,8 @@ class Settings {
 		$default = $this->plugin->options->get('default_domain');
 		echo "<select name=\"smol_links_options[default_domain]\" class=\"smol-links-domain-list\">\n";
 		foreach ($domains as $domain) {
-			$selected = ($default == $domain) ? ' selected="selected"' : '';
-			echo '<option value="' . esc_attr($domain) . '">' . esc_html($domain) . "</option>\n";
+			$selected = ($default == $domain) ? ' selected' : '';
+			echo '<option value="' . esc_attr($domain) . '"' . esc_attr($selected) . '>' . esc_html($domain) . "</option>\n";
 		}
 		echo "</select>\n";
 		echo "<p><a href=\"#\" class=\"smol-links-reload-domains\">Reload domain list</a></p>\n";

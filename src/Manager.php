@@ -136,10 +136,8 @@ class Manager {
 
 				list($current) = $this->current_tab();
 				foreach ($this->tabs as $tab => $query) {
-					$slug = sanitize_title($tab);
-					$tab = esc_html($tab);
-					$selected = ($current == $slug) ? ' class="selected"' : '';
-					echo "<li><a href=\"?page=smol-links&tab=$slug\"$selected>$tab</a></li>";
+					$selected = ($current == sanitize_title($tab)) ? 'selected' : '';
+					echo '<li><a href="?page=smol-links&tab=' . sanitize_title($tab) . '" class="' . esc_attr($selected) . '">' . esc_html($tab) . '</a></li>';
 				}
 
 				?>
@@ -170,15 +168,12 @@ class Manager {
 		$domains = $this->plugin->options->get('domains');
 		$default = $this->plugin->options->get('default_domain');
 		if (count($domains) == 1) {
-			$domain = esc_html($domains[0]);
-			echo "<span class=\"smol-links-short-code-domain\">https://$domain/</span>";
-			echo "<input type=\"hidden\" name=\"domain\" value=\"$domain\" class=\"smol-links-domain\">";
+			echo '<span class="smol-links-short-code-domain">https://' . esc_html($domains[0]) . '/</span>' . '<input type="hidden" name="domain" value="' . esc_attr($domains[0]) . '" class="smol-links-domain">';
 		} else {
 			echo "<select class=\"smol-links-short-code-domain smol-links-domain\">\n";
 			foreach ($domains as $domain) {
-				$selected = ($domain == $default) ? ' selected="selected"' : '';
-				$domain = esc_html($domain);
-				echo "<option value=\"$domain\"$selected>https://$domain</option>\n";
+				$selected = ($domain == $default) ? ' selected' : '';
+				echo '<option value="' . esc_html($domain) . '"' . esc_attr($selected) . '>https://' . esc_html($domain) . "</option>\n";
 			}
 			echo "</select> /\n";
 		}
@@ -190,7 +185,7 @@ class Manager {
 			<h1><?php _e('Smol Links', 'smol-links'); ?></h1>
 			<div class="notice notice-warning">
 				<p>
-					Cannot connect to Shlink Server.
+					<?php _e('Cannot connect to Shlink Server.', 'smol-links'); ?>
 					<a href="/wp-admin/options-general.php?page=smol-links-settings"><?php _e('Please configure Shlink API settings.', 'smol-links'); ?></a>
 				</p>
 			</div>
