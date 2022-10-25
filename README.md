@@ -13,7 +13,7 @@ Create and manage Shlink short links from WordPress
 
 ## Description ##
 
-__This plugin is a work in progress, development is ongoing.__
+__This plugin is a work in progress; development is ongoing.__
 
 A WordPress dashboard interface for managing a self-hosted [Shlink URL shortener](https://shlink.io/) instance.
 
@@ -27,7 +27,7 @@ A WordPress dashboard interface for managing a self-hosted [Shlink URL shortener
 __Filter hooks__
 
 * `smol_links_tags` - assigns tags to each saved short link (default: `["smol-links-server:$hostname", "smol-links-user:$username"]`)
-* `smol_links_long_url` - automatically adjust the long URL redirect
+* `smol_links_long_url` - automatically adjusts the long URL redirect
 * `smol_links_manager_tabs` - customizes the manager tabs (array: ["Tab label" => [*Shlink API query*]])
 
 # Developer setup #
