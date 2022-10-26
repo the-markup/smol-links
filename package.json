@@ -1,6 +1,6 @@
 {
 	"name": "smol-links",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"description": "Create and manage Shlink short links from WordPress",
 	"main": "build/index.js",
 	"author": "The Markup",

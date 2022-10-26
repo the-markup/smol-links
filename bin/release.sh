@@ -2,31 +2,40 @@
 
 set -e
 
-if [ -d /tmp/smol-links ] ; then
-  echo "Error: /tmp/smol-links already exists"
-  exit 1
+if [ $# -lt 1 ]; then
+	echo "usage: $0 <svn dir>"
+	exit 1
 fi
 
 dir="$( cd "$(dirname "$( dirname "${BASH_SOURCE[0]}" )" )" >/dev/null 2>&1 && pwd )"
+version="$(cat "$dir/readme.txt" | grep "Stable tag: " | cut -c 13-)"
+svn="$1"
+
+if [ -d "$svn/tags/$version" ] ; then
+  echo "Error: $svn/tags/$version already exists"
+  exit 1
+fi
+
+echo "Running grunt..."
+npm run grunt
 
 echo "Building assets..."
 cd "$dir"
 npm run build
 
-echo "Creating /tmp/smol-links..."
-mkdir /tmp/smol-links
+echo "Creating $svn/tags/$version..."
+mkdir "$svn/tags/$version"
 rsync --recursive \
       --verbose \
       --include="vendor/autoload.php" \
       --exclude-from=".distignore" \
       "$dir/" \
-      /tmp/smol-links/
+      "$svn/tags/$version/"
 
-echo "Zipping release..."
-cd /tmp
-zip -r smol-links.zip smol-links
+echo "Copying to $svn/trunk..."
+rsync --recursive \
+      --verbose \
+      "$svn/tags/$version/" \
+      "$svn/trunk/"
 
-echo "Cleaning up /tmp/smol-links..."
-rm -rf /tmp/smol-links
-
-echo "Ready: /tmp/smol-links.zip"
+echo "Done"
