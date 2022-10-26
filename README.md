@@ -5,7 +5,7 @@
 **Requires at least:** 4.5  
 **Tested up to:** 6.0.0  
 **Requires PHP:** 7.3  
-**Stable tag:** 0.0.1  
+**Stable tag:** 0.1.0  
 **License:** GPLv2 or later  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -27,7 +27,7 @@ A WordPress dashboard interface for managing a self-hosted [Shlink URL shortener
 __Filter hooks__
 
 * `smol_links_tags` - assigns tags to each saved short link (default: `["smol-links-server:$hostname", "smol-links-user:$username"]`)
-* `smol_links_long_url` - automatically adjusts the long URL redirect
+* `smol_links_long_url` - automatically adjust the long URL redirect
 * `smol_links_manager_tabs` - customizes the manager tabs (array: ["Tab label" => [*Shlink API query*]])
 
 # Developer setup #
@@ -57,6 +57,10 @@ docker-compose exec web composer --working-dir="/var/www/html/wp-content/plugins
 3. Configure the __Smol Links__ settings from your WordPress dashboard
 
 ## Changelog ##
+
+### 0.1.0 ###
+* Release to WordPress plugin directory
+* Security improvements
 
 ### 0.0.1 ###
 * Generate short URLs upon saving a post
