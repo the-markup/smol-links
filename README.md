@@ -39,22 +39,25 @@ __Developer dependencies:__
 
 __Build and start:__
 
-```
-./bin/build.sh
-./bin/start.sh
-```
+	./bin/build.sh
+	./bin/start.sh
 
 __Running tests:__
 
-```
-docker-compose exec web composer --working-dir="/var/www/html/wp-content/plugins/smol-links" test
-```
+	docker-compose exec web composer --working-dir="/var/www/html/wp-content/plugins/smol-links" test
+
 
 ## Installation ##
 
 1. Upload `smol-links` folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Configure the __Smol Links__ settings from your WordPress dashboard
+
+## Screenshots ##
+
+1. Create and manage Shlink short links from WordPress.
+2. Configure your self-hosted Shlink server and optionally generate a short URL whenever a post is published.
+3. The post editor includes the short URL in the sidebar.
 
 ## Changelog ##
 
