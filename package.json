@@ -15,10 +15,10 @@
 		"grunt": "grunt default",
 		"docs": "phpdoc --directory src --target docs"
 	},
-  "dependencies": {
-    "@primer/octicons": "^17.4.0",
+	"dependencies": {
+		"@primer/octicons": "^17.4.0",
 		"@wordpress/scripts": "^23.6.0"
-  }
+	},
 	"devDependencies": {
 		"@wordpress/i18n": "^4.14.0",
 		"grunt": "~1.5.3",
