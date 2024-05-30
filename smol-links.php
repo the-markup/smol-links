@@ -6,14 +6,14 @@
  * @author    The Markup
  * @license   GPL-2.0-or-later
  * @link      https://themarkup.org/
- * @copyright 2022 The Markup
+ * @copyright 2024 The Markup
  *
  * @wordpress-plugin
  * Plugin Name:       Smol Links
  * Description:       Create and manage Shlink short links from WordPress
  * Requires at least: 4.5
  * Requires PHP:      7.0
- * Version:           0.1.0
+ * Version:           0.1.1
  * Author:            The Markup
  * Author URI:        https://themarkup.org/
  * License:           GPL-2.0-or-later
