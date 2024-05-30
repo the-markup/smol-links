@@ -61,6 +61,10 @@ __Running tests:__
 
 == Changelog ==
 
+= 0.1.1 =
+* Fix a bug with the Short Links manager
+* Upgrade dependencies
+
 = 0.1.0 =
 * Release to WordPress plugin directory
 * Security improvements
