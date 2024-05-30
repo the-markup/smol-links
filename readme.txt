@@ -3,7 +3,7 @@ Contributors: dphiffer
 Donate link: https://themarkup.org/donate
 Tags: short url, shlink
 Requires at least: 4.5
-Tested up to: 6.0.0
+Tested up to: 6.5.3
 Requires PHP: 7.3
 Stable tag: 0.1.0
 License: GPLv2 or later
@@ -34,17 +34,17 @@ __Filter hooks__
 
 __Developer dependencies:__
 
-* [node.js](https://nodejs.org/) (tested on v16)
+* [node.js](https://nodejs.org/) (tested on v20)
 * [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
 __Build and start:__
 
-	./bin/build.sh
-	./bin/start.sh
+	./bin/build
+	./bin/start
 
 __Running tests:__
 
-	docker-compose exec web composer --working-dir="/var/www/html/wp-content/plugins/smol-links" test
+	docker compose exec web composer --working-dir="/var/www/html/wp-content/plugins/smol-links" test
 
 
 == Installation ==

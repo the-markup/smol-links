@@ -129,6 +129,8 @@ class SmolLinksManager {
 		let titleField = form.querySelector('.smol-links-title');
 		let domainField = form.querySelector('.smol-links-domain');
 
+		let list = document.querySelector('.smol-links-list ul');
+
 		if (longURLField.value == '') {
 			feedback.innerHTML = `
 				<div class="notice notice-error is-dismissible">
@@ -146,7 +148,6 @@ class SmolLinksManager {
 		domainField.setAttribute('disabled', 'disabled');
 
 		if (this.getTab() != 'auto-generated') {
-			let list = document.querySelector('.smol-links-list ul');
 			list.innerHTML =
 				this.getItemHTML({
 					longUrl: longURLField.value,
@@ -155,7 +156,6 @@ class SmolLinksManager {
 					shortUrl: '',
 					visitsCount: 0,
 				}) + list.innerHTML;
-
 			let item = list.querySelectorAll('.smol-links-item')[0];
 			item.classList.add('smol-links-item--is-saving');
 		}
@@ -178,6 +178,7 @@ class SmolLinksManager {
 		let response = await result.json();
 
 		if (this.getTab() != 'auto-generated') {
+			let item = list.querySelectorAll('.smol-links-item')[0];
 			item.classList.remove('smol-links-item--is-saving');
 		}
 
@@ -189,6 +190,7 @@ class SmolLinksManager {
 
 		if (response.shlink && response.shlink.shortCode) {
 			if (this.getTab() != 'auto-generated') {
+				let item = list.querySelectorAll('.smol-links-item')[0];
 				item.innerHTML = this.getItemContentHTML(response.shlink);
 				item.setAttribute('data-title', response.shlink.title || '');
 				item.setAttribute('data-short-code', response.shlink.shortCode);

@@ -6,14 +6,16 @@
  * @author    The Markup
  * @license   GPL-2.0-or-later
  * @link      https://themarkup.org/
- * @copyright 2022 The Markup
+ * @copyright 2024 The Markup
  */
 
 require_once(__DIR__ . '/API.php');
 
 class TestPlugin extends WP_UnitTestCase {
 
-	function setUp() {
+	public function set_up() {
+		parent::set_up();
+
 		global $smol_links_plugin;
 		$this->plugin = $smol_links_plugin;
 		$this->plugin->api = new TestAPI($this->plugin);
@@ -23,10 +25,10 @@ class TestPlugin extends WP_UnitTestCase {
 		$this->plugin->options->set('api_key', 'not empty');
 	}
 
-	function testSavePost() {
+	public function test_save_post() {
 		// Test with generate option turned off
 		$this->plugin->options->set('generate_on_save', false);
-		$post_id = $this->factory->post->create();
+		$post_id = self::factory()->post->create();
 		$shlink = $this->plugin->get_post_shlink(get_post($post_id));
 		$this->assertEquals($shlink, null);
 
