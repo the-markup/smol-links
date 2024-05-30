@@ -34,7 +34,7 @@ __Filter hooks__
 
 __Developer dependencies:__
 
-* [node.js](https://nodejs.org/) (tested on v16)
+* [node.js](https://nodejs.org/) (tested on v20)
 * [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
 __Build and start:__
