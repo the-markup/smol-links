@@ -79,10 +79,12 @@ class SmolLinksManager {
 	}
 
 	getItemContentHTML(shlink) {
-		let title = shlink.title || shlink.longUrl;
+		const title = shlink.title || shlink.longUrl;
+		const clickTotal = shlink.visitsSummary.total;
+
 		return `<div class="smol-links-item__content">
 			<div class="smol-links-item__clicks">
-				${shlink.visitsCount} clicks
+				${clickTotal} click${(clickTotal !== 1) ? 's' : ''}
 			</div>
 			<div class="smol-links-item__links">
 				<div class="smol-links-item__long-url">${title}</div>
@@ -154,7 +156,9 @@ class SmolLinksManager {
 					shortCode: shortCodeField.value,
 					title: titleField.value,
 					shortUrl: '',
-					visitsCount: 0,
+					visitsSummary: {
+						total: 0,
+					},
 				}) + list.innerHTML;
 			let item = list.querySelectorAll('.smol-links-item')[0];
 			item.classList.add('smol-links-item--is-saving');

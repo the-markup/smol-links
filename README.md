@@ -5,7 +5,7 @@
 **Requires at least:** 4.5  
 **Tested up to:** 6.5.3  
 **Requires PHP:** 7.3  
-**Stable tag:** 0.1.1  
+**Stable tag:** 0.2.0  
 **License:** GPLv2 or later  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -60,6 +60,9 @@ __Running tests:__
 3. The post editor includes the short URL in the sidebar.
 
 ## Changelog ##
+
+### 0.2.0 ###
+* Update to Shlink v3 API
 
 ### 0.1.1 ###
 * Fix a bug with the Short Links manager

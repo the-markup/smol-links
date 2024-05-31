@@ -22,25 +22,25 @@ class API {
 
 	function create_shlink($args) {
 		$base_url = $this->plugin->options->get('base_url');
-		$endpoint = "$base_url/rest/v2/short-urls";
+		$endpoint = "$base_url/rest/v3/short-urls";
 		return $this->request('POST', $endpoint, $args);
 	}
 
 	function update_shlink($short_code, $args) {
 		$base_url = $this->plugin->options->get('base_url');
-		$endpoint = "$base_url/rest/v2/short-urls/$short_code";
+		$endpoint = "$base_url/rest/v3/short-urls/$short_code";
 		return $this->request('PATCH', $endpoint, $args);
 	}
 
 	function get_shlinks($args = null) {
 		$base_url = $this->plugin->options->get('base_url');
-		$endpoint = "$base_url/rest/v2/short-urls";
+		$endpoint = "$base_url/rest/v3/short-urls";
 		return $this->request('GET', $endpoint, $args);
 	}
 
 	function get_domains() {
 		$base_url = $this->plugin->options->get('base_url');
-		$endpoint = "$base_url/rest/v2/domains";
+		$endpoint = "$base_url/rest/v3/domains";
 		return $this->request('GET', $endpoint);
 	}
 

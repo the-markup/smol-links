@@ -39,7 +39,17 @@ class TestPlugin extends WP_UnitTestCase {
 			'post_title' => 'Testing generate_on_save'
 		]);
 		$shlink = $this->plugin->get_post_shlink(get_post($post_id));
+
 		$this->assertEquals($shlink['short_code'], 'xxxxx');
+		$this->assertEquals($shlink['short_url'], 'https://example.com/xxxxx');
+		$this->assertEquals($shlink['long_url'], 'http://example.org/?p='.$post_id);
 	}
 
+	public function test_expected_permalink() {
+		$post_id = self::factory()->post->create();
+		$post = get_post($post_id);
+		$link = $this->plugin->get_expected_permalink($post);
+
+		$this->assertEquals($link, 'http://example.org/?p='.$post_id);
+	}
 }
