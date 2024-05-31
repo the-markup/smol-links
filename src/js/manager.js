@@ -156,7 +156,9 @@ class SmolLinksManager {
 					shortCode: shortCodeField.value,
 					title: titleField.value,
 					shortUrl: '',
-					visitsCount: 0,
+					visitsSummary: {
+						total: 0,
+					},
 				}) + list.innerHTML;
 			let item = list.querySelectorAll('.smol-links-item')[0];
 			item.classList.add('smol-links-item--is-saving');
