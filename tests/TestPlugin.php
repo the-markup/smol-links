@@ -45,4 +45,11 @@ class TestPlugin extends WP_UnitTestCase {
 		$this->assertEquals($shlink['long_url'], 'http://example.org/?p='.$post_id);
 	}
 
+	public function test_expected_permalink() {
+		$post_id = self::factory()->post->create();
+		$post = get_post($post_id);
+		$link = $this->plugin->get_expected_permalink($post);
+
+		$this->assertEquals($link, 'http://example.org/?p='.$post_id);
+	}
 }
