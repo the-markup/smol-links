@@ -8,8 +8,9 @@ class SmolLinksManager {
 
 	load() {
 		let tab = this.getTab();
+		let page = this.getPage();
 		return fetch(
-			`/wp-admin/admin-ajax.php?action=smol_links_load&tab=${tab}&_wpnonce=${smol_links_nonces.load}`
+			`/wp-admin/admin-ajax.php?action=smol_links_load&tab=${tab}&page=${page}&_wpnonce=${smol_links_nonces.load}`
 		);
 	}
 
@@ -22,18 +23,29 @@ class SmolLinksManager {
 		return tab;
 	}
 
+	getPage() {
+		let page = 1;
+		let pageQuery = location.search.match(/pg=(\d+)/);
+		if (pageQuery) {
+			page = pageQuery[1];
+		}
+		return page;
+	}
+
 	async showResults(result) {
 		try {
 			let response = await result.json();
 			let html = 'Oops, something unexpected happened';
 
 			if (!response.ok || !response.shlink) {
-				html =
-					'Error: ' +
-					(response.error ||
-						'something went wrong loading shlinks. Try again?');
+				html = `<div class="smol-links-error">
+					<strong>Error: </strong>
+					${(response.error ||
+						'something went wrong loading shlinks. Try again?')}
+				</div>`;
 			} else {
 				html = this.getListHTML(response.shlink.shortUrls.data);
+				html += this.getPaginationHTML(response.shlink.shortUrls.pagination);
 			}
 
 			let el = document.querySelector('.smol-links-list');
@@ -42,13 +54,16 @@ class SmolLinksManager {
 
 			let form = document.querySelector('.smol-links-create');
 			form.addEventListener('submit', this.createShlink.bind(this));
+
+			let pagination = document.querySelector('.smol-links-pagination');
+			pagination.addEventListener('change', this.updatePage.bind(this))
 		} catch (err) {
 			let loading = document.querySelector('.smol-links-loading');
-			loading.innerHTML = `
-				<div class="notice notice-error is-dismissible">
-					<p>There was an error loading shlinks.</p>
-				</div>
-			`;
+			// loading.innerHTML = `
+			// 	<div class="notice notice-error is-dismissible">
+			// 		<p>There was an error loading shlinks.</p>
+			// 	</div>
+			// `;
 		}
 	}
 
@@ -112,6 +127,17 @@ class SmolLinksManager {
 				</span>
 			</span>
 		`;
+	}
+
+	getPaginationHTML(pagination) {
+		let options = '';
+		for (let p = 1; p <= pagination.pagesCount; p++) {
+			let selected = pagination.currentPage == p ? ' selected="selected"' : '';
+			options += `<option value="${p}"${selected}>Page ${p}</option>`;
+		}
+		return `<select class="smol-links-pagination">
+			${options}
+		</select>`;
 	}
 
 	async createShlink(event) {
@@ -252,6 +278,13 @@ class SmolLinksManager {
 			return;
 		}
 		this.editShlink(item);
+	}
+
+	updatePage() {
+		let tab = this.getTab();
+		let pagination = document.querySelector('.smol-links-pagination');
+		let page = pagination.options[pagination.selectedIndex].value;
+		window.location = `/wp-admin/admin.php?page=smol-links&tab=${tab}&pg=${page}`;
 	}
 
 	editShlink(item) {

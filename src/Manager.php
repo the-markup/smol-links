@@ -164,6 +164,15 @@ class Manager {
 		}
 	}
 
+	function current_page() {
+		// Check for a 'page' query string
+		if (! empty($_GET['page'])) {
+			return intval($_GET['page']);
+		} else {
+			return 1;
+		}
+	}
+
 	function short_code_domain() {
 		$domains = $this->plugin->options->get('domains');
 		$default = $this->plugin->options->get('default_domain');
@@ -197,7 +206,7 @@ class Manager {
 		try {
 			check_ajax_referer('smol_links_load');
 			$request = [
-				'page'         => 1,
+				'page'         => $this->current_page(),
 				'itemsPerPage' => 25,
 				'orderBy'      => 'dateCreated-DESC'
 			];
