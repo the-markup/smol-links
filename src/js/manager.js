@@ -25,6 +25,7 @@ class SmolLinksManager {
 
 	getPage() {
 		let page = 1;
+		// We use 'pg' instead of 'page' because WordPress reserves that query var
 		let pageQuery = location.search.match(/pg=(\d+)/);
 		if (pageQuery) {
 			page = pageQuery[1];
@@ -284,6 +285,7 @@ class SmolLinksManager {
 		let tab = this.getTab();
 		let pagination = document.querySelector('.smol-links-pagination');
 		let page = pagination.options[pagination.selectedIndex].value;
+		// We use 'pg' instead of 'page' because WordPress reserves that query var
 		window.location = `/wp-admin/admin.php?page=smol-links&tab=${tab}&pg=${page}`;
 	}
 
