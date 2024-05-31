@@ -39,7 +39,10 @@ class TestPlugin extends WP_UnitTestCase {
 			'post_title' => 'Testing generate_on_save'
 		]);
 		$shlink = $this->plugin->get_post_shlink(get_post($post_id));
+
 		$this->assertEquals($shlink['short_code'], 'xxxxx');
+		$this->assertEquals($shlink['short_url'], 'https://example.com/xxxxx');
+		$this->assertEquals($shlink['long_url'], 'http://example.org/?p='.$post_id);
 	}
 
 }

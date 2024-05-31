@@ -23,7 +23,9 @@ class TestAPI extends SmolLinks\API {
 			"shortUrl"       => "https://example.com/xxxxx",
 			"longUrl"        => $args['longUrl'],
 			"dateCreated"    => current_time(DATE_RFC3339),
-			"visitsCount"    => 0,
+			"visitsSummary"  => [
+				"total" => 0
+			],
 			"tags"           => $tags,
 			"meta"           => [
 				"validSince" => null,
