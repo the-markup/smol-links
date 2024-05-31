@@ -80,10 +80,10 @@ class SmolLinksManager {
 
 	getItemContentHTML(shlink) {
 		let title = shlink.title || shlink.longUrl;
-		console.log(shlink);
+
 		return `<div class="smol-links-item__content">
 			<div class="smol-links-item__clicks">
-				${shlink.visitsCount} clicks
+				${shlink.visitsSummary.total} clicks
 			</div>
 			<div class="smol-links-item__links">
 				<div class="smol-links-item__long-url">${title}</div>
