@@ -61,6 +61,9 @@ __Running tests:__
 
 == Changelog ==
 
+= 0.3.0 =
+* Add pagination to Smol Links manager interface
+
 = 0.2.0 =
 * Update to Shlink v3 API
 
