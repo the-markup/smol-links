@@ -39,14 +39,15 @@ class SmolLinksManager {
 			let html = 'Oops, something unexpected happened';
 
 			if (!response.ok || !response.shlink) {
-				html = `<div class="smol-links-error">
-					<strong>Error: </strong>
-					${(response.error ||
-						'something went wrong loading shlinks. Try again?')}
-				</div>`;
+				if (response.title && response.detail) {
+					throw new Error(`${response.title}: ${response.detail}`);
+				} else {
+					throw new Error('Something went wrong loading shlinks. Try again?');
+				}
 			} else {
-				html = this.getListHTML(response.shlink.shortUrls.data);
-				html += this.getPaginationHTML(response.shlink.shortUrls.pagination);
+				let listHTML = this.getListHTML(response.shlink.shortUrls.data);
+				let paginationHTML = this.getPaginationHTML(response.shlink.shortUrls.pagination);
+				html = paginationHTML + listHTML + paginationHTML;
 			}
 
 			let el = document.querySelector('.smol-links-list');
@@ -56,15 +57,17 @@ class SmolLinksManager {
 			let form = document.querySelector('.smol-links-create');
 			form.addEventListener('submit', this.createShlink.bind(this));
 
-			let pagination = document.querySelector('.smol-links-pagination');
-			pagination.addEventListener('change', this.updatePage.bind(this))
+			let pagination = document.querySelectorAll('.smol-links-pagination');
+			for (let select of pagination) {
+				select.addEventListener('change', this.updatePage.bind(this))
+			}
 		} catch (err) {
-			let loading = document.querySelector('.smol-links-loading');
-			// loading.innerHTML = `
-			// 	<div class="notice notice-error is-dismissible">
-			// 		<p>There was an error loading shlinks.</p>
-			// 	</div>
-			// `;
+			let el = document.querySelector('.smol-links-list');
+			el.innerHTML = `<div class="smol-links-error">
+				<strong>Error: </strong>
+				${(err.message ||
+					'Something went wrong loading shlinks. Try again?')}
+			</div>`;
 		}
 	}
 
@@ -281,10 +284,9 @@ class SmolLinksManager {
 		this.editShlink(item);
 	}
 
-	updatePage() {
+	updatePage(e) {
 		let tab = this.getTab();
-		let pagination = document.querySelector('.smol-links-pagination');
-		let page = pagination.options[pagination.selectedIndex].value;
+		let page = e.target.options[e.target.selectedIndex].value;
 		// We use 'pg' instead of 'page' because WordPress reserves that query var
 		window.location = `/wp-admin/admin.php?page=smol-links&tab=${tab}&pg=${page}`;
 	}
