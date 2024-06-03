@@ -8,8 +8,9 @@ class SmolLinksManager {
 
 	load() {
 		let tab = this.getTab();
+		let page = this.getPage();
 		return fetch(
-			`/wp-admin/admin-ajax.php?action=smol_links_load&tab=${tab}&_wpnonce=${smol_links_nonces.load}`
+			`/wp-admin/admin-ajax.php?action=smol_links_load&tab=${tab}&page=${page}&_wpnonce=${smol_links_nonces.load}`
 		);
 	}
 
@@ -22,18 +23,31 @@ class SmolLinksManager {
 		return tab;
 	}
 
+	getPage() {
+		let page = 1;
+		// We use 'pg' instead of 'page' because WordPress reserves that query var
+		let pageQuery = location.search.match(/pg=(\d+)/);
+		if (pageQuery) {
+			page = pageQuery[1];
+		}
+		return page;
+	}
+
 	async showResults(result) {
 		try {
 			let response = await result.json();
 			let html = 'Oops, something unexpected happened';
 
 			if (!response.ok || !response.shlink) {
-				html =
-					'Error: ' +
-					(response.error ||
-						'something went wrong loading shlinks. Try again?');
+				if (response.title && response.detail) {
+					throw new Error(`${response.title}: ${response.detail}`);
+				} else {
+					throw new Error('Something went wrong loading shlinks. Try again?');
+				}
 			} else {
-				html = this.getListHTML(response.shlink.shortUrls.data);
+				let listHTML = this.getListHTML(response.shlink.shortUrls.data);
+				let paginationHTML = this.getPaginationHTML(response.shlink.shortUrls.pagination);
+				html = paginationHTML + listHTML + paginationHTML;
 			}
 
 			let el = document.querySelector('.smol-links-list');
@@ -42,13 +56,18 @@ class SmolLinksManager {
 
 			let form = document.querySelector('.smol-links-create');
 			form.addEventListener('submit', this.createShlink.bind(this));
+
+			let pagination = document.querySelectorAll('.smol-links-pagination');
+			for (let select of pagination) {
+				select.addEventListener('change', this.updatePage.bind(this))
+			}
 		} catch (err) {
-			let loading = document.querySelector('.smol-links-loading');
-			loading.innerHTML = `
-				<div class="notice notice-error is-dismissible">
-					<p>There was an error loading shlinks.</p>
-				</div>
-			`;
+			let el = document.querySelector('.smol-links-list');
+			el.innerHTML = `<div class="smol-links-error">
+				<strong>Error: </strong>
+				${(err.message ||
+					'Something went wrong loading shlinks. Try again?')}
+			</div>`;
 		}
 	}
 
@@ -112,6 +131,17 @@ class SmolLinksManager {
 				</span>
 			</span>
 		`;
+	}
+
+	getPaginationHTML(pagination) {
+		let options = '';
+		for (let p = 1; p <= pagination.pagesCount; p++) {
+			let selected = pagination.currentPage == p ? ' selected="selected"' : '';
+			options += `<option value="${p}"${selected}>Page ${p}</option>`;
+		}
+		return `<select class="smol-links-pagination">
+			${options}
+		</select>`;
 	}
 
 	async createShlink(event) {
@@ -252,6 +282,13 @@ class SmolLinksManager {
 			return;
 		}
 		this.editShlink(item);
+	}
+
+	updatePage(e) {
+		let tab = this.getTab();
+		let page = e.target.options[e.target.selectedIndex].value;
+		// We use 'pg' instead of 'page' because WordPress reserves that query var
+		window.location = `/wp-admin/admin.php?page=smol-links&tab=${tab}&pg=${page}`;
 	}
 
 	editShlink(item) {
