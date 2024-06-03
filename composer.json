@@ -1,7 +1,7 @@
 {
 	"name": "the-markup/smol-links",
 	"description": "Create and manage Shlink short links from WordPress",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"type": "wordpress-plugin",
 	"require-dev": {
 		"phpunit/phpunit": "^9.6",
