@@ -7,7 +7,9 @@ class SmolLinksSettings {
 
 	setupDomainsRefresh() {
 		let link = document.querySelector('.smol-links-reload-domains');
-		link.addEventListener('click', this.reloadDomains.bind(this));
+		if (link) {
+			link.addEventListener('click', this.reloadDomains.bind(this));
+		}
 	}
 
 	async reloadDomains(event) {

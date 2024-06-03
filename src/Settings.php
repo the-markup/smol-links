@@ -85,7 +85,10 @@ class Settings {
 	}
 
 	function on_admin_init() {
-		register_setting('smol-links', 'smol_links_options');
+		register_setting('smol-links', 'smol_links_options', [
+			'type' => 'array',
+			'sanitize_callback' => [$this, 'sanitize_options']
+		]);
 		add_settings_section(
 			'smol-links-server',
 			__('Server', 'smol-links'),
@@ -149,6 +152,69 @@ class Settings {
 				'smol-links',
 				'smol-links-generate'
 			);
+		}
+	}
+
+	function sanitize_options($input) {
+		$found_errors = false;
+		$base_url_sanitized = sanitize_text_field($input['base_url']);
+		$api_key_sanitized = sanitize_text_field($input['api_key']);
+
+		if (!preg_match('/^https?:\/\//', $base_url_sanitized)) {
+			$found_errors = true;
+			add_settings_error(
+				'smol-links-base-url',
+				'invalid-base-url',
+				sprintf(
+					__('Invalid base URL: <code>%s</code>. Try adding <code>https://</code>.', 'smol-links'),
+					esc_html($base_url_sanitized)
+				)
+			);
+		} else if (preg_match('/\/$/', $base_url_sanitized)) {
+			// Strip trailing slash
+			$base_url_sanitized = substr($base_url_sanitized, 0, -1);
+		}
+		if (!$found_errors) {
+			$response = wp_remote_get("$base_url_sanitized/rest/health");
+			if (is_wp_error($response)) {
+				$found_errors = true;
+				add_settings_error(
+					'smol-links-base-url',
+					'error-loading-base-url',
+					sprintf(
+						__('Error loading <code>%s</code>.', 'smol-links'),
+						esc_url("$base_url_sanitized/rest/health")
+					)
+				);
+			}
+		}
+		if (!$found_errors) {
+			try {
+				$domains = $this->plugin->api->get_domains([
+					'base_url' => $base_url_sanitized,
+					'api_key' => $api_key_sanitized
+				]);
+			} catch (\Exception $error) {
+				$found_errors = true;
+				add_settings_error(
+					'smol-links-api-key',
+					'invalid-api-key',
+					sprintf(
+						__('Could not validate API key <code>%s</code> at <code>%s</code>.', 'smol-links'),
+						esc_html($api_key_sanitized),
+						esc_url($base_url_sanitized)
+					)
+				);
+			}
+		}
+		if (!$found_errors) {
+			return [
+				'base_url' => $base_url_sanitized,
+				'api_key' => $api_key_sanitized
+			];
+		} else {
+			// Revert to previously saved options
+			return $this->plugin->options->all();
 		}
 	}
 
