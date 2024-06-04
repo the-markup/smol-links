@@ -36,7 +36,7 @@ class SmolLinksManager {
 
 	getSearch() {
 		let search = '';
-		let searchQuery = location.search.match(/search=(\d+)/);
+		let searchQuery = location.search.match(/search=(\w+)/);
 		if (searchQuery) {
 			search = searchQuery[1];
 		}
@@ -159,7 +159,7 @@ class SmolLinksManager {
 	}
 
 	getSearchHTML(searchTerm) {
-		return `<input type="search" class="smol-links-search" size="20" >${searchTerm}</input>`;
+		return `<input type="search" class="smol-links-search" size="20" value="${searchTerm ?? ''}"></input>`;
 	}
 
 	async createShlink(event) {
