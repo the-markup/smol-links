@@ -74,7 +74,7 @@ class SmolLinksManager {
 			}
 
 			let searchButton = document.querySelector('.smol-links-search-button');
-			search.addEventListener('click', this.updateSearchTerm.bind(this));
+			searchButton.addEventListener('click', this.updateSearchTerm.bind(this));
 		} catch (err) {
 			let el = document.querySelector('.smol-links-list');
 			el.innerHTML = `<div class="smol-links-error">
