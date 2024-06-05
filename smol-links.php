@@ -13,7 +13,7 @@
  * Description:       Create and manage Shlink short links from WordPress
  * Requires at least: 4.5
  * Requires PHP:      7.0
- * Version:           0.2.0
+ * Version:           0.3.0
  * Author:            The Markup
  * Author URI:        https://themarkup.org/
  * License:           GPL-2.0-or-later
