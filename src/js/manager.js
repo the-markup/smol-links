@@ -73,8 +73,8 @@ class SmolLinksManager {
 				select.addEventListener('change', this.updatePage.bind(this));
 			}
 
-			let search = document.querySelector('.smol-links-search');
-			search.addEventListener('change', this.updateSearchTerm.bind(this));
+			let searchButton = document.querySelector('.smol-links-search-button');
+			search.addEventListener('click', this.updateSearchTerm.bind(this));
 		} catch (err) {
 			let el = document.querySelector('.smol-links-list');
 			el.innerHTML = `<div class="smol-links-error">
@@ -159,13 +159,18 @@ class SmolLinksManager {
 	}
 
 	getSearchHTML(searchTerm) {
-		return `<input type="search" 
+		return `
+			<div class="search-container">
+				<input type="search" 
 					class="smol-links-search" 
 					placeholder="Search generated links..." 
 					aria-label="Search through smol links" 
 					size="20" 
 					value="${searchTerm ?? ''}">
-				</input>`;
+				</input>
+				<button class="smol-links-search-button">Search</button>
+			</div>
+		`;
 	}
 
 	async createShlink(event) {
@@ -319,7 +324,7 @@ class SmolLinksManager {
 	updateSearchTerm(e) {
 		const tab = this.getTab();
 		const page = this.getPage();
-		const searchTerm = e.target.value;
+		const searchTerm = document.getElementsByClassName('smol-links-search')[0].value;
 		window.location = `/wp-admin/admin.php?page=smol-links&tab=${tab}&pg=${page}&search=${searchTerm}`;
 	}
 
