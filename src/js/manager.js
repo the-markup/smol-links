@@ -159,7 +159,13 @@ class SmolLinksManager {
 	}
 
 	getSearchHTML(searchTerm) {
-		return `<input type="search" class="smol-links-search" size="20" value="${searchTerm ?? ''}"></input>`;
+		return `<input type="search" 
+					class="smol-links-search" 
+					placeholder="Search generated links..." 
+					aria-label="Search through smol links" 
+					size="20" 
+					value="${searchTerm ?? ''}">
+				</input>`;
 	}
 
 	async createShlink(event) {
