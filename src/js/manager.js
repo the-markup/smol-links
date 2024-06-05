@@ -57,7 +57,7 @@ class SmolLinksManager {
 			} else {
 				let listHTML = this.getListHTML(response.shlink.shortUrls.data);
 				let paginationHTML = this.getPaginationHTML(response.shlink.shortUrls.pagination);
-				let searchHTML = this.getSearchHTML(response.shlink.shortUrls.search);
+				let searchHTML = this.getSearchHTML(this.getSearch());
 				html = paginationHTML + searchHTML + listHTML + paginationHTML;
 			}
 
