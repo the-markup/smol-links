@@ -58,7 +58,9 @@ class SmolLinksManager {
 				let listHTML = this.getListHTML(response.shlink.shortUrls.data);
 				let paginationHTML = this.getPaginationHTML(response.shlink.shortUrls.pagination);
 				let searchHTML = this.getSearchHTML(this.getSearch());
-				html = paginationHTML + searchHTML + listHTML + paginationHTML;
+				let headerOpen = '<div class="smol-links-header">';
+				let headerClose = '</div>';
+				html = headerOpen + paginationHTML + searchHTML + headerClose + listHTML + paginationHTML;
 			}
 
 			let el = document.querySelector('.smol-links-list');
@@ -168,7 +170,7 @@ class SmolLinksManager {
 					size="20" 
 					value="${searchTerm ?? ''}">
 				</input>
-				<button class="smol-links-search-button">Search</button>
+				<button class="smol-links-search-button button">Search</button>
 			</div>
 		`;
 	}

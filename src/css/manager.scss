@@ -236,10 +236,14 @@
 	display: block;
 }
 
-.smol-links-search {
-	margin: 10px 0 0 0;
+.search-container {
+	margin: 10px 0 0 10px;
 }
 
 .smol-links-search-button {
 	vertical-align: middle;
+}
+
+.smol-links-header {
+	display: flex;
 }
