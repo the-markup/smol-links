@@ -154,7 +154,15 @@ class Settings {
 
 	function base_url_field() {
 		$value = htmlentities($this->plugin->options->get('base_url'));
-		echo '<input type="text" name="smol_links_options[base_url]" class="regular-text ltr" value="' . esc_attr($value) . '">';
+		echo '<input 
+				type="url" 
+				placeholder="https://example.com" 
+				pattern="/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/ig" 
+				name="smol_links_options[base_url]" 
+				class="regular-text ltr" 
+				value="' . esc_attr($value) . '"
+				required
+			  >';
 	}
 
 	function api_key_field() {
@@ -164,7 +172,7 @@ class Settings {
 
 	function generate_on_save_field() {
 		$value = htmlentities($this->plugin->options->get('generate_on_save'));
-		echo '<input type="checkbox" name="smol_links_options[generate_on_save]" value="1" ' . checked( 1, $value, false ) . '>';
+		echo '<input type="checkbox" name="smol_links_options[generate_on_save]" value="1" ' . checked( 1, $value, false ) . ' required >';
 	}
 
 	function default_domain_field() {
