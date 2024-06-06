@@ -85,7 +85,6 @@ class Manager {
 			<form action="/wp-admin/admin-ajax.php" method="post" class="smol-links-create">
 				<input type="hidden" name="action" value="create_shlink">
 				<div class="smol-links-edit-field">
-					<!-- TODO: make this input only take valid long urls -->
 					<label for="smol-links-create__long-url" class="smol-links-label required">URL to shorten</label>
 					<input 
 						type="url" 

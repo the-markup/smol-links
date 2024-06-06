@@ -163,7 +163,6 @@ class SmolLinksManager {
 
 		let list = document.querySelector('.smol-links-list ul');
 
-		// TODO: Check here that URL has proper format
 		const parsedUrl = new URL(longURLField.value);
 		if (longURLField.value == '' || !parsedUrl) {
 			feedback.innerHTML = `
