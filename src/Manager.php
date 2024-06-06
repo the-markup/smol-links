@@ -86,8 +86,16 @@ class Manager {
 				<input type="hidden" name="action" value="create_shlink">
 				<div class="smol-links-edit-field">
 					<!-- TODO: make this input only take valid long urls -->
-					<label for="smol-links-create__long-url" class="smol-links-label">URL to shorten</label>
-					<input type="url" name="long_url" id="smol-links-create__long-url" pattern="/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/ig" class="smol-links-long-url regular-text ltr" required>
+					<label for="smol-links-create__long-url" class="smol-links-label required">URL to shorten</label>
+					<input 
+						type="url" 
+						name="long_url" 
+						placeholder="https://example.com"
+						id="smol-links-create__long-url" 
+						pattern="/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/ig" 
+						class="smol-links-long-url regular-text ltr" 
+						required
+					/>
 				</div>
 				<div class="smol-links-edit-field">
 					<label for="smol-links-create__title" class="smol-links-label smol-links-label--optional">Title</label>
