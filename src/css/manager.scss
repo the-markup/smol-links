@@ -21,6 +21,13 @@
 			font-weight: normal;
 			margin-left: 10px;
 		}
+
+		&.required:after {
+			content: "required";
+			font-weight: normal;
+			margin-left: 10px;
+			color: #d63638;
+		}
 	}
 }
 

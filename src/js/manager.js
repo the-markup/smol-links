@@ -194,10 +194,11 @@ class SmolLinksManager {
 
 		let list = document.querySelector('.smol-links-list ul');
 
-		if (longURLField.value == '') {
+		const parsedUrl = new URL(longURLField.value);
+		if (longURLField.value == '' || !parsedUrl) {
 			feedback.innerHTML = `
 				<div class="notice notice-error is-dismissible">
-					<p>Sorry, you must specify a long URL to shorten.</p>
+					<p>Sorry, you must specify a valid long URL to shorten.</p>
 				</div>
 			`;
 			return;
