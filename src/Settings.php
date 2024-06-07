@@ -156,81 +156,78 @@ class Settings {
 	}
 
 	function sanitize_options($input) {
-		$found_errors = false;
 		$base_url_sanitized = sanitize_text_field($input['base_url']);
 		$api_key_sanitized = sanitize_text_field($input['api_key']);
 
-		if (!preg_match('/^https?:\/\//', $base_url_sanitized)) {
-			$found_errors = true;
-			add_settings_error(
-				'smol-links-base-url',
-				'invalid-base-url',
-				sprintf(
+		try {
+			if (empty($base_url_sanitized) || empty($api_key_sanitized)) {
+				throw new \Exception(__('Please enter a base URL and API key.'));
+			}
+			if (!preg_match('/^https?:\/\//', $base_url_sanitized)) {
+				throw new \Exception(sprintf(
 					__('Invalid base URL: <code>%s</code>. Try adding <code>https://</code>.', 'smol-links'),
 					esc_html($base_url_sanitized)
-				)
-			);
-		} else if (preg_match('/\/$/', $base_url_sanitized)) {
-			// Strip trailing slash
-			$base_url_sanitized = substr($base_url_sanitized, 0, -1);
-		}
-		if (!$found_errors) {
+				));
+			}
+			if (preg_match('/\/$/', $base_url_sanitized)) {
+				// Strip trailing slash
+				$base_url_sanitized = substr($base_url_sanitized, 0, -1);
+			}
+
 			$response = wp_remote_get("$base_url_sanitized/rest/health");
 			if (is_wp_error($response)) {
-				$found_errors = true;
-				add_settings_error(
-					'smol-links-base-url',
-					'error-loading-base-url',
-					sprintf(
-						__('Error loading <code>%s</code>.', 'smol-links'),
-						esc_url("$base_url_sanitized/rest/health")
-					)
-				);
+				throw new \Exception(sprintf(
+					__('Error loading <code>%s</code>.', 'smol-links'),
+					esc_url("$base_url_sanitized/rest/health")
+				));
 			}
-		}
-		if (!$found_errors) {
-			try {
-				$domains = $this->plugin->api->get_domains([
-					'base_url' => $base_url_sanitized,
-					'api_key' => $api_key_sanitized
-				]);
-			} catch (\Exception $error) {
-				$found_errors = true;
-				add_settings_error(
-					'smol-links-api-key',
-					'invalid-api-key',
-					sprintf(
-						__('Could not validate API key <code>%s</code> at <code>%s</code>.', 'smol-links'),
-						esc_html($api_key_sanitized),
-						esc_url($base_url_sanitized)
-					)
-				);
-			}
-		}
-		if (!$found_errors) {
+
+			$this->plugin->api->get_domains([
+				'base_url' => $base_url_sanitized,
+				'api_key' => $api_key_sanitized
+			]);
+
 			return [
 				'base_url' => $base_url_sanitized,
 				'api_key' => $api_key_sanitized
 			];
-		} else {
-			// Revert to previously saved options
+		} catch (\Exception $error) {
+			add_settings_error(
+				'smol-links-api-key',
+				'smol-links-error',
+				$error->getMessage()
+			);
+			foreach ($input as $key => $value) {
+				// Store the submitted value so we can restore it to the form input
+				set_transient("smol_links_settings_$key", $value);
+			}
+			// Revert back to previous settings
 			return $this->plugin->options->all();
 		}
 	}
 
 	function base_url_field() {
-		$value = htmlentities($this->plugin->options->get('base_url'));
+		$value = $this->field_value('base_url');
 		echo '<input type="text" name="smol_links_options[base_url]" class="regular-text ltr" value="' . esc_attr($value) . '">';
 	}
 
 	function api_key_field() {
-		$value = htmlentities($this->plugin->options->get('api_key'));
+		$value = $this->field_value('api_key');
 		echo '<input type="text" name="smol_links_options[api_key]" class="regular-text ltr" value="' . esc_attr($value) . '">';
 	}
 
 	function generate_on_save_field() {
-		$value = htmlentities($this->plugin->options->get('generate_on_save'));
-		echo '<input type="checkbox" name="smol_links_options[generate_on_save]" value="1" ' . checked( 1, $value, false ) . '>';
+		$value = $this->field_value('generate_on_save');
+		echo '<input type="checkbox" name="smol_links_options[generate_on_save]" value="1" ' . checked(1, $value, false) . '>';
+	}
+
+	function field_value($key) {
+		$transient = get_transient("smol_links_settings_$key");
+		if ($transient !== false) {
+			delete_transient("smol_links_settings_$key");
+			return $transient;
+		}
+		return $this->plugin->options->get($key);
 	}
 
 	function default_domain_field() {
