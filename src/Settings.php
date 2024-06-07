@@ -161,7 +161,7 @@ class Settings {
 
 		try {
 			if (empty($base_url_sanitized) || empty($api_key_sanitized)) {
-				throw new \Exception(__('Please enter a base URL and API key.'));
+				throw new \Exception(__('Please enter a base URL and API key.', 'smol-links'));
 			}
 			if (!preg_match('/^https?:\/\//', $base_url_sanitized)) {
 				throw new \Exception(sprintf(
