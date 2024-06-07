@@ -91,7 +91,7 @@ class Manager {
 						name="long_url" 
 						placeholder="https://example.com"
 						id="smol-links-create__long-url" 
-						pattern="/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/ig" 
+						pattern="^(http(s){0,1}:\/\/.){0,1}[\-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([\-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$"
 						class="smol-links-long-url regular-text ltr" 
 						required
 					/>
