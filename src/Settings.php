@@ -157,7 +157,7 @@ class Settings {
 		echo '<input 
 				type="url" 
 				placeholder="https://example.com" 
-				pattern="/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/ig" 
+				pattern="^(http(s){0,1}:\/\/.){0,1}[\-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([\-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$" 
 				name="smol_links_options[base_url]" 
 				class="regular-text ltr" 
 				value="' . esc_attr($value) . '"
