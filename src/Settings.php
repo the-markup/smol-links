@@ -172,7 +172,7 @@ class Settings {
 
 	function generate_on_save_field() {
 		$value = htmlentities($this->plugin->options->get('generate_on_save'));
-		echo '<input type="checkbox" name="smol_links_options[generate_on_save]" value="1" ' . checked( 1, $value, false ) . ' required >';
+		echo '<input type="checkbox" name="smol_links_options[generate_on_save]" value="1" ' . checked( 1, $value, false ) . '>';
 	}
 
 	function default_domain_field() {
