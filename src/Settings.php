@@ -154,12 +154,20 @@ class Settings {
 
 	function base_url_field() {
 		$value = htmlentities($this->plugin->options->get('base_url'));
-		echo '<input type="text" name="smol_links_options[base_url]" class="regular-text ltr" value="' . esc_attr($value) . '">';
+		echo '<input 
+				type="url" 
+				placeholder="https://example.com" 
+				pattern="^(http(s){0,1}:\/\/.){0,1}[\-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([\-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$" 
+				name="smol_links_options[base_url]" 
+				class="regular-text ltr" 
+				value="' . esc_attr($value) . '"
+				required
+			  >';
 	}
 
 	function api_key_field() {
 		$value = htmlentities($this->plugin->options->get('api_key'));
-		echo '<input type="text" name="smol_links_options[api_key]" class="regular-text ltr" value="' . esc_attr($value) . '">';
+		echo '<input type="text" name="smol_links_options[api_key]" class="regular-text ltr" value="' . esc_attr($value) . '" required>';
 	}
 
 	function generate_on_save_field() {
