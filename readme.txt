@@ -13,8 +13,6 @@ Create and manage Shlink short links from WordPress
 
 == Description ==
 
-__This plugin is a work in progress; development is ongoing.__
-
 A WordPress dashboard interface for managing a self-hosted [Shlink URL shortener](https://shlink.io/) instance.
 
 * Create and edit Shlinks short links from a manager interface
