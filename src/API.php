@@ -38,19 +38,24 @@ class API {
 		return $this->request('GET', $endpoint, $args);
 	}
 
-	function get_domains() {
-		$base_url = $this->plugin->options->get('base_url');
-		$endpoint = "$base_url/rest/v3/domains";
-		return $this->request('GET', $endpoint);
+	function get_domains($options = null) {
+		if (!$options) {
+			$options = $this->plugin->options->all();
+		}
+		$endpoint = "{$options['base_url']}/rest/v3/domains";
+		return $this->request('GET', $endpoint, [], $options);
 	}
 
-	function request($method, $endpoint, $args = null) {
+	function request($method, $endpoint, $args = null, $options = null) {
+		if (!$options) {
+			$options = $this->plugin->options->all();
+		}
 		$url = $endpoint;
 		$request = [
 			'method'  => $method,
 			'headers' => [
 				'Accept'       => 'application/json',
-				'X-Api-Key'    => $this->plugin->options->get('api_key')
+				'X-Api-Key'    => $options['api_key']
 			]
 		];
 		if ($args) {

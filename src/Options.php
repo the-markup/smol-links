@@ -18,26 +18,35 @@ class Options {
 
 	function __construct($plugin) {
 		$this->plugin = $plugin;
-		$defaults = [
-			'base_url' => '',
-			'api_key' => '',
-			'generate_on_save' => false,
-			'domains' => [],
-			'default_domain' => null
-		];
-		$saved_options = get_option('smol_links_options') ?: [];
-		$this->options = array_merge($defaults, $saved_options);
+	}
+
+	function all() {
+		if (empty($this->values)) {
+			$defaults = [
+				'base_url' => '',
+				'api_key' => '',
+				'generate_on_save' => false,
+				'domains' => [],
+				'default_domain' => null
+			];
+			$saved_options = get_option('smol_links_options') ?: [];
+			$this->values = array_merge($defaults, $saved_options);
+		}
+		return $this->values;
 	}
 
 	function get($key) {
-		if (isset($this->options[$key])) {
-			return $this->options[$key];
+		$values = $this->all();
+		if (isset($values[$key])) {
+			return $values[$key];
 		}
 		return null;
 	}
 
 	function set($key, $value) {
-		$this->options[$key] = $value;
-		update_option('smol_links_options', $this->options, false);
+		$values = $this->all();
+		$values[$key] = $value;
+		$this->values = $values;
+		update_option('smol_links_options', $values, false);
 	}
 }
