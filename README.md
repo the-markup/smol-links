@@ -3,7 +3,7 @@
 **Donate link:** https://themarkup.org/donate  
 **Tags:** short url, shlink  
 **Requires at least:** 4.5  
-**Tested up to:** 6.5.3  
+**Tested up to:** 6.5.4  
 **Requires PHP:** 7.3  
 **Stable tag:** 0.4.0  
 **License:** GPLv2 or later  
@@ -58,6 +58,9 @@ __Running tests:__
 3. The post editor includes the short URL in the sidebar.
 
 ## Changelog ##
+
+### 0.4.1 ###
+* Validate and sanitize settings
 
 ### 0.4.0 ###
 * Add search to manager interface
