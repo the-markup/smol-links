@@ -2,9 +2,9 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Smol Links 0.2.0\n"
+"Project-Id-Version: Smol Links 0.4.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/smol-links\n"
-"POT-Creation-Date: 2024-06-07 17:03:24+00:00\n"
+"POT-Creation-Date: 2024-06-07 17:30:48+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -28,52 +28,40 @@ msgstr ""
 msgid "Smol Links"
 msgstr ""
 
-#: src/Manager.php:188
+#: src/Manager.php:214
 msgid "Cannot connect to Shlink Server."
 msgstr ""
 
-#: src/Manager.php:189
+#: src/Manager.php:215
 msgid "Please configure Shlink API settings."
 msgstr ""
 
-#: src/Settings.php:79 src/Settings.php:109
+#: src/Settings.php:79 src/Settings.php:106
 msgid "Smol Links Settings"
 msgstr ""
 
-#: src/Settings.php:94
+#: src/Settings.php:91
 msgid "Server"
 msgstr ""
 
-#: src/Settings.php:100
+#: src/Settings.php:97
 msgid "Generating Shlinks"
 msgstr ""
 
-#: src/Settings.php:125
+#: src/Settings.php:122
 msgid "Base URL"
 msgstr ""
 
-#: src/Settings.php:132
+#: src/Settings.php:129
 msgid "API Key"
 msgstr ""
 
-#: src/Settings.php:142
+#: src/Settings.php:139
 msgid "Generate upon saving a post"
 msgstr ""
 
-#: src/Settings.php:150
+#: src/Settings.php:147
 msgid "Default domain"
-msgstr ""
-
-#: src/Settings.php:164
-msgid "Please enter a base URL and API key."
-msgstr ""
-
-#: src/Settings.php:168
-msgid "Invalid base URL: <code>%s</code>. Try adding <code>https://</code>."
-msgstr ""
-
-#: src/Settings.php:180
-msgid "Error loading <code>%s</code>."
 msgstr ""
 
 #. Description of the plugin/theme

@@ -5,15 +5,13 @@
 **Requires at least:** 4.5  
 **Tested up to:** 6.5.3  
 **Requires PHP:** 7.3  
-**Stable tag:** 0.2.0  
+**Stable tag:** 0.4.0  
 **License:** GPLv2 or later  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 
 Create and manage Shlink short links from WordPress
 
 ## Description ##
-
-__This plugin is a work in progress; development is ongoing.__
 
 A WordPress dashboard interface for managing a self-hosted [Shlink URL shortener](https://shlink.io/) instance.
 
@@ -60,6 +58,16 @@ __Running tests:__
 3. The post editor includes the short URL in the sidebar.
 
 ## Changelog ##
+
+### 0.4.0 ###
+* Add search to manager interface
+* URL validation on form inputs
+
+### 0.3.1 ###
+* Remove Composer from installation
+
+### 0.3.0 ###
+* Add pagination to Smol Links manager interface
 
 ### 0.2.0 ###
 * Update to Shlink v3 API

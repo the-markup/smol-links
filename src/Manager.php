@@ -85,8 +85,16 @@ class Manager {
 			<form action="/wp-admin/admin-ajax.php" method="post" class="smol-links-create">
 				<input type="hidden" name="action" value="create_shlink">
 				<div class="smol-links-edit-field">
-					<label for="smol-links-create__long-url" class="smol-links-label">URL to shorten</label>
-					<input type="text" name="long_url" id="smol-links-create__long-url" class="smol-links-long-url regular-text ltr">
+					<label for="smol-links-create__long-url" class="smol-links-label required">URL to shorten</label>
+					<input 
+						type="url" 
+						name="long_url" 
+						placeholder="https://example.com"
+						id="smol-links-create__long-url" 
+						pattern="^(http(s){0,1}:\/\/.){0,1}[\-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([\-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$"
+						class="smol-links-long-url regular-text ltr" 
+						required
+					/>
 				</div>
 				<div class="smol-links-edit-field">
 					<label for="smol-links-create__title" class="smol-links-label smol-links-label--optional">Title</label>
@@ -164,6 +172,24 @@ class Manager {
 		}
 	}
 
+	function current_page() {
+		// Check for a 'page' query string
+		if (! empty($_GET['page'])) {
+			return intval($_GET['page']);
+		} else {
+			return 1;
+		}
+	}
+
+	function current_search_term() {
+		// Check for a 'search' query string
+		if (! empty($_GET['search'])) {
+			return sanitize_title($_GET['search']);
+		} else {
+			return '';
+		}
+	}
+
 	function short_code_domain() {
 		$domains = $this->plugin->options->get('domains');
 		$default = $this->plugin->options->get('default_domain');
@@ -197,9 +223,10 @@ class Manager {
 		try {
 			check_ajax_referer('smol_links_load');
 			$request = [
-				'page'         => 1,
+				'page'         => $this->current_page(),
 				'itemsPerPage' => 25,
-				'orderBy'      => 'dateCreated-DESC'
+				'orderBy'      => 'dateCreated-DESC',
+				'searchTerm'   =>  $this->current_search_term(),
 			];
 
 			list($slug, $query) = $this->current_tab();

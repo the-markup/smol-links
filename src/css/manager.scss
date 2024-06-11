@@ -21,6 +21,13 @@
 			font-weight: normal;
 			margin-left: 10px;
 		}
+
+		&.required:after {
+			content: "required";
+			font-weight: normal;
+			margin-left: 10px;
+			color: #d63638;
+		}
 	}
 }
 
@@ -225,4 +232,25 @@
 	.wrap & .notice {
 		margin-bottom: 0;
 	}
+}
+
+.smol-links-error {
+	padding: 20px 0;
+}
+
+.smol-links-pagination {
+	margin: 10px 0 0 0;
+	display: block;
+}
+
+.search-container {
+	margin: 10px 0 0 10px;
+}
+
+.smol-links-search-button {
+	vertical-align: middle;
+}
+
+.smol-links-header {
+	display: flex;
 }

@@ -24,6 +24,7 @@ package.json
 package-lock.json
 phpunit.xml
 phpunit.xml.dist
+.phpunit.result.cache
 multisite.xml
 multisite.xml.dist
 .phpcs.xml
@@ -35,7 +36,7 @@ webpack.config.js
 wp-cli.local.yml
 yarn.lock
 tests
-vendor/*
+vendor
 node_modules
 *.sql
 *.tar.gz
