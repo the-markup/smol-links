@@ -3,7 +3,7 @@ Contributors: dphiffer
 Donate link: https://themarkup.org/donate
 Tags: short url, shlink
 Requires at least: 4.5
-Tested up to: 6.5.4
+Tested up to: 6.6
 Requires PHP: 7.3
 Stable tag: 0.4.1
 License: GPLv2 or later
