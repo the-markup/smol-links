@@ -158,6 +158,8 @@ class Settings {
 	function sanitize_options($input) {
 		$base_url_sanitized = sanitize_text_field($input['base_url']);
 		$api_key_sanitized = sanitize_text_field($input['api_key']);
+		$generate_on_save_sanitized = intval($input['generate_on_save']);
+		$default_domain_sanitized = sanitize_text_field($input['default_domain']);
 
 		try {
 			if (empty($base_url_sanitized) || empty($api_key_sanitized)) {
@@ -189,7 +191,9 @@ class Settings {
 
 			return [
 				'base_url' => $base_url_sanitized,
-				'api_key' => $api_key_sanitized
+				'api_key' => $api_key_sanitized,
+				'generate_on_save' => $generate_on_save_sanitized,
+				'default_domain' => $default_domain_sanitized,
 			];
 		} catch (\Exception $error) {
 			add_settings_error(
