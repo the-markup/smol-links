@@ -3,9 +3,9 @@
 **Donate link:** https://themarkup.org/donate  
 **Tags:** short url, shlink  
 **Requires at least:** 4.5  
-**Tested up to:** 6.5.4  
+**Tested up to:** 6.6.1  
 **Requires PHP:** 7.3  
-**Stable tag:** 0.4.1  
+**Stable tag:** 0.4.2  
 **License:** GPLv2 or later  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -58,6 +58,10 @@ __Running tests:__
 3. The post editor includes the short URL in the sidebar.
 
 ## Changelog ##
+
+### 0.4.2 ###
+* Fix bug causing settings to not get saved
+* Update dependencies
 
 ### 0.4.1 ###
 * Validate and sanitize settings
