@@ -1,11 +1,17 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-set -e
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# make sure we're running the right version of node
+source ~/.nvm/nvm.sh
+nvm use
 
 stop_containers() {
   echo "Shutting off containers..."
   echo
-  docker-compose stop
+  docker compose stop
   echo
   echo "All done!"
 }
@@ -14,12 +20,12 @@ trap stop_containers SIGINT
 
 echo "Starting containers..."
 echo
-docker-compose up -d
+docker compose up -d
 echo
 
 echo "Running composer install..."
 echo
-docker-compose exec web composer --working-dir="/var/www/html/wp-content/plugins/smol-links" install
+docker compose exec web composer --working-dir="/var/www/html/wp-content/plugins/smol-links" install
 echo
 
 echo "Running npm install..."

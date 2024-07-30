@@ -1,6 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-set -e
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# make sure we're running the right version of node
+source ~/.nvm/nvm.sh
+nvm use
 
 echo "Building and then starting containers..."
 echo

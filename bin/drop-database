@@ -1,6 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-set -e
+set -o errexit
+set -o pipefail
+set -o nounset
 
 if [ $(mysql --user="wordpress" --password="wordpress" --host="db" --execute='show databases;' | grep ^wordpress$) ]
 then

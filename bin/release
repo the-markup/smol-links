@@ -1,17 +1,21 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-set -e
+set -o errexit
+set -o pipefail
+set -o nounset
 
 if [ $# -lt 1 ]; then
 	echo "usage: $0 <svn dir>"
 	exit 1
 fi
 
+# make sure we're running the right version of node
+source ~/.nvm/nvm.sh
+nvm use
+
 dir="$( cd "$(dirname "$( dirname "${BASH_SOURCE[0]}" )" )" >/dev/null 2>&1 && pwd )"
 version="$(cat "$dir/readme.txt" | grep "Stable tag: " | cut -c 13-)"
 svn="$1"
-
-
 
 if [ -d "$svn/tags/$version" ] ; then
   echo "Error: $svn/tags/$version already exists"
