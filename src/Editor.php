@@ -45,11 +45,12 @@ class Editor {
 			return;
 		}
 
+		$asset = include(dirname(__DIR__) . '/build/editor.asset.php');
 		wp_enqueue_script(
 			'smol-links-editor',
 			plugins_url('build/editor.js', __DIR__),
-			['wp-edit-post', 'wp-components', 'wp-plugins', 'wp-data'],
-			filemtime(plugin_dir_path(__DIR__) . 'build/editor.js')
+			$asset['dependencies'],
+			$asset['version']
 		);
 
 		wp_enqueue_style(
