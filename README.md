@@ -1,14 +1,4 @@
 # Smol Links #
-**Contributors:** [dphiffer](https://profiles.wordpress.org/dphiffer/)  
-**Donate link:** https://themarkup.org/donate  
-**Tags:** short url, shlink  
-**Requires at least:** 4.5  
-**Tested up to:** 6.6.1  
-**Requires PHP:** 7.3  
-**Stable tag:** 0.4.2  
-**License:** GPLv2 or later  
-**License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
-
 Create and manage Shlink short links from WordPress
 
 ## Description ##
@@ -53,9 +43,15 @@ __Running tests:__
 
 ## Screenshots ##
 
-1. Create and manage Shlink short links from WordPress.
-2. Configure your self-hosted Shlink server and optionally generate a short URL whenever a post is published.
-3. The post editor includes the short URL in the sidebar.
+### 1. Create and manage Shlink short links from WordPress. ###
+![Create and manage Shlink short links from WordPress.](assets/screenshot-1.jpg)
+
+### 2. Configure your self-hosted Shlink server and optionally generate a short URL whenever a post is published. ###
+![Configure your self-hosted Shlink server and optionally generate a short URL whenever a post is published.](assets/screenshot-2.jpg)
+
+### 3. The post editor includes the short URL in the sidebar. ###
+![The post editor includes the short URL in the sidebar.](assets/screenshot-3.jpg)
+
 
 ## Changelog ##
 
