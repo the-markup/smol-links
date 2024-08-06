@@ -45,3 +45,4 @@ node_modules
 Dockerfile
 .nvmrc
 docker-compose.yml
+assets
