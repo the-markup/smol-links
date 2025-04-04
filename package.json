@@ -17,7 +17,7 @@
 	},
 	"dependencies": {
 		"@primer/octicons": "^19.11.0",
-		"@wordpress/scripts": "^28.4.0"
+		"@wordpress/scripts": "^30.14.1"
 	},
 	"devDependencies": {
 		"@wordpress/i18n": "^5.4.0",
