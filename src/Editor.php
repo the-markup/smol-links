@@ -13,6 +13,8 @@ namespace SmolLinks;
 
 class Editor {
 
+	public object $plugin;
+
 	function __construct($plugin) {
 		$this->plugin = $plugin;
 		add_action('init', [$this, 'on_init']);

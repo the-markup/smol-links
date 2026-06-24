@@ -16,6 +16,8 @@ namespace SmolLinks;
  */
 class API {
 
+	public object $plugin;
+
 	function __construct($plugin) {
 		$this->plugin = $plugin;
 	}

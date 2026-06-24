@@ -13,6 +13,9 @@ namespace SmolLinks;
 
 class Manager {
 
+	public object $plugin;
+	public object $tabs;
+
 	var $default_tabs = [
 		'All'            => [],
 		'Manual'         => ['tags[]' => 'smol-links-manager'],
