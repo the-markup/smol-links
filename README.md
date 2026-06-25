@@ -91,3 +91,4 @@ __Running tests:__
 * Create/edit short URLs from a manager
 
 ## Upgrade Notice ##
+Stable tag: 0.4.3
