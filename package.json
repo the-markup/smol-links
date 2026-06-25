@@ -16,11 +16,11 @@
 		"docs": "phpdoc --directory src --target docs"
 	},
 	"dependencies": {
-		"@primer/octicons": "^19.11.0",
-		"@wordpress/scripts": "^28.4.0"
+		"@primer/octicons": "^19.11.0"
 	},
 	"devDependencies": {
 		"@wordpress/i18n": "^5.4.0",
+		"@wordpress/scripts": "^30.27.0",
 		"grunt": "~1.6.1",
 		"grunt-cli": "^1.5.0",
 		"grunt-wp-i18n": "~1.0.3",
