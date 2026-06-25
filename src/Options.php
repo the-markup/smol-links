@@ -16,6 +16,9 @@ namespace SmolLinks;
  */
 class Options {
 
+	public object $plugin;
+	public array $values;
+
 	function __construct($plugin) {
 		$this->plugin = $plugin;
 	}

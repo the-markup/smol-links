@@ -13,6 +13,8 @@ namespace SmolLinks;
 
 class Settings {
 
+	public object $plugin;
+
 	function __construct($plugin) {
 		$this->plugin = $plugin;
 		$this->setup_domains();

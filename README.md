@@ -1,4 +1,5 @@
 # Smol Links #
+
 Create and manage Shlink short links from WordPress
 
 ## Description ##
@@ -55,6 +56,9 @@ __Running tests:__
 
 ## Changelog ##
 
+### 0.4.3 ###
+* Fix PHP warnings
+
 ### 0.4.2 ###
 * Fix bug causing settings to not get saved
 * Update dependencies
@@ -88,3 +92,4 @@ __Running tests:__
 * Create/edit short URLs from a manager
 
 ## Upgrade Notice ##
+Stable tag: 0.4.3

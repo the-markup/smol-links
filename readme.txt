@@ -5,7 +5,6 @@ Tags: short url, shlink
 Requires at least: 4.5
 Tested up to: 6.6.1
 Requires PHP: 7.3
-Stable tag: 0.4.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -59,6 +58,9 @@ __Running tests:__
 
 == Changelog ==
 
+= 0.4.3 =
+* Fix PHP warnings
+
 = 0.4.2 =
 * Fix bug causing settings to not get saved
 * Update dependencies
@@ -92,3 +94,4 @@ __Running tests:__
 * Create/edit short URLs from a manager
 
 == Upgrade Notice ==
+Stable tag: 0.4.3

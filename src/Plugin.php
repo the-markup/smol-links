@@ -13,6 +13,12 @@ namespace SmolLinks;
 
 class Plugin {
 
+	public object $options;
+	public object $api;
+	public object $settings;
+	public object $manager;
+	public object $editor;
+
 	/**
 	 * Setup contingent object instances (Options, Admin, and API) and WordPress
 	 * hooks
