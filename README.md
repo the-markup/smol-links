@@ -1,4 +1,5 @@
 # Smol Links #
+
 Create and manage Shlink short links from WordPress
 
 ## Description ##

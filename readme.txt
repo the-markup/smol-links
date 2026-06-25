@@ -58,6 +58,9 @@ __Running tests:__
 
 == Changelog ==
 
+= 0.4.3 =
+* Fix PHP warnings
+
 = 0.4.2 =
 * Fix bug causing settings to not get saved
 * Update dependencies
