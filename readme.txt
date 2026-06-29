@@ -58,6 +58,9 @@ __Running tests:__
 
 == Changelog ==
 
+= 0.4.4 =
+* Rerelease
+
 = 0.4.3 =
 * Fix PHP warnings
 
@@ -94,4 +97,4 @@ __Running tests:__
 * Create/edit short URLs from a manager
 
 == Upgrade Notice ==
-Stable tag: 0.4.3
+Stable tag: 0.4.4
