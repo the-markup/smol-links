@@ -56,6 +56,9 @@ __Running tests:__
 
 ## Changelog ##
 
+### 0.4.5 ###
+* Fix type issue
+
 ### 0.4.4 ###
 * Re-release
 

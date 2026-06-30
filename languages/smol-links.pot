@@ -2,7 +2,7 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Smol Links 0.4.4\n"
+"Project-Id-Version: Smol Links 0.4.5\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/smol-links\n"
 "POT-Creation-Date: 2026-06-25 03:16:55+00:00\n"
 "MIME-Version: 1.0\n"
