@@ -14,7 +14,7 @@ namespace SmolLinks;
 class Manager {
 
 	public object $plugin;
-	public object $tabs;
+	public array $tabs;
 
 	var $default_tabs = [
 		'All'            => [],
