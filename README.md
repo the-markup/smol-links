@@ -60,7 +60,7 @@ __Running tests:__
 * Fix type issue
 
 ### 0.4.4 ###
-* Re-release
+* Rerelease
 
 ### 0.4.3 ###
 * Fix PHP warnings
@@ -98,4 +98,4 @@ __Running tests:__
 * Create/edit short URLs from a manager
 
 ## Upgrade Notice ##
-Stable tag: 0.4.4
+Stable tag: 0.4.5
